@@ -1,0 +1,88 @@
+---
+title: "Abstracting x-mas-3"
+author: "Aleksander Dietrichson, PhD"
+format: html
+editor: visual
+---
+
+In order to analyze *x-mas-3* and training an AI to play the game, we decided to make an *abstract* version in the game in R/C++. The abstracted version is more suitable for computer-game interaction as it will communicate only the relevant information between the agent and the game. This will be substantially faster than interacting with the UI and allow for more streamlined training process.
+
+## Abstraction of the Board and Tiles
+
+The board is a 6 by 10 grid each containing a tile out of ten different tile-types. For our purposes we represent the board as a 6x10 matrix with the letters A through J representing the ten different tiles. An example board would me represented thus:
+
+```{r}
+set.seed(4361)
+tiles <- LETTERS[1:10]
+board <- matrix(data = sample(tiles,60,replace = TRUE),6,10)
+board
+```
+
+### Checking for Combinations
+
+Using this structure we can check for the presence of combinations using regular expressions. Using *"(\[A-J\])\\\\1\\\\1+"* as a regular expression will identify three or more consecutive occurrences of similar tiles. Implemented in R below:
+
+```{r}
+get_n_combinations <- function(m){
+  my_regex <- "([A-J])\\1\\1+"  
+    rowmatch <- purrr::map_lgl(1:6,~{
+    my_str <- stringr::str_c(m[.x,], collapse = "")
+    grepl(my_regex,my_str) 
+  })
+  colmatch <-purrr::map_lgl(1:10,~{
+    grepl(my_regex,stringr::str_c(m[,.x], collapse = "")) 
+  })
+  sum(colmatch,rowmatch)
+}
+
+get_n_combinations(board)
+```
+
+In this case one match is returned because of the triple "C"s found in column 5.
+
+### Initial Board State
+
+Since the initial state of the board cannot include any scoring combination we need a function that generated a random
+
+```{r}
+initialize_board <- function(){
+  tiles <- LETTERS[1:10]
+ board <- matrix(data = sample(tiles,60,replace = TRUE),6,10)
+  ## If the initial state scores, generate another one
+  if(get_n_combinations(board)>0){
+    board <- initialize_board()
+  }
+ board
+}
+initialize_board()
+```
+
+### Making moves
+
+Moves are made by specifying a cell, and one of four directions: up, down, left, right. We can implement this thus:
+
+```{r}
+move <- function(board,.r=1,.c=1,move=c("U","D","L","R")){
+  my_tile <- board[.r,.c]
+  target_row <- switch (move,
+                        "U" = .r-1,
+                        "D" = .r+1,
+                        .r
+  )
+  target_col <- switch (move,
+                        "L" = .c-1,
+                        "R" = .c+1,
+                        .c
+  )
+
+  # If the move is illegal return board as is
+  if(target_row == 0) return(board)
+  if(target_row > dim(board)[1]) return(board)
+  if(target_col==0) return(board)
+  if(target_col > dim(board)[2]) return(board)
+  
+  board[.r,.c] <- board[target_row,target_col]
+  board[target_row,target_col] <- my_tile
+  board
+}
+```
