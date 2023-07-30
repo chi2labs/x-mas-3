@@ -214,11 +214,15 @@ $$
 $$ {#eq-example-windows-binary}
 
 
-#### The Reduces Action Spaces
+#### The Reduced Action Spaces
 
 If we employ the windowed approach suggested above, our action space, $A$ shrinks significantly. We will in fact have two different $S$ and $A$ depending on whether we are considering parallel or perpendicular moves. 
 
-For a parallel window, we can generalize to the horizontal variant (since the horizontal one is a simple transposition thereof) and we then get only a few relevant combinations. Since any four element set which already has three in a row is will not occur, we are left with: {0000,0001,0010,0011,0100,0101,0110,1000,1001,1011, 1101} for a total of 11 cases out of which only two have a winning move ({1011, 1101}). This reduces $A_{\parallel}$ for $S_{\parallel}$ to three moves: pass, flip first (FF) or flip last (FL).
+For a parallel window, we can generalize to the horizontal variant (since the horizontal one is a simple transposition thereof) and we then get only a few relevant combinations. Since any four element set which already has three in a row is will not occur, we are left with: {0000,0001,0010,0011,0100,0101,0110,1000,1001,1011, 1101} for a total of 11 cases out of which only two have a winning move ({1011, 1101}). This reduces $A_{\parallel}$ for $S_{\parallel}$ to three moves: pass (P), flip first (FF) or flip last (FL). formalized in @eq-action-space-parallel.
+
+$$
+A_{\parallel} = \{P,FF,FL\}
+$$ {#eq-action-space-parallel}
 
 For the perpendicular case we 62 combinations, these are illustrated in @eq-perpendicular-combinations.
 
