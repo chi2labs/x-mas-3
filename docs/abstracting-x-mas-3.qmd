@@ -5,6 +5,13 @@ format: html
 editor: visual
 ---
 
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(message=FALSE)
+library(xmas3)
+```
+
 In order to analyze *x-mas-3* and training an AI to play the game, we decided to make an *abstract* version in the game in R/C++. The abstracted version is more suitable for computer-game interaction as it will communicate only the relevant information between the agent and the game. This will be substantially faster than interacting with the UI and allow for more streamlined training process.
 
 ## Abstraction of the Board and Tiles
@@ -12,15 +19,27 @@ In order to analyze *x-mas-3* and training an AI to play the game, we decided to
 The board is a 6 by 10 grid each containing a tile out of ten different tile-types. For our purposes we represent the board as a 6x10 matrix with the letters A through J representing the ten different tiles. An example board would me represented thus:
 
 ```{r}
+#| echo: false
+#| results: asis
+#| fig-cap: "Example Board"
 set.seed(4361)
 tiles <- LETTERS[1:10]
 board <- matrix(data = sample(tiles,60,replace = TRUE),6,10)
-board
+
+board |> array_to_LaTeX() |> 
+  #paste("{#eq-test}", collapse="") |> 
+  cat()
 ```
 
 ### Checking for Combinations
 
-Using this structure we can check for the presence of combinations using regular expressions. Using *"(\[A-J\])\\\\1\\\\1+"* as a regular expression will identify three or more consecutive occurrences of similar tiles. Implemented in R below:
+Using this structure we can check for the presence of combinations using regular expressions. Using
+
+$$
+\text{([A-J])\\1\\1+}
+$$
+
+as a regular expression will identify three or more consecutive occurrences of similar tiles. Implemented in R below:
 
 ```{r}
 get_n_combinations <- function(m){
@@ -86,3 +105,103 @@ move <- function(board,.r=1,.c=1,move=c("U","D","L","R")){
   board
 }
 ```
+
+## Applying Reinforcement Learning
+
+Reinforcement Learning (RL) is an algorithm that allows an agent (i.e. AI) to interact with an environment over a sequence of observations. The agent seeks to be rewarded and for the reward to be maximized over time. The model consists of a set of environment states $S$ a set of actions $A$ and a set of rewards $R$ (positive or negative).
+
+The algorithm is guaranteed to converge to an optimal policy for each possible state in $S$. RL (and in this case we will use Q-learning) needs to be trained on a set of state-transition tuples formally defined thus:
+
+$$
+(s_i, a_i, r_{i+1}, s_{i+1})
+$$ {#eq-tuples}
+
+where:
+
+-   $s_i$ is the current environment state,
+-   $a_i$ is selected action in the current state,
+-   $r_{i+1}$ represents the reward, and,
+-   $s_{i+1}$ is the resulting state.
+
+### Specifying our Spaces
+
+For $S$ we have ten possibilities for each of the 60 ($6\times10$) cells on our board. For $A$ the agent can make one out of four moves in each of the 60 cells (ignoring for the moment the marginal cases of moving off the board, which is not possible). As for the reward space $R$, we can set this to a binary $[1,-1]$.
+
+### Reducing our Spaces
+
+For our $S$ as defined above the number of possible states is $10^{60}$, which is a 1 followed by 60 zeros. The action space $A$ is slightly smaller since there are only four possibilities for each cell, so we have "only" $4^60$ which is roughly equal to $1.329\times10^36$.
+
+Given the magnitude of these numbers it is clear that we cannot reasonably expect the algorithm to converge for several millennia with the computing power currently available. We therefore need to employ some strategies for reducing the spaces.
+
+#### One Type at a Time
+
+We can consider a one-type-at-a-time strategy. The heuristic implemented would then be to first look for moves involving *candy*, then move on to *trees* and so on. For example: staring with an initial board like this:
+
+```{r}
+#| label: example-board
+#| results: asis
+#| echo: false
+
+library(xmas3)
+set.seed(6995)
+example_board <- initialize_board() 
+array_to_LaTeX(board) |> 
+  cat()
+```
+
+And chose to consider the "A" cells we get:
+
+```{r}
+#| label: example-binary-board
+#| results: asis
+#| echo: false
+B <- apply(example_board,2,\(x){ifelse(x=="A",1,0)})
+array_to_LaTeX(board) |> 
+  cat()
+```
+
+This reduces the problem to a binary one and we effectively reduce $S$ to $2^{60}$, which is *merely* 1.15 quintillions. While this represents a huge reduction, it is still far from being feasible. In addition this does not reduce our action space $A$, as you still have four possible moves for each of the 60 cells.
+
+#### Windowing
+
+We can further reduce our problem space by applying a technique knows as *windowing*. This implies dividing the grid into sub-grids and looking for playable moves within that reduced space. If we first consider the quest for a three-tile combinations, the windows in question would be a $3\times2$ and a $2\times3$ sub-matrix for perpendicular ($\perp$)moves. For parallel ($\parallel$) moves, i.e. moves with the same row or column we would have to consider and $4\times1$ respectively. Examples are shown below.
+
+```{r}
+#| include: false
+d <- c(1,0,1,1,0,1)
+M1 <- matrix(d,2,3)
+M2 <- t(M1)
+M3 <- matrix(c(1,1,0,1))
+M4 <- t(M3)
+```
+
+```{=tex}
+\begin{bmatrix} 1 & 1 & 0 \\ 0 & 1 & 1 \end{bmatrix}
+%
+\text{ or}
+%
+\begin{bmatrix} 1 & 0 \\ 1 & 1 \\ 0 & 1 \end{bmatrix}
+%
+\text{ for }\perp\text{moves,}
+```
+and
+
+```{=tex}
+\begin{bmatrix} 1 & 1 & 0 & 1 \end{bmatrix}
+%
+\text{ or}
+%
+\begin{bmatrix} 1 \\ 1 \\ 0 \\ 1 \end{bmatrix}
+%
+\text{ for }\parallel \text{ moves.}
+```
+
+Is it easy to see that the $3\times2$ matrix above is a transposition of the $2\times3$ one, and therefore it does not matter whether a move if horizontal or vertical the problem is similar in nature for all *perpendicular* moves. The same is true for the $4\times1$ and $1\times4$ matrices, i.e. where there is a winning *parallel* move. @eq-example-windows illustrates two windows on our original board and @eq-example-windows-binary show the same in our binary space (combining the two reduction strategies).
+
+$$
+\begin{bmatrix} G & \color{red}{\textbf{C}} & \color{red}{\textbf{J}} & \color{red}{\textbf{D}} & \color{red}{\textbf{G}} & G & C & G & B & A \\ I & D & E & A & C & B & H & C & E & F \\ J & C & J & F & C & J & \color{red}{\textbf{A}} & \color{red}{\textbf{H}} & B & F \\ H & C & D & F & C & F & \color{red}{\textbf{D}} & \color{red}{\textbf{B}} & G & B \\ D & I & H & I & I & B & \color{red}{\textbf{F}} & \color{red}{\textbf{C}} & C & E \\ B & F & A & J & E & H & I & C & H & G \end{bmatrix}
+$$ {#eq-example-windows}
+
+$$
+\begin{bmatrix} 0 & \color{red}{\textbf{1}} & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & 0 & 1 & 0 & 0 & 0 \\ I & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 0 & 0 \\ 0 & 1 & 0 & 0 & 1 & 0 & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & 0 & 0 \\ 0 & 1 & 0 & 0 & 1 & 0 & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & 0 & 0 \\ 0 & I & 0 & I & I & 0 & \color{red}{\textbf{0}} & \color{red}{\textbf{1}} & 1 & 0 \\ 0 & 0 & 0 & 0 & 0 & 0 & I & 1 & 0 & 0 \end{bmatrix}
+$$ {#eq-example-windows-binary}
