@@ -236,15 +236,15 @@ The action space is limited to flipping one out of three positions, First, Middl
 
 $$
 A_{\perp}=\{FU,MU,LU,FD,MD,LD\}
-$$
+$$ {#eq-action-space-perpendicular}
 
 ### Caveats
 
 The windowed approach proposed above, along with the one-type-at-a-time technique reduce our $A$ and $S$ to magnitudes that are manageable and allow us to generate a training set. They do limit the potential for the agent in some non-trivial ways, namely:
 
-1. The Agent will only look for combination of three tiles and
+1. The Agent will only look for combinations of three tiles, and
 2. The agent will only look one move ahead.
 
-In view of (2) the more precise description of our endevour is perhaps to say that we are teaching it _tacktics_ rather than _strategy_.
+In view of (2) the more precise description of our endevour is perhaps to say that we are teaching it _tactics_ rather than _strategy_.
 
 
