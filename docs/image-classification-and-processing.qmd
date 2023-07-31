@@ -1,16 +1,17 @@
 ---
-title: "Image Classification and Processing"
+title: "Image Processing"
 author: "Aleksander Dietrichson"
 format: html
 editor: visual
 ---
 
-In order for the AI to interact with a real life GUI of x-mas-3, the system needs to be able to infer the board state from a computer screen. Whether a live stream, or periodic screenshots (in principle the same) the AI needs to be able to distiguish the different tiles in play from one another and somehow read their position on the board.
+In order for the AI to interact with a real life GUI of x-mas-3, the system needs to be able to infer the board state from a computer screen. Whether a live stream, or periodic screenshots (in principle the same) the AI needs to be able to distinguish the different tiles in play from one another and somehow read their position on the board.
 
 ```{r}
 #| include: false
 
 library(xmas3)
+library(magick)
 
 ```
 
@@ -25,11 +26,11 @@ Since the actual playing board is somewhat smaller than the screenshot we procee
 ```{r}
 #| label: fig-cropped-board
 #| fig-cap: "The cropped board"
-library(magick)
+#| echo: false
 my_image <- image_read(system.file("image-data/board-1920x1080.png",package = "xmas3"))
  filename <- here::here("inst","image-data","board-1450x890.png")
 cropped_board <- image_crop(my_image,"1450x890+250+100")
-print(cropped_board)
+cropped_board
 ```
 
 We then proceeded to calculate the centroids for each cell. To check our work we plotted these on the board for visual inspection.
@@ -40,21 +41,18 @@ We then proceeded to calculate the centroids for each cell. To check our work we
 #| echo: false
 my_coords <- calculate_grid_centroids()
 my_coords$location <- paste0("+",my_coords$x,"+",my_coords$y)
-img <- cropped_board
-for(loc in my_coords$location){
-  img <- image_annotate(img, location=loc, color="white", size=200,text="*")
-}
-
+img <- image_draw(cropped_board)
+points(x = my_coords$x, y = my_coords$y,cex=5,lwd=5, col="white",pch = 16)
 img
 
 ```
 
-As can be seen in @fig-centroids-on-board our first attempt was a little off. This may be due to the *character chosen* to annotate the image. We can adjust for it's height and width. We assume that the text is left-aligned and the the y coordinate is the *top*, not the baseline of the character. We were able to use the coordinates to define a grid on the board as shown in @fig-grid-on-cropped-board.
+As can be seen in @fig-centroids-on-board our first attempt was a little off, so some adjustments needed to be made. We were able to use the coordinates to define a grid on the board as shown in @fig-grid-on-cropped-board.
 
 ```{r}
 #| label: fig-grid-on-cropped-board
 #| fig-cap: "Board Grid"
-#| 
+#| echo: false
 # The tiles seem to be 144x148 (roughly)
 
 img <-image_draw(cropped_board)
@@ -67,4 +65,30 @@ rect(
 img
 ```
 
-This grid allows us to extract images of the individual tiles.
+This grid allows us to extract images of the individual tiles, which is what we need for training the computer vision algorithm. Some example of the extracted images are shown in @fig-invidual-tiles.
+
+::: {#fig-invidual-tiles layout-ncol="5"}
+
+![Candy](image-data/tiles/image-11.png)
+
+![Wreath](image-data/tiles/image-12.png)
+
+![Hat](image-data/tiles/image-13.png)
+
+![Berries](image-data/tiles/image-15.png)
+
+![Tree](image-data/tiles/image-17.png)
+
+![Striped Ball](image-data/tiles/image-24.png)
+
+![Spotted Ball](image-data/tiles/image-25.png)
+
+![Stocking](image-data/tiles/image-26.png)
+
+![Star](image-data/tiles/image-31.png)
+
+![Red Ball](image-data/tiles/image-9.png)
+
+
+Individual Tiles from the x-mas-3 Canvas.
+:::
