@@ -1,0 +1,70 @@
+---
+title: "Image Classification and Processing"
+author: "Aleksander Dietrichson"
+format: html
+editor: visual
+---
+
+In order for the AI to interact with a real life GUI of x-mas-3, the system needs to be able to infer the board state from a computer screen. Whether a live stream, or periodic screenshots (in principle the same) the AI needs to be able to distiguish the different tiles in play from one another and somehow read their position on the board.
+
+```{r}
+#| include: false
+
+library(xmas3)
+
+```
+
+## Generating the Image Training Data
+
+We started with a full 1920x1080 screenshot, shown in @fig-screenshot-1920x1080.
+
+![Screenshot of the x-mas-3 GUI](image-data/board-1920x1080.png){#fig-screenshot-1920x1080 width="100%"}
+
+Since the actual playing board is somewhat smaller than the screenshot we proceeded to crop it. For this purpose we used the {magick} package: an interface to the `ImageMagick` library.
+
+```{r}
+#| label: fig-cropped-board
+#| fig-cap: "The cropped board"
+library(magick)
+my_image <- image_read(system.file("image-data/board-1920x1080.png",package = "xmas3"))
+ filename <- here::here("inst","image-data","board-1450x890.png")
+cropped_board <- image_crop(my_image,"1450x890+250+100")
+print(cropped_board)
+```
+
+We then proceeded to calculate the centroids for each cell. To check our work we plotted these on the board for visual inspection.
+
+```{r}
+#| label: fig-centroids-on-board
+#| fig-cap: "Centroids Identified on the Board"
+#| echo: false
+my_coords <- calculate_grid_centroids()
+my_coords$location <- paste0("+",my_coords$x,"+",my_coords$y)
+img <- cropped_board
+for(loc in my_coords$location){
+  img <- image_annotate(img, location=loc, color="white", size=200,text="*")
+}
+
+img
+
+```
+
+As can be seen in @fig-centroids-on-board our first attempt was a little off. This may be due to the *character chosen* to annotate the image. We can adjust for it's height and width. We assume that the text is left-aligned and the the y coordinate is the *top*, not the baseline of the character. We were able to use the coordinates to define a grid on the board as shown in @fig-grid-on-cropped-board.
+
+```{r}
+#| label: fig-grid-on-cropped-board
+#| fig-cap: "Board Grid"
+#| 
+# The tiles seem to be 144x148 (roughly)
+
+img <-image_draw(cropped_board)
+rect(
+  xleft =   my_coords$x-72,
+  xright =  my_coords$x+72,
+  ytop =    my_coords$y-72,
+  ybottom = my_coords$y+72,
+  border = "white", lty = "solid", lwd = 5)
+img
+```
+
+This grid allows us to extract images of the individual tiles.

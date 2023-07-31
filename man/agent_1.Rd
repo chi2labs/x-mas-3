@@ -4,10 +4,10 @@
 \alias{agent_1}
 \title{Agent 1}
 \usage{
-agent_1(Board)
+agent_1(B)
 }
 \arguments{
-\item{B}{}
+\item{B}{Board}
 }
 \value{
 a list with the resulting board and metadata
