@@ -1,0 +1,118 @@
+---
+title: "Agent Training"
+author: "Aleksander Dietrichson, PhD"
+format: html
+editor: visual
+---
+
+After the prior analysis we are now in a position to train our agent. As pointed out before, we will employ a per-type strategy combined with windowing to reduce our problem space to a manageable magnitude.
+
+```{r}
+#| include: false
+library(xmas3)
+library(ReinforcementLearning)
+library(dplyr)
+
+```
+
+## The parallel State Space
+
+To be able to evaluate the presence of playable combinations in our matrix we need a function to *window* the matrix by individual $4\times1$ states. Each of these windows correspond to an $s_i$ element, and we will train the agent to make the correct plays by synthetically generating a training data-set. We can do this, because both $S_{\parallel}$ and $A_{\parallel}$
+
+are small enough that we can generate all combinations. To implement this we will require a *windowing* function, which we implemented in the R programming language as seen below.
+
+```{r}
+#| eval: false
+get_windows <- \(M, direction = c("H","V"), shape = c("1x4","2x3"),size=3){
+  if(missing(M))stop("Specify matrix")
+  direction <- match.arg(direction)
+  shape <- match.arg(shape)
+  if(shape == "2x3") return(get_2_by_3_windows(M,direction))
+  ret <- c()
+  if(direction == "H"){
+    ret <- purrr::map(1:(10-3),\(.c){
+      purrr::map(1:6,\(.r){
+        data.frame(w=
+        M[.r,.c:(.c+3)] |> paste0(collapse = ""),
+        col=.c,
+        row=.r
+        )
+      }) |> bind_rows()
+    }) |> bind_rows()
+  }
+  
+  if(direction == "V"){
+    ret <- purrr::map(1:(6-3),\(.r){
+      purrr::map(1:10,\(.c){
+        data.frame(w=
+                     M[.r:(.r+3),.c] |> paste0(collapse = ""),
+                   col=.c,
+                   row=.r
+        )
+      }) |> bind_rows()
+    }) |> bind_rows()
+  }
+  
+  
+  ret
+}
+
+```
+
+This function will take a $6\times10$ matrix (**M**) and scan it either horizontally (direction = "H") or vertically (direction = "V"), and return `data.frame` with w (window) along with column and row specification.
+
+The binary window can have a total of 13 combinations: $2^4$ less the combinations: $\{[1, 1, 1, 0], [0, 1, 1, 1][1,1,1,1]\}$ which are already winning and will have been removed from the board. We can therefore easily contruct a data-set with all combinations, along with the options from our action space $A_{\parallel}=\{P,FF,FL\}$. The generation of training data was done in R. Note that I have left the *NextState* column as "0000" as this is not relevant since we don't aspire to look more than one move ahead.
+
+```{r}
+#| eval: false
+# Function to generate training data for the parallel State Space
+generate_parallel_training_data <- \(){
+  my_states <- c("0000","0001","0010","0011","0100","0101","0110",
+                 #"0111", #removes
+                 "1000","1001","1010","1011","1100","1101"
+                 #,"1110",#"1111" #removed
+                 )
+  actions <- c("Pass","Flip First","Flip Last")
+  data.frame(
+    State = rep(my_states,3),
+    Action = rep(actions,13),
+    Reward = -1,
+    NextState = "0000"
+  ) |> 
+    mutate(Reward = ifelse(Action == "Pass",1,Reward)) |> 
+    mutate(Reward=ifelse(State=="1101" & Action == "Flip Last",1,Reward)) |> 
+    mutate(Reward=ifelse(State=="1101" & Action == "Pass",-1,Reward)) |> 
+    mutate(Reward=ifelse(State=="1011" & Action == "Flip First",1,Reward)) |> 
+    mutate(Reward=ifelse(State=="1011" & Action == "Pass",-1,Reward))
+    
+  
+}
+```
+
+We can now set up the Reinforcement Learning training.
+
+```{r}
+data <- xmas3::generate_parallel_training_data()
+control <- list(alpha = 0.1, gamma = 0.1, epsilon = 0.1)
+system.time(
+  model <- ReinforcementLearning(
+    data, s = "State", a = "Action", r = "Reward", s_new = "NextState", 
+    control = control)
+)
+```
+
+As expected the model converged in a matter of milliseconds. Let us take a look at the policy it came up with.
+
+```{r}
+#| echo: false
+#| tbl-cap: "Policy table of the 'Parallel Model'"
+data.frame(State=names(model$Policy), Action=unname(model$Policy)) |> 
+  select(State,Action) |> 
+  knitr::kable()
+```
+
+Which looks like a perfect set.
+
+## Putting It to the Test
+
+We now have a somewhat intelligent agent.

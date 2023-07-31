@@ -9,7 +9,7 @@
 #' @importFrom dplyr bind_rows
 #' @return a data frame with w (window), col(start colum), row(start row)
 #' @export
-get_windows <- function(M, direction = c("H","V"), shape = c("1x4","2x3"),size=3){
+get_windows <- \(M, direction = c("H","V"), shape = c("1x4","2x3"),size=3){
   if(missing(M))stop("Specify matrix")
   direction <- match.arg(direction)
   shape <- match.arg(shape)
