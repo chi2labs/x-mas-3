@@ -195,7 +195,6 @@ and
 %
 \text{ for }\parallel \text{ moves.}
 ```
-
 Is it easy to see that the $3\times2$ matrix above is a transposition of the $2\times3$ one, and therefore it does not matter whether a move if horizontal or vertical the problem is similar in nature for all *perpendicular* moves. The same is true for the $4\times1$ and $1\times4$ matrices, i.e. where there is a winning *parallel* move. Matrix [-@eq-example-windows] illustrates two windows on our original board and Matrix [-@eq-example-windows-binary] shows the same in our binary space (combining the two reduction strategies).
 
 $$
@@ -213,15 +212,14 @@ $$
 \end{bmatrix}
 $$ {#eq-example-windows-binary}
 
-
 #### The Reduced Action Spaces
 
-If we employ the windowed approach suggested above, our action space, $A$ shrinks significantly. We will in fact have two different $S$ and $A$ depending on whether we are considering parallel or perpendicular moves. 
+If we employ the windowed approach suggested above, our action space, $A$ shrinks significantly. We will in fact have two different $S$ and $A$ depending on whether we are considering parallel or perpendicular moves.
 
-For a parallel window, we can generalize to the horizontal variant (since the horizontal one is a simple transposition thereof) and we then get only a few relevant combinations. Since any four element set which already has three in a row is will not occur, we are left with: {0000,0001,0010,0011,0100,0101,0110,1000,1001,1011, 1101} for a total of 11 cases out of which only two have a winning move ({1011, 1101}). This reduces $A_{\parallel}$ for $S_{\parallel}$ to three moves: pass (P), flip first (FF) or flip last (FL). formalized in @eq-action-space-parallel.
+For a parallel window, we can generalize to the horizontal variant (since the horizontal one is a simple transposition thereof) and we then get only a few relevant combinations. Since any four element set which already has three in a row is will not occur, we are left with: {0000,0001,0010,0011,0100,0101,0110,1000,1001,1011, 1101} for a total of 11 cases out of which only two have a winning move ({1011, 1101}). This reduces $A_{\parallel}$ for $S_{\parallel}$ to three moves: pass (P), flip first (F) or flip last (L). formalized in @eq-action-space-parallel.
 
 $$
-A_{\parallel} = \{P,FF,FL\}
+A_{\parallel} = \{P,F,L\}
 $$ {#eq-action-space-parallel}
 
 For the perpendicular case we 62 combinations, these are illustrated in @eq-perpendicular-combinations.
@@ -236,19 +234,17 @@ S_{\perp} = \Biggl\{ \left[{000\atop{000}}\right],
 \Biggr\}
 $$ {#eq-perpendicular-combinations}
 
-The action space is limited to flipping one out of three positions, First, Middle, Last, either Up of Down. Illustrated in @eq-action-space-perpendicular.
+The action space is limited to flipping one out of three positions, First, Middle, Last, or Passing. Illustrated in @eq-action-space-perpendicular.
 
 $$
-A_{\perp}=\{FU,MU,LU,FD,MD,LD\}
+A_{\perp}=\{F,M,L,P\}
 $$ {#eq-action-space-perpendicular}
 
 ### Caveats
 
 The windowed approach proposed above, along with the one-type-at-a-time technique reduce our $A$ and $S$ to magnitudes that are manageable and allow us to generate a training set. They do limit the potential for the agent in some non-trivial ways, namely:
 
-1. The Agent will only look for combinations of three tiles, and
-2. The agent will only look one move ahead.
+1.  The Agent will only look for combinations of three tiles, and
+2.  The agent will only look one move ahead.
 
-In view of (2) the more precise description of our endevour is perhaps to say that we are teaching it _tactics_ rather than _strategy_.
-
-
+In view of (2) the more precise description of our endeavour is perhaps to say that we are teaching it *tactics* rather than *strategy*.

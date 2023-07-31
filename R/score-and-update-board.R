@@ -56,6 +56,6 @@ score_and_update_board <- function(board, with_score = TRUE){
 #   
 # }
 
-if(interactive()){
-  score_and_update_board(test_board)
-}
+# if(interactive()){
+#   score_and_update_board(test_board)
+# }
