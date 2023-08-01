@@ -68,7 +68,6 @@ img
 This grid allows us to extract images of the individual tiles, which is what we need for training the computer vision algorithm. Some example of the extracted images are shown in @fig-invidual-tiles.
 
 ::: {#fig-invidual-tiles layout-ncol="5"}
-
 ![Candy](image-data/tiles/image-11.png)
 
 ![Wreath](image-data/tiles/image-12.png)
@@ -88,7 +87,6 @@ This grid allows us to extract images of the individual tiles, which is what we 
 ![Star](image-data/tiles/image-31.png)
 
 ![Red Ball](image-data/tiles/image-9.png)
-
 
 Individual Tiles from the x-mas-3 Canvas.
 :::

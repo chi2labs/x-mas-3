@@ -1,0 +1,62 @@
+---
+title: "Computer Vision Heuristic Approach: Second try"
+format: html
+editor: visual
+---
+
+In order for the system to play a game through the UI provided it needs to be able to identify and distinguish between tile-types. Since the problem space here is relatively limited, I decided to train a set of binary classifiers in hopes that the differences between the tile-types, and the similarity between the tiles of same type would be of sufficient magnitude so as to be detectable by linear models. While the same-group tiles are in principle identical, some differences --blur if you will-- will in practice be introduces by imperfections in the data-extraction process. This, in practice, will be done by takings screenshots and creating a grid as we have seen before, and indivual pixels are likely to have shifted within a reasonable margin of error.
+
+## Strategy
+
+To overcome this problem I decided on the following strategy:
+
+1.  Reduce color space to RGB
+2.  Calculate overall color density for each tile
+3.  Calculate same for each quadrant of the same
+4.  Train logistic regression classifiers for each class of objects.
+
+We would then have a set of ten classifiers, and could easily (and quickly) run each tile through the classifier function, which would return a probability for each class, and a *hard prediction*, i.e. the prediction with the highest probability.
+
+```{r}
+#| include: false
+library(xmas3)
+library(magick)
+library(xmas3)
+library(dplyr)
+
+```
+
+## Implementation
+
+We will train one binary classifier for each of the ten classes we have in the data, i.e. one to detect each tile-type. For this purpose I manually classified approximately 250 tiles, extracted through screen-shots and then cropped to tile-sized pngs. Each of these were processed through functions
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+my_data <- 
+  readr::read_csv(here::here("inst","training-data","image-classification.csv"))
+my_color_analysis <- color_analysis(my_data$image)
+my_data <- my_data |> cbind(my_color_analysis)
+
+my_classes <- unique(my_data$class)
+models <- list()
+for(tile_type  in my_classes){
+  my_data$outcome <- ifelse(my_data$class == tile_type,1,0)
+  my_model <- 
+    glm(outcome~.,
+        family = "binomial",
+        data = my_data |> select(-class,-image,-time)
+        )
+  models[[tile_type]] <- my_model
+}
+readr::write_rds(models,here::here("inst","models","tile-classification-models.rds"))
+```
+
+## Model Testing
+
+### Prediction on the Training Data
+
+```{r}
+
+```

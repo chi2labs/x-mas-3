@@ -11,16 +11,17 @@
 #'
 #' @return invisible()
 #' @export
-get_and_save_individual_tiles <- \(img,
+get_tiles_and_save <- \(img,
                                    coordinates =null,
                                    output_path=here::here("inst","image-data","tiles"),
-                                   filename="image.png",size_x=144,size_y=144){
+                                   filename="image.png",size_x=144,size_y=150){
 
-  date_time <- format(Sys.time(),"%Y-%B-%d-%H%M")  
+  date_time <- format(Sys.time(),"%Y-%m-%d %H_%M_%S")
+  my_geometry <- paste0(size_x, "x", size_y,"+")
   for(i in 1:nrow(coordinates)){
     crop_x <- coordinates$x[i] - (size_x/2)
     crop_y <- coordinates$y[i] - (size_y/2)
-    cropped_img <- image_crop(img, geometry =paste("140x150+", crop_x,"+", crop_y))
+    cropped_img <- image_crop(img, geometry =paste(my_geometry, crop_x,"+", crop_y))
     my_filename <- stringr::str_replace(filename,"\\.",paste0("-",date_time,"-",i,"\\."))
     image_write(cropped_img, paste0(path = output_path,"/",
                                     my_filename
