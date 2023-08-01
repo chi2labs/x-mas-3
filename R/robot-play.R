@@ -95,4 +95,8 @@ robot_make_move<- function(.r=1,.c=1,move=c("U","D","L","R"),offset_x = 433, off
                             y = offset_y + dest$y , game_canvas[[1]])
   remDr$click()
   
+  #Make Screenshot 
+  # path_to_screenshot <-  tempfile(fileext = ".png")
+  # remDr$screenshot(file = path_to_screenshot)
+  # path_to_screenshot
 }
