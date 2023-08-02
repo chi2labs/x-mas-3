@@ -5,7 +5,7 @@
 #' @return a list with the resulting board and metadata
 #' @export
 
-agent_0 <-function\(B){
+agent_0 <-function(B){
    possible_moves <- c("U","D","L","R")
    cm <-c()
   .c <- sample(1:10,1)
