@@ -33,14 +33,11 @@ robot_initialize <- function(){
   )
   message("Connecting to Chome Driver")
   remDr$open()
-  remDr$maxWindowSize()
+  #remDr$maxWindowSize()
+  remDr$setWindowSize(1600,868)
   message("Loading Game...")
   remDr$navigate("https://gato-files-prod.s3.amazonaws.com/assets/games/X-MAS%203/index.html")
-  # Wait for game to load
-  # for(i in 1:45){
-  #   Sys.sleep(1)
-  #   cat(".")
-  # }
+  
   readline("Waiting for game do load. Press enter when it does.")
   message("Clicking through to Arcade Mode")
   game_canvas <- remDr$findElements(using = "id","unity-canvas")
