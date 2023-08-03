@@ -23,7 +23,7 @@ robot_play_game <- function(agent=agent0, max_moves = 100){
 robot_initialize <- function(){
   message("Initializing x-mas-3 Robot")
   message("Starting Selenium")
-  selenium(retcommand = TRUE)
+  #selenium(retcommand = TRUE)
   #selenium()
   cDrv <- chrome()
   remDr <<- remoteDriver(
@@ -33,14 +33,11 @@ robot_initialize <- function(){
   )
   message("Connecting to Chome Driver")
   remDr$open()
-  remDr$maxWindowSize()
+  remDr$setWindowSize(width = 1200,height = 831)
+  #remDr$setWindowSize(1600,868)
   message("Loading Game...")
   remDr$navigate("https://gato-files-prod.s3.amazonaws.com/assets/games/X-MAS%203/index.html")
-  # Wait for game to load
-  # for(i in 1:45){
-  #   Sys.sleep(1)
-  #   cat(".")
-  # }
+  
   readline("Waiting for game do load. Press enter when it does.")
   message("Clicking through to Arcade Mode")
   game_canvas <- remDr$findElements(using = "id","unity-canvas")
@@ -61,20 +58,20 @@ robot_initialize <- function(){
 #'
 #' @return invisible()
 #' @export
-robot_make_move<- function(.r=1,.c=1,move=c("U","D","L","R"),offset_x = 433, offset_y = 140){
+robot_make_move<- function(.r=1,.c=1,move=c("U","D","L","R")){
   if(!exists("game_canvas")){
     game_canvas <<- remDr$findElements(using = "id","unity-canvas")  
   }
    move <- match.arg(move)
-   
-   if(!exists("coords")){
-  coords <<- calculate_grid_centroids(surface_width = 760 ,surface_height = 480) #This is on linux
+   if(!exists("robot_conf")){
+     robot_conf <<- robot_config_mac()
    }
+   coords <- robot_conf$coords
   
   new_r <- .r 
   new_c <- .c
   message("Moving: ",.r,"x",.c, " ", move)
-  
+  # Calculate new position
   if(move == "L"){ new_c <- .c-1}
   if(move == "R"){ new_c <- .c+1}
   if(move == "U"){ new_r <- .r-1}
@@ -87,16 +84,34 @@ robot_make_move<- function(.r=1,.c=1,move=c("U","D","L","R"),offset_x = 433, off
     message("Move off the board detected")
     return(invisible())
   }
-  remDr$mouseMoveToLocation(x = offset_x+orig$x ,
-                            y = offset_y+orig$y , game_canvas[[1]])
+  remDr$mouseMoveToLocation(x = robot_conf$offset_x+orig$x ,
+                            y = robot_conf$offset_y+orig$y , game_canvas[[1]])
   remDr$click()
   
-  remDr$mouseMoveToLocation(x = offset_x + dest$x ,
-                            y = offset_y + dest$y , game_canvas[[1]])
+  remDr$mouseMoveToLocation(x = robot_conf$offset_x + dest$x ,
+                            y = robot_conf$offset_y + dest$y , game_canvas[[1]])
   remDr$click()
   
   #Make Screenshot 
   # path_to_screenshot <-  tempfile(fileext = ".png")
   # remDr$screenshot(file = path_to_screenshot)
   # path_to_screenshot
+}
+
+robot_config_chroomebook<- function(){
+  coords <- calculate_grid_centroids(surface_width = 760 ,surface_height = 480)
+  offset_x <- 433
+  offset_y <- 140
+}
+
+robot_config_mac <- function(){
+  list(
+    coords = calculate_grid_centroids(surface_width = 714 ,surface_height = 430),
+    offset_x = 250,
+    offset_y = 100,
+    window = list(
+      height=831,
+      width = 1200
+    )
+  )
 }
