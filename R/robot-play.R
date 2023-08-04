@@ -35,6 +35,8 @@ robot_initialize <- function(){
   remDr$open()
   remDr$setWindowSize(width = 1200,height = 831)
   #remDr$setWindowSize(1600,868)
+
+  #remDr$maxWindowSize()
   message("Loading Game...")
   remDr$navigate("https://gato-files-prod.s3.amazonaws.com/assets/games/X-MAS%203/index.html")
   
