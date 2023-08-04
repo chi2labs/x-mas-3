@@ -14,7 +14,7 @@ agent_0 <-function(B){
   if(.c == 1  ) {.cm <- c( .cm, "L" )  }
   if(.c == 10 ) {.cm <- c( .cm, "R" )  }
   if(.r == 1 )  (.cm <- c( .cm, "U" ) )
-  if(.r == 10)  (.cm <- c( .cm, "D" ) )
+  if(.r == 6)  (.cm <- c( .cm, "D" ) )
   
   #Update Possible moves
    possible_moves <- possible_moves[!possible_moves%in%.cm]
