@@ -1,0 +1,115 @@
+---
+title: "Image Classification Model Training"
+author: "Aleksander Dietrichson, PhD"
+format: html
+editor: visual
+---
+
+We attempted to train a image classification model to recognize the tiles in our video-game. This document describes the steps we went through.
+
+```{r}
+#| include: false
+library(tidyverse)
+library(keras)
+library(tensorflow)
+library(reticulate)
+
+# virtualenv_create("r-reticulate", python = "/usr/bin/python")
+# install_tensorflow(envname = "r-reticulate")
+# install_keras(envname = "r-reticulate")
+reticulate::use_virtualenv("r-reticulate")
+
+# If this is your first time running keras and tensorflow, you will need to enter
+# 
+# install_tensorflow(envname = "r-reticulate",extra_packages="pillow")
+#install_keras()
+
+```
+
+I classified about 250 tile images by hand. These are in the same folder, so I will move them to sub-folders with the class name.
+
+```{r}
+#| eval: false
+library(readr)
+image_classification <- read_csv(here::here("inst","training-data","image-classification.csv"))
+for(folder in unique(image_classification$class)){
+    foldername <- here::here("inst","training-data",folder)
+   if(!file.exists(foldername)){
+     dir.create(foldername)
+   }
+}
+
+purrr::walk2(image_classification$image,image_classification$class,~{
+  dest <- here::here("inst","training-data",.y)
+  cat("\n",.x,"to" ,dest)
+  file.copy(.x,dest)
+})
+
+
+```
+
+```{r}
+image_classification <- readr::read_csv(here::here("inst","training-data","image-classification.csv"))
+label_list <- image_classification$class |> unique()
+output_n <- length(label_list)
+save(label_list, file="label_list.R")
+
+## Set targets to scale images
+width <- 72
+height<- 72
+target_size <- c(width, height)
+rgb <- 3 #color channels
+
+path_train <- here::here("inst","training-data")
+train_data_gen <- image_data_generator(rescale = 1/255, 
+  validation_split = 0)
+```
+
+### Do training
+
+```{r}
+train_images <- flow_images_from_directory(path_train,
+  train_data_gen,
+  subset = 'training',
+  target_size = target_size,
+  class_mode = "categorical",
+  shuffle=F,
+  classes = label_list,
+  seed = 2021)
+```
+
+```{r}
+# mod_base <- application_xception(weights = 'imagenet', 
+#    include_top = FALSE, input_shape = c(width, height, 3))
+# freeze_weights(mod_base) 
+```
+
+```{r}
+
+model <- keras_model_sequential()
+model %>%
+  layer_flatten(input_shape = c(28, 28)) %>%
+  layer_dense(units = 128, activation = 'relu') %>%
+  layer_dense(units = 10, activation = 'softmax')
+# 
+# model %>%
+#     layer_conv_2d(filters = 32, kernel_size = c(3,3), 
+#                    activation = 'relu', input_shape = c(28, 28, 1)) %>%
+#     layer_max_pooling_2d(pool_size = c(2,2)) %>%
+#     layer_flatten() %>%
+#     layer_dense(units = 128, activation = 'relu') %>%
+#     layer_dropout(rate = 0.5) %>%
+#     layer_dense(units = 10, activation = 'softmax')
+```
+
+```{r}
+model %>% compile(
+    loss = 'sparse_categorical_crossentropy',
+    optimizer = 'adam', 
+    metrics = c('accuracy')
+)
+```
+
+```{r}
+model %>% fit(train_images, label_list, epochs = 5, verbose = 2)
+```

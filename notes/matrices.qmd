@@ -1,0 +1,44 @@
+---
+title: "test"
+format: html
+editor: visual
+---
+
+$$
+\begin{bmatrix} 
+G & \color{red}{\textbf{C}} & \color{red}{\textbf{J}} & \color{red}{\textbf{D}} & \color{red}{\textbf{G}} & G & C & G & B & A \\ 
+I & D & E & A & C & B & H & C & E & F \\ 
+J & C & J & F & C & J & \color{red}{\textbf{A}} & \color{red}{\textbf{H}} & B & F \\ 
+H & C & D & F & C & F & \color{red}{\textbf{D}} & \color{red}{\textbf{B}} & G & B \\ 
+D & I & H & I & I & B & \color{red}{\textbf{F}} & \color{red}{\textbf{C}} & C & E \\ 
+B & F & A & J & E & H & I & C & H & G 
+\end{bmatrix}
+$$ {#eq-example-windows}
+
+\$\$
+
+```{=tex}
+\begin{bmatrix} 
+0 & \color{red}{\textbf{1}} & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & 0 & 1 & 0 & 0 & 0 \\ 
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 0 & 0 \\ 
+0 & 1 & 0 & 0 & 1 & 0 & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & 0 & 0 \\ 
+0 & 1 & 0 & 0 & 1 & 0 & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & 0 & 0 \\ 
+0 & 0 & 0 & 0 & 0 & 0 & \color{red}{\textbf{0}} & \color{red}{\textbf{1}} & 1 & 0 \\ 
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 
+\end{bmatrix}
+```
+\$\$
+
+[-@eq-example-windows]
+
+0001,0010,0011,0100,0101,0110,1000,1001,1011
+
+$$
+S_{\perp} = \Biggl\{ \left[{000\atop{000}}\right],
+\left[{000\atop{001}}\right],
+\left[{000\atop{010}}\right] ...
+\left[{001\atop{001}}\right],
+\left[{001\atop{010}}\right]...
+\left[{110\atop{011}}\right]
+\Biggr\}
+$$ {#eq-perpendicular-combinations}

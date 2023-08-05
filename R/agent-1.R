@@ -2,7 +2,7 @@
 #'
 #' Makes moves based on trained model
 #' @param B Board
-#'
+#' @import ReinforcementLearning
 #' @return a list with the resulting board and metadata
 #' @export
 agent_1 <-\(B){
@@ -18,7 +18,7 @@ agent_1 <-\(B){
     W <- get_windows(BB,direction = "V")
     W$move <- predict(model_1,W$w)
     W <- W |> 
-      filter(move !="Pass")
+      dplyr::filter(move !="Pass")
     if(nrow(W)>0){
       #do first viable move
       my_move <- calculate_windowed_move(W$col[1],W$row[1],W$move[1],direction = "V")
@@ -39,7 +39,7 @@ agent_1 <-\(B){
     W <- get_windows(BB,direction = "H")
     W$move <- predict(model_1,W$w)
     W <- W |> 
-      filter(move !="Pass")
+      dplyr::filter(move !="Pass")
     if(nrow(W)>0){
       #do first viable move
       my_move <- calculate_windowed_move(W$col[1],W$row[1],W$move[1],direction = "H")

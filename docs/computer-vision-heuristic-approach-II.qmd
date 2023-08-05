@@ -1,0 +1,116 @@
+---
+title: "Computer Vision Heuristic Approach: Second try"
+format: html
+editor: visual
+---
+
+
+Strategy: 
+
+1.  Reduce color space to RGB
+2.  Calculate overall 
+3.  calculate for each quadrant
+4.  Use heuristics or logistic regression
+
+```{r}
+#| include: false
+library(xmas3)
+library(magick)
+my_data <- readr::read_csv(here::here("inst","training-data","image-classification.csv"))
+```
+
+
+```{r}
+color_analysis <- \(img){
+  purrr::map_df(img,\(.x){
+    
+  if(is.character(.x)){
+    .x <- image_read(.x)
+  }
+  tmp <- as.raster(.x) |> as.character()
+  tmp <- str_sub(tmp,1,7) |> 
+    col2rgb()
+  l <- length(tmp)/3
+  l <- seq(l/4,l,by=l/4)
+
+  data.frame(
+    R   = mean(tmp[1,]),
+    G   = mean(tmp[2,]),
+    B   = mean(tmp[3,]),
+    #Q1
+    Q1R = mean(tmp[1,1:l[1]]), 
+    Q1G = mean(tmp[2,1:l[1]]), 
+    Q1B = mean(tmp[3,1:l[1]]), 
+    
+    Q2R = mean(tmp[1,l[1]:l[2]]), 
+    Q2G = mean(tmp[2,l[1]:l[2]]), 
+    Q2B = mean(tmp[3,l[1]:l[2]]),
+    
+    Q3R = mean(tmp[1,l[2]:l[3]]), 
+    Q3G = mean(tmp[2,l[2]:l[3]]), 
+    Q3B = mean(tmp[3,l[2]:l[3]]), 
+
+    Q4R = mean(tmp[1,l[3]:l[4]]), 
+    Q4G = mean(tmp[2,l[3]:l[4]]), 
+    Q4B = mean(tmp[3,l[3]:l[4]]) 
+ 
+             )
+  })
+}
+```
+
+
+```{r}
+my_color_analysis <- color_analysis(my_data$image)
+my_data <- my_data |> cbind(my_color_analysis)
+
+my_data$is_candy <- ifelse(my_data$class=="candy",1,0)
+glm(is_candy~.,family = "binomial",data = my_data |> select(-class,-image,-time)) -> candymodel
+
+
+```
+
+```{r}
+summary(candymodel)
+```
+
+```{r}
+predict(candymodel, type="response") -> my_pred
+sum(my_pred>.5)
+```
+
+## Let's to a couple from the rest of the sample tiles
+
+```{r}
+my_files <- dir(here::here("inst","image-data","ui-tiles"),full.names = TRUE)
+my_new_data <- color_analysis(my_files)
+```
+
+```{r}
+my_pred <- predict(candymodel, type="response",newdata = my_new_data)
+
+```
+
+```{r}
+library(magick)
+image_read(my_files[7])
+image_read(my_files[8])
+image_read(my_files[9])
+image_read(my_files[19])
+```
+Seems like weŕe getting somewhere.
+
+```{r}
+my_data$is_candy <- NULL
+my_data$is_hat <- ifelse(my_data$class=="hat",1,0)
+hatmodel <- glm(is_hat~.,family = "binomial",data = my_data |> select(-class,-image,-time))
+```
+
+```{r}
+my_pred <- predict(hatmodel, newdata = my_new_data, type="response")
+image_read(my_files[17])
+image_read(my_files[18])
+image_read(my_files[780])
+```
+
+Keeps looking good.

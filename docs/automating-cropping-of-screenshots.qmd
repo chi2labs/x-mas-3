@@ -1,0 +1,79 @@
+---
+title: "Automating Cropping of screenshots"
+format: html
+editor: visual
+---
+
+## 
+
+In order to create a training set of tiles for image-recognitions, I programmed a robot to take approximately 30 screenshots of the initial interface. For consistency these were taken in full-screen mode, on the linux virtual machine on my Asus Chromebook.
+
+The size of the png-files is 1600 x 760, The target area measures circa 760 x 480.
+
+```{r}
+library(xmas3)
+library(magick)
+img <- image_read(here::here("inst","image-data","ui-screenshots",
+                             "screenshot-2023-07-31-1701-2.png"))
+```
+
+```{r}
+# Lets try an x-offset of 420
+image_crop(img,geometry = "760x480+420")
+```
+
+Almost spot on
+
+```{r}
+image_crop(img,geometry = "760x480+425")
+```
+
+Good. Now let's figure out the y
+
+```{r}
+image_crop(img,geometry = "760x470+425+135")
+```
+
+OK, looks like we have our magic numbers.
+
+Lets see if we can generate coordinates and a grid.
+
+```{r}
+my_coords <- calculate_grid_centroids(760,470)
+img2 <-image_crop(img,geometry = "760x470+425+135") 
+img2 <- image_draw(img2)
+points(my_coords$x, my_coords$y, pch=16,cex=5, col="white")
+img2
+```
+
+```{r}
+
+img3 <-image_draw(img2)
+rect(
+  xleft =   my_coords$x-40,
+  xright =  my_coords$x+40,
+  ytop =    my_coords$y-40,
+  ybottom = my_coords$y+40,
+  border = "white", lty = "solid", lwd = 5)
+img3
+```
+
+Yep, looks right. Now lets create some tiles.
+
+```{r}
+get_tiles_and_save(img2,my_coords,output_path = here::here("tmp"),
+                  size_x = 72, size_y = 80)
+```
+
+```{r}
+# Putting it all together
+my_coords <- calculate_grid_centroids(760,470)
+my_files <- dir(here::here("inst","image-data", "ui-screenshots"),full.names = TRUE)
+for(filename in my_files){
+  img <- image_read(filename)
+  img2 <-image_crop(img,geometry = "760x470+425+135")
+  get_tiles_and_save(img2,my_coords,output_path = here::here("inst","image-data", "ui-tiles"),
+                  size_x = 72, size_y = 80)
+}
+
+```

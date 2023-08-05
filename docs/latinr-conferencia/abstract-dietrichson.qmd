@@ -1,0 +1,11 @@
+---
+title: "Jugando Videojuegos con R"
+author: "Aleksander Dietrichson"
+format: pdf
+bibliography: references.bib
+editor: visual
+---
+
+Este paper cuenta las experiencias que tuve cuando en otoño del 2023 me propuse entrenar a una inteligencia artificlal a jugar un videojuego sencillo. *X-mas-3* es un videojuego con reglas que se expresan en un par de lineas, sin embargo por tratarse de un tablero seis por diez con diez piezas distintas llegamos a un $10^{60}$ combinaciones, con lo cual no es posible analizar todas las posiciones y más bien tenemos emplear una estratégia de reconocer patrones. En R hice una versión aún más simplificada del juego, y use el paquete *ReinforcementLearning* [@ReinforcementLearning] para entrenar a una inteligencia artificial con una serie de simulacros del juego simplificado. Para ponerla a prueba en su hábitat natural usé los paquete *RSelenium* [@RSelenium] y *wdman* [@wdman-2] para crear un robot que interactua directamente con la interface HTML del juego. Interactuar con el tablero de la interface del juego presentó otro problema a resolver ya que el robot tiene que *leer e interpretar* el tablero de juego por medio de gráficos - screenshots que toma del tablero. Se utilizó el paquete *magick* [@magick] para procesar las imágenes y para su interpretación probé tres tecnicas distintas, todas funcionaron con lo cual opté por la más sencilla y eficiente.
+
+## Referencias:

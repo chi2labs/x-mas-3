@@ -1,0 +1,198 @@
+---
+title: "Board Analysis from Screenshot"
+subtitle: "Smaller Tiles and Grid Estimation"
+author: "Aleksander Dietrichson, PhD"
+format: html
+editor: visual
+---
+
+In order to evaluate a board from the graphical interface we need to be able to identify the indivual tiles. This document shows the steps we went through to implement one of the strategies.
+
+```{r}
+#| include: false
+
+library(xmas3)
+
+library(magick)
+
+```
+
+## Getting Focus
+
+```{r}
+my_image <- image_read("../inst/screenshots-mac/screenshot-2023-08-3-11.png")
+my_image
+```
+
+This screenshot was taken my macbook pro, so we believe that the parameters we have to work with are roughly those expressed in the function
+
+```{r}
+robot_config_mac <- function(){
+      
+  board_width <- 714
+  board_height <- 430
+  list(
+    coords = calculate_grid_centroids(board_width, board_height),
+    board_width = board_width,
+    board_height = board_height,
+    offset_x = 250,
+    offset_y = 100,
+    window = list(
+      height=831,
+      width = 1200
+    )
+  )
+}
+
+```
+
+Let's use these parameters as a starting point to crop the image.
+
+It appears, however, that the screenshot is in a higher resolution than we're expecting, so we should consider resizing it.
+
+```{r}
+my_image2 <- image_resize(my_image, "1200x700")
+my_image2
+```
+
+```{r}
+
+my_geometry <- geometry_area(710,426,250,134)
+  
+image_crop(my_image2,geometry = my_geometry)
+
+```
+
+Now we have something closer to the real geometry.
+
+```{r}
+my_coords <- calculate_grid_centroids(surface_height = 426, surface_width =710 )
+# Update conf
+conf <- robot_config_mac()
+conf$coords <- my_coords
+conf$board_height <- 426
+my_board <- image_crop(my_image2, my_geometry)
+```
+
+```{r}
+get_tile <- function(.c, .r,conf, tile_width = 40, tile_height = 40){
+    my_row <- conf$coords |> 
+      dplyr::filter(.data$col==.c,.data$row==.r)
+    
+    crop_x <- my_row$x - (tile_width/2)
+    crop_y <- my_row$y - (tile_height/2)# - (conf$board_height/2)
+    
+    cropped_img <- 
+      image_crop(
+        my_board,
+        #geometry = "100x100+10+10"
+        geometry = 
+          geometry_area(width = tile_width, height = tile_height, 
+                        x_off = crop_x,
+                        y_off = crop_y)
+        #,
+        #                         x_off = crop_x,y_off = crop_y)
+        )  
+    cropped_img
+}
+
+get_tile(1,1, conf)
+get_tile(2,1, conf)
+get_tile(1,2, conf)
+```
+
+Let's define reference tiles from the know board.
+
+```{r}
+reference_tiles <- list(
+  striped = get_tile(1,1,conf) |> as.raster() |> as.character(),
+  hat =     get_tile(2,1,conf)|> as.raster() |> as.character(),
+  tree =    get_tile(3,1,conf)|> as.raster() |> as.character(),
+  red =     get_tile(5,1,conf)|> as.raster() |> as.character(),
+  spotted = get_tile(6,1,conf)|> as.raster() |> as.character(),
+  berries = get_tile(8,1,conf)|> as.raster() |> as.character(),
+  stocking = get_tile(1,2,conf)|> as.raster() |> as.character(),
+  star =     get_tile(4,2, conf)|> as.raster() |> as.character(),
+  wreath =   get_tile(5,2, conf)|> as.raster() |> as.character(),
+  candy =   get_tile(1,4, conf)|> as.raster() |> as.character()
+)
+readr::write_rds(reference_tiles, here::here("inst","models", "reference_tiles.rds"))
+
+reference_tiles_2 <- reference_tiles
+
+names(reference_tiles_2)<-LETTERS[1:10]
+
+readr::write_rds(reference_tiles_2, here::here("inst","models", "reference_tiles_2.rds"))
+
+```
+
+Fetch a tile off the board
+
+```{r}
+my_tile <- get_tile(4,4,conf)
+```
+
+```{r}
+tile_compare <- function(tile){
+  purrr::map(reference_tiles,~{
+    sum(as.character(as.raster(tile))%in%.x)
+  }) |> unlist() -> tmp
+  names(tmp[which.max(tmp)])
+}
+
+```
+
+Now let's evaluate an entire board
+
+```{r}
+
+B <- matrix(nrow=6,ncol=10)
+
+purrr::walk(1:6,function(.r){
+  purrr::walk(1:10, function(.c){
+    my_tile <- get_tile(.c,.r,conf)
+    B[.r,.c] <<- tile_compare(my_tile)
+  })
+  
+})
+
+print(B)
+```
+
+Bingo!
+
+Let's try with a different board
+
+```{r}
+## my_geometry <- geometry_area(710,426,250,134)
+
+load_scale_and_crop_board <- function(img){
+  if(is.character(img))(
+    img <- image_read(img)    
+  )
+  img |> 
+  image_resize( "1200x700") |> 
+  image_crop(my_geometry)
+}
+
+my_board <- load_scale_and_crop_board("../inst/screenshots-mac/screenshot-2023-08-3-17.png")
+my_board |> print()
+```
+
+```{r}
+system.time({
+  
+
+B <- matrix(nrow=6,ncol=10)
+
+purrr::walk(1:6,function(.r){
+  purrr::walk(1:10, function(.c){
+    my_tile <- get_tile(.c,.r,conf)
+    B[.r,.c] <<- tile_compare(my_tile)
+  })
+  
+})
+
+print(B)
+}) |> print()
+```
