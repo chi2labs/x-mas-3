@@ -105,7 +105,7 @@ robot_config_chroomebook<- function(){
 
 robot_config_mac <- function(){
   list(
-    coords = calculate_grid_centroids(surface_width = 714 ,surface_height = 430),
+    coords = calculate_grid_centroids(surface_width = 714 ,surface_height = 426),
     offset_x = 250,
     offset_y = 100,
     window = list(
