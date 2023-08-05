@@ -1,0 +1,116 @@
+---
+title: "Test Screenshot Functions"
+author: "Aleksander Dietrichson"
+date: 2023-08-04
+format: html
+editor: visual
+---
+
+## Functions to be tested
+
+```{r}
+#| include: false
+library(xmas3)
+
+```
+
+```{r}
+#| eval: false
+screenshot_load_scale_and_crop()
+screenshot_get_tile()
+screenshot_tile_guess_class()
+```
+
+```{r}
+my_files <- dir(here::here("inst/screenshots-mac/"),full.names = T)
+```
+
+### screenshot_load_scale_and_crop
+
+```{r}
+screenshot_load_scale_and_crop(my_files[1])
+```
+
+```{r}
+my_image <- magick::image_read(my_files[2])
+my_image |> 
+  screenshot_load_scale_and_crop()
+```
+
+### screenshot_get_tile()
+
+```{r}
+my_screenshot <- screenshot_load_scale_and_crop(my_files[3])
+my_screenshot
+screenshot_get_tile(board = my_screenshot,.c = 1,.r = 1)
+```
+
+### screenshot_tile_guess_class()
+
+```{r}
+my_screenshot <- screenshot_load_scale_and_crop(my_files[4])
+my_tile <- screenshot_get_tile(my_screenshot,1,1)
+my_screenshot
+```
+
+```{r}
+screenshot_tile_guess_class(my_tile)
+```
+
+### screenshot_translate_board()
+
+```{r}
+screenshot_translate_board(my_screenshot)
+```
+
+
+```{r}
+system.time({
+  my_screenshot <- screenshot_load_scale_and_crop(my_files[6])
+  M <- screenshot_translate_board(my_screenshot)  
+  M2 <- initialize_board()
+  M3 <- play_board(M2, agent_1)
+})
+
+```
+
+
+```{r}
+options(xmas3.switch_ref_names=TRUE)
+my_screenshot <- screenshot_load_scale_and_crop(my_files[7])
+M <- screenshot_translate_board(my_screenshot)
+P <- play_board(M,agent_1)
+P$metadata
+```
+
+
+```{r}
+my_screenshot
+```
+
+```{r}
+my_screenshot <- screenshot_load_scale_and_crop(my_files[8])
+M <- screenshot_translate_board(my_screenshot)
+P <- play_board(M,agent_1)
+P$metadata
+```
+
+```{r}
+my_screenshot
+```
+
+```{r}
+options(xmas3.switch_ref_names=TRUE)
+
+system.time({
+  
+my_data <- purrr::map(my_files, function(mf){
+  my_screenshot <- screenshot_load_scale_and_crop(mf)
+  M <- screenshot_translate_board(my_screenshot)
+  P <- play_board(M,agent_1)
+  P$metadata
+})
+
+})
+```
+
