@@ -1,0 +1,12 @@
+# Testing
+rm(list = ls())
+library(xmas3)
+library(RSelenium)
+library(wdman)
+#source("~/x-mas-3/R/robot-play.R")
+robot_initialize()
+robot_make_move(1,1,"R")
+robot_play_game()
+#library(RSelenium)
+#rD <- rsDriver(browser="firefox", port=4555L, verbose=F, chromever = NULL)
+#rD$open()

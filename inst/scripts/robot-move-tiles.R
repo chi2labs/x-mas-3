@@ -7,7 +7,6 @@ if(!exists("remDr")){
 
 
 
-
 for(i in 1:9){
   robot_make_move(1,i,"R")
   Sys.sleep(1)

@@ -9,8 +9,8 @@ screenshot_get_tile(
   .c,
   .r,
   conf = robot_config_mac(),
-  tile_width = 20,
-  tile_height = 20
+  tile_width = 40,
+  tile_height = 40
 )
 }
 \arguments{

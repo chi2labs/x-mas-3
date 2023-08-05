@@ -4,10 +4,10 @@
 #'
 #' @return invisible()
 #' @export
-robot_play_game <- function(agent=agent0, max_moves = 100){
+robot_play_game <- function(agent=agent_0, max_moves = 100){
   B <- initialize_board()
   for(i in 1:max_moves){
-    ret <- agent_0(B)
+    ret <- agent(B)
     robot_make_move(ret$metadata$row,.c = ret$metadata$col,move = ret$metadata$move)
   }
 }
@@ -23,9 +23,9 @@ robot_play_game <- function(agent=agent0, max_moves = 100){
 robot_initialize <- function(){
   message("Initializing x-mas-3 Robot")
   message("Starting Selenium")
-  #selenium(retcommand = TRUE)
+  selenium(retcommand = TRUE)
   #selenium()
-  cDrv <- chrome()
+  cDrv <<- chrome()
   remDr <<- remoteDriver(
     remoteServerAddr = "localhost",
     port = 4567L,
@@ -43,6 +43,15 @@ robot_initialize <- function(){
   remDr$mouseMoveToLocation(x=800,y=250, game_canvas[[1]])
   remDr$click()
   invisible()
+}
+
+#' Finalize Robot
+#'
+#' @return TRUE on success
+#' @export
+robot_finalize <- function(){
+  try(remDr$close())
+  cDrv$stop()
 }
 
 #' Make a Move

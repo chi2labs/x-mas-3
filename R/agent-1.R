@@ -60,8 +60,3 @@ agent_1 <-\(B){
   }
   ret
 }
-
-if(interactive()){
-  #B <- initialize_board()
-  agent_1(BB3) |> print()
-}

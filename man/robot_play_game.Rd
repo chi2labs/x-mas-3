@@ -4,7 +4,7 @@
 \alias{robot_play_game}
 \title{Play a Game through the UI}
 \usage{
-robot_play_game(agent = agent0, max_moves = 100)
+robot_play_game(agent = agent_0, max_moves = 100)
 }
 \arguments{
 \item{agent}{which agent to use}
