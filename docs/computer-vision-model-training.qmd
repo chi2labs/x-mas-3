@@ -1,0 +1,109 @@
+---
+title: "Computer Vision Heuristic Approach: Second try"
+format: html
+editor: visual
+---
+
+In order for the system to play a game through the UI provided it needs to be able to identify and distinguish between tile-types. Since the problem space here is relatively limited, I decided to train a set of binary classifiers in hopes that the differences between the tile-types, and the similarity between the tiles of same type would be of sufficient magnitude so as to be detectable by linear models. While the same-group tiles are in principle identical, some differences --blur if you will-- will in practice be introduces by imperfections in the data-extraction process. This, in practice, will be done by takings screenshots and creating a grid as we have seen before, and indivual pixels are likely to have shifted within a reasonable margin of error.
+
+## Strategy
+
+To overcome this problem I decided on the following strategy:
+
+1.  Reduce color space to RGB
+2.  Calculate overall color density for each tile
+3.  Calculate same for each quadrant of the same
+4.  Train logistic regression classifiers for each class of objects.
+
+We would then have a set of ten classifiers, and could easily (and quickly) run each tile through the classifier function, which would return a probability for each class, and a *hard prediction*, i.e. the prediction with the highest probability.
+
+```{r}
+#| include: false
+library(xmas3)
+library(magick)
+library(xmas3)
+library(dplyr)
+
+```
+
+## Implementation
+
+We will train one binary classifier for each of the ten classes we have in the data, i.e. one to detect each tile-type. For this purpose I manually classified approximately 250 tiles, extracted through screen-shots and then cropped to tile-sized pngs. Each of these were processed through functions that load the png into memory, reduce the color space to and calculate the average for each color. The process is then repeated for each of the four quadrants of the image and the set of color means is returned as data.frame.
+
+```{r}
+#| message: false
+#| warning: false
+#| eval: false
+my_data <- 
+  readr::read_csv(here::here("inst","training-data","image-classification.csv"))
+my_color_analysis <- color_analysis(my_data$image)
+my_data <- my_data |> cbind(my_color_analysis)
+
+my_classes <- unique(my_data$class)
+models <- list()
+for(tile_type  in my_classes){
+  my_data$outcome <- ifelse(my_data$class == tile_type,1,0)
+  my_model <- 
+    glm(outcome~.,
+        family = "binomial",
+        data = my_data |> select(-class,-image,-time)
+        )
+  models[[tile_type]] <- my_model
+}
+readr::write_rds(models,here::here("inst","models","tile-classification-models.rds"))
+```
+
+## Model Testing
+
+### Prediction on the Training Data
+
+```{r}
+#| message: false
+my_data <- 
+  readr::read_csv(here::here("inst","training-data","image-classification.csv"))
+probs <- classify_tile(my_data$image)
+head(probs[,c(1:4,11)])
+```
+
+The return value of the classifier is a data frame with class probabilities in columns and a hard prediction at the end. I will check this against the training data to uncover if the model has any inherent ambiguities.
+
+```{r}
+sum(my_data$class == probs$prediction)
+```
+
+So, perfect match on the trained data, which is hardly anything to brag about. Let see how the model does on unseen data. For this I will select 100 tiles at random from the unseen tiles, and run them through the same process.
+
+```{r}
+my_files <- dir(here::here("inst","image-data","ui-tiles"),full.names = TRUE)
+my_files <- my_files[!my_files %in% my_data$image]
+set.seed(0871) #For reproducibility
+my_files <- sample(my_files,100)
+probs <- classify_tile(my_files)
+```
+
+```{r}
+#| include: false
+img_path <-here::here("docs","tile-images") 
+dir.create(img_path)
+file.copy(my_files,paste0(img_path,"/",basename(my_files)))
+```
+
+```{r}
+#| echo: false
+#| results: asis
+for(i in 1:nrow(probs)){
+  cat("\n",paste0("![](","docs/tile-images/",
+                  basename(my_files[i]),
+                  ")"),"\n") 
+  cat("\n* ",probs$prediction[i],"\n")
+}
+
+```
+
+Visual inspection uncovered one mis-predictions on these tiles. One instnace of *candy* was misclassified as *stripes*. This is still an acceptable margin of error.
+
+## Caveat
+
+After training the model I discovered a bug in the image processing code. Instead of dividing the image into *quadrants* which was my intention, they were divided into *quarters* from the top. This may have impacted on the model performance in this case, however, I will investigate that at a later point, as we currently have a very performing model.
+
+## 

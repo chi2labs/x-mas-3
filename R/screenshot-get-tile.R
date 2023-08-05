@@ -12,8 +12,8 @@
 #' @return the tile in png format
 #' @export
 screenshot_get_tile <- function(board,.c, .r, 
-                                conf=robot_config_mac(), 
-                                tile_width = 20, tile_height = 20){
+                                conf = robot_config_mac(), 
+                                tile_width = 40, tile_height = 40){
   my_row <- conf$coords |> 
     dplyr::filter(.data$col==.c,.data$row==.r)
   
