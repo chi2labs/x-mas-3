@@ -1,0 +1,178 @@
+---
+title: "On Smaller Grids and Notation"
+format: html
+editor: visual
+---
+
+## *Calculations on binary grids*
+
+```{r}
+#| include: false
+library(dplyr)
+```
+
+```{r}
+
+
+bench::mark({
+  M <- matrix(nrow = 5,ncol = 4 , data = sample(c(0,1),replace = TRUE))
+  col_sums = colSums(M)
+  row_sums = rowSums(M)
+  total_sums <- c(col_sums,row_sums)
+  score <-0
+  score <- c(score,sum(total_sums==3)*50)
+  score <- c(score,sum(total_sums==4)*100)
+  score <- c(score,sum(total_sums==5)*200)
+  
+  data.frame(
+    score
+    )
+}) -> my_data
+
+binary_boards_per_second <- my_data$`itr/sec`
+
+knitr::kable(my_data[,2:7])
+
+```
+
+*`r binary_boards_per_second` boards per second which means that our total input-space* $S$ *for training*
+
+```{r}
+c_of_S <- 2^(5*4)
+```
+
+*can be scored in*
+
+```{r}
+round(c_of_S/binary_boards_per_second) 
+```
+
+*seconds or*
+
+```{r}
+round(c_of_S/binary_boards_per_second) / 60
+```
+
+*minutes.*
+
+*All this for training purposes*
+
+## *Making Moves on the Board*
+
+```{r}
+# 
+make_move <- function(B,c1,r1,c2,r2){
+  ## Move will be in the format A1A2
+  tmp <- B[r2,c2]
+  B[r2, c2] <- B[r1,c1]
+  B[r1, c1] <- tmp
+  B
+}
+```
+
+```{r}
+ M <- matrix(nrow = 5,ncol = 4 , data = sample(c(0,1),replace = TRUE))
+ colnames(M) <- LETTERS[1:4]
+bench::mark({
+  make_move(M, # Make random move
+            c1=sample(LETTERS[1:4],1),
+            c2=sample(LETTERS[1:4],1),
+            r1=sample(1:5,1),
+            r2=sample(1:5,1)
+            )
+  
+}) -> my_data
+knitr::kable(my_data[,2:7])
+```
+
+*OK, we can really make some moves!*
+
+*Let's see if we can split a single-string move without too much loss*
+
+```{r}
+# Our action-space is A
+
+create_action_space <- function(nrows,ncols){
+  my_cols <- LETTERS[1:ncols]
+  my_rows <- 1:nrows
+  A <- c()
+  # Vertical moves
+  for(.r in 1:(length(my_rows))){
+    for(.c in 1:(length(my_cols)-1)){
+      A <- c(A,
+              paste0(
+                my_cols[.c],my_rows[.r],
+                     " to ",
+                my_cols[.c+1],my_rows[.r]
+                     )
+             )
+    }
+  }
+  
+  # Horizontal
+  for(.c in 1:(length(my_cols)-1)){
+    for(.r in 1:length(my_rows)){
+      A <- c(A,
+              paste0(
+                my_cols[.c],my_rows[.r],
+                     " to ",
+                my_cols[.c+1],my_rows[.r]
+                     )
+             )
+    }
+
+  }
+  
+  A
+}
+
+A <- create_action_space(5,4) |> sort()
+A
+length(A)
+
+
+
+```
+
+```{r}
+make_move2 <- function(B,move){
+  # Parse out move
+  # Has format: "A1 to B1"
+  c1 <- stringr::str_sub(move,1,1)
+  r1 <- stringr::str_sub(move,2,2) %>% as.integer()
+  c2 <- stringr::str_sub(move,7,7)
+  r2 <- stringr::str_sub(move,8,8) %>% as.integer()
+  
+  ## Move will be in the format A1A2
+  tmp <- B[r2,c2]
+  B[r2, c2] <- B[r1,c1]
+  B[r1, c1] <- tmp
+  B
+}
+```
+
+Let's see if parsing makes a difference
+
+```{r}
+
+bench::mark(
+  make_move(M, # Make random move
+            c1=sample(LETTERS[1:4],1),
+            c2=sample(LETTERS[1:4],1),
+            r1=sample(1:5,1),
+            r2=sample(1:5,1)
+            ) %>% is.matrix(),
+  make_move2(M,sample(A,1)) |> is.matrix()
+  
+) -> my_data
+knitr::kable(my_data[,1:7])
+
+```
+
+So, we're able to make 1M moves in just over a minute on version 2, which is more convenient for readability.
+
+## Conclusion
+
+-   Use chess-like notation -- the extra overhead is minimal
+
+-   A 5x4 grid can probably be solved with RL
