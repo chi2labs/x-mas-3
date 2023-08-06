@@ -64,16 +64,18 @@ Our states space *S*, is 4 by 5 binary matrix. However, any grid that already ha
 ```{r}
 N = 1:(2^(4*5))
 
-
-S <- purrr::map(N,~{
-  my_data <- intToBits(.x) |> as.integer()
-  M <- matrix(data = my_data[1:20],ncol = 4,nrow = 5)
-  colnames(M) <- LETTERS[1:4]
-  if(score_binary_board(M)>0) return(NULL)
-  M
+#N = 1:(2^(4))
+my_time <- system.time({
+  S <- purrr::map(N,~{
+    my_data <- intToBits(.x) |> as.integer()
+    M <- matrix(data = my_data[1:20],ncol = 4,nrow = 5)
+    colnames(M) <- LETTERS[1:4]
+    if(score_binary_board(M)>0) return(NULL)
+    M
+  })
+  S <- S[lengths(S)>0] # Remove any board with a score
 })
-
-S <- S[lengths(S)>0] # Remove any board with a score
+my_time
 ```
 
 How many are we left with?
@@ -81,3 +83,7 @@ How many are we left with?
 ```{r}
 length(S)
 ```
+
+Which should be quite manageable.
+
+Note: s\[124\] has a correct move and a superior tactic (or two correct moves)
