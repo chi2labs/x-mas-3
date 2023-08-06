@@ -1,0 +1,83 @@
+---
+title: "Agent Training"
+author: "Aleksander Dietrichson, PhD"
+monobackgroundcolor: "lightgrey"
+code-fold: TRUE
+format: html
+---
+
+Based on some notes and experiments it seems reasonable to assume that we should be able to train an RL model on a 5 by 4 grid. It also seems that chess-like notation, which is more human readable, and thus more convenient for the researcher (i.e. me), add minimal overhead in the parsing and scoring processes.
+
+```{r}
+#| include: false
+library(xmas3)
+library(ReinforcementLearning)
+library(dplyr)
+```
+
+## Functions Needed
+
+For the purposes of setting up the agent training for a 4x5 board, we implemented the following functions in the {xmas3} package.
+
+### create_action_space
+
+This function generates an action space in chess notation given a grid on ncol and nrows.
+
+```{r}
+#| echo: false
+xmas3::create_action_space
+```
+
+### make_move
+
+This function takes as input a board B and a *move* (in chess notation). It makes the move and returns the resulting board.
+
+```{r}
+#| echo: false
+
+xmas3::make_move
+```
+
+### score_binary_board
+
+This function takes as input a binary matrix and calculates the resulting score according to the rules of X-mas-3.
+
+```{r}
+#| echo: false
+xmas3::score_binary_board
+```
+
+These functions will allow us to create the input needed to train a *Reinforcement Learning* (RL) model.
+
+## Creating the Action Space
+
+In principle we have five possible move to make on each tile, Left, Right,Up, Down and Pass. Given the game rules, however, moving a tile right, is equivalent to moving it's right-adjacent neighbor to the left. The possible moves can therefore be reduced to Left,Down and Pass. This allows for a reduced action space *A*, on a given board *B* as shown in the function above. We create our action space *A* using the function provided
+
+```{r}
+A <- create_action_space(5,4)
+```
+
+## Creating the States Space
+
+Our states space *S*, is 4 by 5 binary matrix. However, any grid that already has a winning combination on it, can be removed, since it will already have been removed from the board on the prior move. We thus have:
+
+```{r}
+N = 1:(2^(4*5))
+
+
+S <- purrr::map(N,~{
+  my_data <- intToBits(.x) |> as.integer()
+  M <- matrix(data = my_data[1:20],ncol = 4,nrow = 5)
+  colnames(M) <- LETTERS[1:4]
+  if(score_binary_board(M)>0) return(NULL)
+  M
+})
+
+S <- S[lengths(S)>0] # Remove any board with a score
+```
+
+How many are we left with?
+
+```{r}
+length(S)
+```
