@@ -9,15 +9,15 @@
 #' @importFrom stringr str_sub
 #' @return a data.frame with variables
 #' @export 
-color_analysis <- \(img){
+color_analysis <- function(img){
   
-  purrr::map_df(c(img),\(.x){
+  purrr::map_df(c(img),function(.x){
     
     if(is.character(.x)){
       .x <- image_read(.x)
     }
-    tmp <- as.raster(.x) |> as.character()
-    tmp <- str_sub(tmp,1,7) |> 
+    tmp <- as.raster(.x) %>% as.character()
+    tmp <- str_sub(tmp,1,7) %>% 
       col2rgb()
     l <- length(tmp)/3
     l <- seq(l/4,l,by=l/4)

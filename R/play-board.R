@@ -7,7 +7,7 @@
 #'
 #' @return a Matrix with the move made
 #' @export
-play_board <- \(Board,agent=agent_0){
+play_board <- function(Board,agent=agent_0){
   B <- agent(Board)
   my_score <- score_and_update_board(B$Board)$score[[1]]
   B$metadata$score <-my_score
@@ -16,5 +16,5 @@ play_board <- \(Board,agent=agent_0){
 
 # if(interactive()){
 #   B <- initialize_board()
-#   play_board(B,agent_1) |> print()
+#   play_board(B,agent_1) %>% print()
 # }

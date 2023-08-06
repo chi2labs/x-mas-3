@@ -1,0 +1,10 @@
+# Config for chromebook
+offset_x: 250
+offset_y: 100
+window:
+  height: 831
+  width: 1200
+board:
+  width: 760
+  height: 480
+

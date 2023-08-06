@@ -9,34 +9,34 @@
 #' @importFrom dplyr bind_rows
 #' @return a data frame with w (window), col(start colum), row(start row)
 #' @export
-get_windows <- \(M, direction = c("H","V"), shape = c("1x4","2x3"),size=3){
+get_windows <- function(M, direction = c("H","V"), shape = c("1x4","2x3"),size=3){
   if(missing(M))stop("Specify matrix")
   direction <- match.arg(direction)
   shape <- match.arg(shape)
   if(shape == "2x3") return(get_2_by_3_windows(M,direction))
   ret <- c()
   if(direction == "H"){
-    ret <- purrr::map(1:(10-3),\(.c){
-      purrr::map(1:6,\(.r){
+    ret <- purrr::map(1:(10-3),function(.c){
+      purrr::map(1:6,function(.r){
         data.frame(w=
-        M[.r,.c:(.c+3)] |> paste0(collapse = ""),
+        M[.r,.c:(.c+3)] %>% paste0(collapse = ""),
         col=.c,
         row=.r
         )
-      }) |> bind_rows()
-    }) |> bind_rows()
+      }) %>% bind_rows()
+    }) %>% bind_rows()
   }
   
   if(direction == "V"){
-    ret <- purrr::map(1:(6-3),\(.r){
-      purrr::map(1:10,\(.c){
+    ret <- purrr::map(1:(6-3),function(.r){
+      purrr::map(1:10,function(.c){
         data.frame(w=
-                     M[.r:(.r+3),.c] |> paste0(collapse = ""),
+                     M[.r:(.r+3),.c] %>% paste0(collapse = ""),
                    col=.c,
                    row=.r
         )
-      }) |> bind_rows()
-    }) |> bind_rows()
+      }) %>% bind_rows()
+    }) %>% bind_rows()
   }
   
   
@@ -49,5 +49,5 @@ get_2_by_3_windows <- function(M,direction){
 }
 # M <- matrix(data = 1:60,6,10, byrow = TRUE)
 # system.time(
-#   get_windows(M,"V") |> print()
+#   get_windows(M,"V") %>% print()
 # )

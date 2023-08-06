@@ -52,6 +52,7 @@ robot_initialize <- function(){
 robot_finalize <- function(){
   try(remDr$close())
   cDrv$stop()
+  
 }
 
 #' Make a Move

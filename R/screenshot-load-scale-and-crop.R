@@ -12,7 +12,7 @@ screenshot_load_scale_and_crop <- function(img, my_geometry = geometry_area(710,
   if(is.character(img))(
     img <- image_read(img)    
   )
-  img |> 
-    image_resize( "1200x700") |> 
+  img %>% 
+    image_resize( "1200x700") %>% 
     image_crop(my_geometry)
 }

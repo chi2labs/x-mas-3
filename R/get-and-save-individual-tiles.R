@@ -11,7 +11,7 @@
 #'
 #' @return invisible()
 #' @export
-get_and_save_individual_tiles <- \(img,
+get_and_save_individual_tiles <- function(img,
                                    coordinates =null,
                                    output_path=here::here("inst","image-data","tiles"),
                                    filename="image.png",size_x=144,size_y=144){
@@ -31,5 +31,5 @@ get_and_save_individual_tiles <- \(img,
 if(interactive()){
   system.time(
     get_and_save_individual_tiles(cropped_board,my_coords)
-  ) |> print()
+  ) %>% print()
 }

@@ -15,6 +15,6 @@ screenshot_tile_guess_class <- function(tile){
   }
   purrr::map(REFERENCE_TILES, ~{
     sum(as.character(as.raster(tile))%in%.x)
-  }) |> unlist() -> tmp
+  }) %>% unlist() -> tmp
   names(tmp[which.max(tmp)])
 }

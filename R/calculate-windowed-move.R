@@ -10,7 +10,7 @@
 #'
 #' @return coordinates for the move function and move (UDLR)
 #' @export
-calculate_windowed_move <- \(.c,.r,move=c("First","Last","Middle"), shape = c("1x4","2x3"), 
+calculate_windowed_move <- function(.c,.r,move=c("First","Last","Middle"), shape = c("1x4","2x3"), 
                              direction=c("Horizontal","Vertical")){
   shape <- match.arg(shape)  
   move <- match.arg(move)

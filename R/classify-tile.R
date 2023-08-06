@@ -12,14 +12,14 @@ classify_tile <-function(tile){
       system.file("models/tile-classification-models.rds",package="xmas3")
     )
   }
-  purrr::map_df(tile,\(.x){
+  purrr::map_df(tile,function(.x){
     
     # if(is.character(.x)){
     #   .x <- image_read(.x)
     # }
     my_color_analysis <- color_analysis(.x)
     
-    purrr::map_dfc(names(tile_classification_models),\(tile_type){
+    purrr::map_dfc(names(tile_classification_models),function(tile_type){
       pred <- predict(
         tile_classification_models[[tile_type]],
         newdata = my_color_analysis,
@@ -38,5 +38,5 @@ classify_tile <-function(tile){
 if(interactive()){
   my_image <- c("inst/image-data/ui-tiles/image-2023-08-01 00_10_16-15.png",
                 "inst/image-data/ui-tiles/image-2023-08-01 00_10_16-19.png")
-  classify_tile(my_image)->test;test |> print()
+  classify_tile(my_image)->test;test %>% print()
 }

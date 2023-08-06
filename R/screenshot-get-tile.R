@@ -14,7 +14,7 @@
 screenshot_get_tile <- function(board,.c, .r, 
                                 conf = robot_config_mac(), 
                                 tile_width = 40, tile_height = 40){
-  my_row <- conf$coords |> 
+  my_row <- conf$coords %>% 
     dplyr::filter(.data$col==.c,.data$row==.r)
   
   crop_x <- my_row$x - (tile_width/2)

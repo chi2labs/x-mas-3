@@ -5,7 +5,7 @@
 #' @import ReinforcementLearning
 #' @return a list with the resulting board and metadata
 #' @export
-agent_1 <-\(B){
+agent_1 <-function(B){
   if(!exists("model_1")){
     #Load model
     model_1 <<- readr::read_rds(system.file("models/model-1.rds",package = 'xmas3'))
@@ -17,7 +17,7 @@ agent_1 <-\(B){
     ## Scan for vertical moves ####
     W <- get_windows(BB,direction = "V")
     W$move <- predict(model_1,W$w)
-    W <- W |> 
+    W <- W %>% 
       dplyr::filter(move !="Pass")
     if(nrow(W)>0){
       #do first viable move
@@ -38,7 +38,7 @@ agent_1 <-\(B){
     ## Scan for vertical moves ####
     W <- get_windows(BB,direction = "H")
     W$move <- predict(model_1,W$w)
-    W <- W |> 
+    W <- W %>% 
       dplyr::filter(move !="Pass")
     if(nrow(W)>0){
       #do first viable move
