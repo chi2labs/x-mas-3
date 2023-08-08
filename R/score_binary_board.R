@@ -5,8 +5,12 @@
 #' @return integer score
 #' @export
 score_binary_board <- function(B){
+  if(!is.matrix(B)) B <- as.matrix(B)
   
-  # Magic numbers are 7,14,28, 30 and 31
+  # Magic numbers here are:
+  # 7,14,28 - three in a row/col
+  # 15, 30 - four in a row/col
+  # 31 - five in a row
   rows <- 
     apply(B,1,function(x){
       v <- paste0(x, collapse = "")
@@ -22,9 +26,9 @@ score_binary_board <- function(B){
   totals <- c(cols,rows)
   
   score <- sum(
-             sum(totals%in%c(7,14,28))*50, #1110,0111, 11100 (and 0100)
-             sum(totals%in%c(30))*100,
-             sum(totals%in%c(30))*200
+             sum(totals%in%c(7,14,28))*50,
+             sum(totals%in%c(15,30))*100, 
+             sum(totals%in%c(31))*200
              )
   score
 }

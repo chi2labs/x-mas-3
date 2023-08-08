@@ -2,7 +2,6 @@
 title: "Agent Training"
 author: "Aleksander Dietrichson, PhD"
 monobackgroundcolor: "lightgrey"
-code-fold: TRUE
 format: html
 ---
 
@@ -18,6 +17,14 @@ library(dplyr)
 ## Functions Needed
 
 For the purposes of setting up the agent training for a 4x5 board, we implemented the following functions in the {xmas3} package.
+
+### Create_state_space
+
+```{r}
+xmas3::create_state_space
+```
+
+This function returns a list of integers with the appropriate class (mostly for printing and debugging.)
 
 ### create_action_space
 
@@ -62,28 +69,95 @@ A <- create_action_space(5,4)
 Our states space *S*, is 4 by 5 binary matrix. However, any grid that already has a winning combination on it, can be removed, since it will already have been removed from the board on the prior move. We thus have:
 
 ```{r}
-N = 1:(2^(4*5))
+S <- create_state_space()
+```
 
-#N = 1:(2^(4))
-my_time <- system.time({
-  S <- purrr::map(N,~{
-    my_data <- intToBits(.x) |> as.integer()
-    M <- matrix(data = my_data[1:20],ncol = 4,nrow = 5)
-    colnames(M) <- LETTERS[1:4]
-    if(score_binary_board(M)>0) return(NULL)
-    M
-  })
-  S <- S[lengths(S)>0] # Remove any board with a score
+This list contains several spaces which already feature a win. These should be removed, as they are not relevant for our purposes, i.e. they would never be tendered to the agent since once a score is made, the scoring tiles are removed from the board.
+
+So therefore we have:
+
+```{r}
+my_scores <- purrr::map(S[1:2],~{
+  cat(.x)
+  # (score_binary_board(.x[[1]])>0)
 })
-my_time
+
 ```
 
 How many are we left with?
 
 ```{r}
-length(S)
+length(S) # 350K spaces
 ```
 
 Which should be quite manageable.
 
 Note: s\[124\] has a correct move and a superior tactic (or two correct moves)
+
+## Hyperparameter Tuning
+
+The purpose of the *machine learning training session* is to provide the AI agent with once of the environments from our environment space *S,* and urge it to take an action from one of the actions in the action space *A*, $a\in{A}$ and then return the resulting environment $s_{i+1}$. If the resulting space represents an improvement on the original one a reward is offered, and if not a penalty is assigned. However, in order to ensure that the agent will be able to think strategically (i.e. more than one move ahead) it is necessary that the penalty for a wrong move be less than one half that of a correct one, and that passing (_Pass_) is not overly discouraged. 
+
+Hyperparameters are often tuned _post-hoc_, but given the limitations discussed earlier I will attempt a _pre-hoc_ tuning excercise for this case. If turns out that the spaces $S{[1..16]}$ are ideal for this purpose, due to the systematic approach we took when creating them. 
+
+$S_{10}$ and $S_{12}$ have solutions (A4 to A3 and A2 to A1, respectively), which will lead to an immediate positive score.
+
+```{r}
+#| label: tbl-state-spaces
+#| tbl-cap: "State Spaces 10 and 12"
+#| tbl-subcap: ["$S_{10}$","$S_{12}$"]
+#| tbl-cap-location: "bottom"
+#| layout-ncol: 2
+knitr::kable(S[10])
+
+knitr::kable(S[12])
+
+```
+
+
+$S_{16}$ by contrast does not have an immediate solution, but the move _A5 to A4_ is the correct play, preparing _A4 to A3_ on the next round.
+
+```{r}
+#| label: tbl-state-space-16
+#| tbl-cap: "State Space 16"
+#| tbl-subcap: "$S_{16}$"
+
+knitr::kable(S[16], escape = FALSE)
+```
+
+
+### Proposed Scoring
+
+Based on this, I will propose the following scoring.
+
+* Scoring move: Actual game score (50,100,200)
+* Non-scoring move: -20
+* Pass: 0
+
+### Test Model Training
+
+```{r}
+# Define smaller space
+s <- S[1:2]
+## Convert data to data.frame
+my_data <-  purrr::map(s,~{
+  data.frame(State = as.character(.x) |> paste0(collapse=""),
+             Action = A
+             )
+  
+}) |> bind_rows()
+
+my_data2 <- purrr::map2(my_data$State,my_data$Action~{
+  
+})
+
+my_data
+
+# control <- list(alpha = 0.1, gamma = 0.1, epsilon = 0.1)
+# system.time(
+#   model <- ReinforcementLearning(
+#     data, s = "State", a = "Action", r = "Reward", s_new = "NextState", 
+#     control = control)
+# )
+```
+
