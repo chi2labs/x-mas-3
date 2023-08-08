@@ -66,33 +66,22 @@ A <- create_action_space(5,4)
 
 ## Creating the States Space
 
-Our states space *S*, is 4 by 5 binary matrix. However, any grid that already has a winning combination on it, can be removed, since it will already have been removed from the board on the prior move. We thus have:
-
+Our states space *S*, is 4 by 5 binary matrix.
 ```{r}
-S <- create_state_space()
-```
-
-This list contains several spaces which already feature a win. These should be removed, as they are not relevant for our purposes, i.e. they would never be tendered to the agent since once a score is made, the scoring tiles are removed from the board.
-
-So therefore we have:
-
-```{r}
-my_scores <- purrr::map(S[1:2],~{
-  cat(.x)
-  # (score_binary_board(.x[[1]])>0)
-})
+filename <- here::here("inst/models/4x5-space.rds")
+# if(!exists(filename)){
+#   S <- create_state_space()  
+# } else {
+  S <- readr::read_rds(filename)
+  
+#}
 
 ```
 
-How many are we left with?
 
-```{r}
-length(S) # 350K spaces
-```
 
-Which should be quite manageable.
 
-Note: s\[124\] has a correct move and a superior tactic (or two correct moves)
+
 
 ## Hyperparameter Tuning
 
@@ -104,6 +93,7 @@ $S_{10}$ and $S_{12}$ have solutions (A4 to A3 and A2 to A1, respectively), whic
 
 ```{r}
 #| label: tbl-state-spaces
+#| echo: false
 #| tbl-cap: "State Spaces 10 and 12"
 #| tbl-subcap: ["$S_{10}$","$S_{12}$"]
 #| tbl-cap-location: "bottom"
@@ -119,6 +109,7 @@ $S_{16}$ by contrast does not have an immediate solution, but the move _A5 to A4
 
 ```{r}
 #| label: tbl-state-space-16
+#| echo: false
 #| tbl-cap: "State Space 16"
 #| tbl-subcap: "$S_{16}$"
 
@@ -138,26 +129,64 @@ Based on this, I will propose the following scoring.
 
 ```{r}
 # Define smaller space
-s <- S[1:2]
+ s <- S[1:16]
 ## Convert data to data.frame
-my_data <-  purrr::map(s,~{
-  data.frame(State = as.character(.x) |> paste0(collapse=""),
-             Action = A
-             )
-  
-}) |> bind_rows()
+ system.time({
+   
+ 
+ my_data <-  purrr::map(s,~{
+   data.frame(State = as.character(.x) |> paste0(collapse=""),
+              Action = A
+              )
+   
+ }) |> bind_rows()
 
-my_data2 <- purrr::map2(my_data$State,my_data$Action~{
-  
-})
 
-my_data
+ ## Play each move, each board
+ 
+ my_data2 <- purrr::map2(my_data$State, my_data$Action,~{
+   B <- binary_to_matrix(.x)
+   B2 <- make_move(B,.y)
+   my_score <- score_binary_board( B2 )
+   if(my_score == 0 & .y != "Pass"){
+     my_score <- (-1) #Penalty
+   }
+   #if(my_score == 0 & .y == "Pass"){
+  #   my_score <- (-50) #Penalty
+  # }
+   
+   data.frame(Reward = my_score, 
+              NextState = B2 |> as.character() |> paste0(collapse=""))
+   
+ }) |> bind_rows()
+ 
+ my_data <- bind_cols(my_data,my_data2)
+ 
+ control <- list(alpha = 0.1, gamma = .6, epsilon = 0.1)
+ 
 
-# control <- list(alpha = 0.1, gamma = 0.1, epsilon = 0.1)
-# system.time(
-#   model <- ReinforcementLearning(
-#     data, s = "State", a = "Action", r = "Reward", s_new = "NextState", 
-#     control = control)
-# )
+   model <- ReinforcementLearning(
+     data=my_data, s = "State", a = "Action", r = "Reward", s_new = "NextState", 
+     control = control)
+ })
+ 
 ```
 
+
+
+## Now let's use predict to check our boards
+
+```{r}
+new_data <- data.frame(State=c(
+  S[[10]] |> as.character() |> paste0(collapse=""),
+  S[[11]] |> as.character() |> paste0(collapse=""),
+  S[[12]] |> as.character() |> paste0(collapse=""),
+ 
+  S[[16]] |> as.character() |> paste0(collapse="")
+  )
+)
+
+predict(model,newdata = new_data$State)
+```
+
+So it did learn strategic moves.

@@ -25,13 +25,13 @@ create_action_space <- function(nrows,ncols){
   }
   
   # Horizontal
-  for(.c in 1:(length(my_cols)-1)){
-    for(.r in 1:length(my_rows)){
+  for(.c in 1:(length(my_cols))){
+    for(.r in 1:(length(my_rows)-1)){
       A <- c(A,
              paste0(
                my_cols[.c],my_rows[.r],
                " to ",
-               my_cols[.c+1],my_rows[.r]
+               my_cols[.c],my_rows[.r+1]
              )
       )
     }
