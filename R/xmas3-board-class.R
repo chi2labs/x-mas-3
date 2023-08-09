@@ -15,14 +15,14 @@ xmas3board <- function(x=0, dims=c(4,5)){
 #' Converts Board State to Matrix
 #'
 #' @param x board
-#'
+#' @importFrom adana int2bin
 #' @return matrix
 #' @export
 as.matrix.xmas3 <- function(x){
-  my_data <- intToBits(x) |> as.integer()
-  ncol <- attr(x,"dims")[1]
-  nrow <- attr(x,"dims")[2]
+  nrow <- attr(x,"dims")[1]
+  ncol <- attr(x,"dims")[2]
   l <- prod(attr(x,"dims"))
+  my_data <- int2bin(x,l)
   M <- matrix(data = my_data[1:l],ncol = ncol,nrow = nrow)
   colnames(M) <- LETTERS[1:ncol]
   M
@@ -89,16 +89,8 @@ plot.xmas3 <- function(x,...){
   g
 }
 
-add_move <- function (x, ...) {
-  UseMethod("add_move")
-}
 
-#' Add Tile to Board Plot
-#'
-#' @param x 
-#' @param ... 
-#'
-#' @return ggplot
+
 #' @export
 add_tile <- function(x,...){
   UseMethod("add_tile")  
@@ -123,15 +115,27 @@ add_tile.xmas3plot <- function(p, pos,...){
   
   p + annotate("point",x=.c-.5,y=.r-.5,shape=22,size=20,...)
 }
-add_move.xmas3plot <- function(g,move,arr=arrow(),...){
+#' Add Move to Board Plot
+#'
+#' @param p Board Plot
+#' @param move Move to Add
+#' @param arr arrow to use
+#' @param ... passed along (for color, linetype etc.)
+#'
+#' @return plot with move added
+#' @export
+add_move <- function (x, ...) {
+  UseMethod("add_move")
+}
+
+#' @rdname add_move
+#' @export
+add_move.xmas3plot <- function(p,move,arr=arrow(),...){
   ## Parse move
-  c1 <- stringr::str_sub(move,1,1)
-  r1 <- stringr::str_sub(move,2,2) %>% as.integer()
-  c2 <- stringr::str_sub(move,7,7)
-  r2 <- stringr::str_sub(move,8,8) %>% as.integer()
-  # Find numerical representations of column values
-  c1 <- which(LETTERS == c1)
-  c2 <- which(LETTERS == c2)
+  m <- parse_move(move)
+  #browser()
+  c1 <- m$cs[1];c2 <- m$cs[2]
+  r1 <- m$rs[1]; r2 <- m$rs[2]
   ##offsets 
   if(c1==c2){
     c1<-c2-.5->c2
@@ -156,20 +160,39 @@ add_move.xmas3plot <- function(g,move,arr=arrow(),...){
     
   }
   
-  g <-g+ annotate("segment",x=c1,y=r1,xend=c2,yend=r2,arrow=arr,...)
-  g
+  p+ annotate("segment",x=c1,y=r1,xend=c2,yend=r2,arrow=arr,...)
+  
+}
+
+#' Parse Move
+#'
+#' @param move Character vector representing the move, e.g. "B1 to B2" 
+#'
+#' @return a named list cell_specs c1,c2,r1,r2
+#' @export
+parse_move <- function(move){
+  
+  #move <- as.character(deparse(substitute(move))) ## why doesn't it work?
+  # Get column
+  cs <- stringr::str_extract_all(move,"[A-Z]", simplify = TRUE)
+  cs <- c(which(LETTERS %in% cs[1]), which(LETTERS %in% cs[2])) 
+  
+  rs <- stringr::str_extract_all(move,"[0-9]{1,2}", simplify = TRUE) %>%
+    as.integer()
+  
+  list(cs=cs,rs=rs)
 }
 
 if(interactive()){
-  tmp <- xmas3board(25,dims = c(3,3))
+  tmp <- xmas3board(1,dims = c(3,3))
   plot(tmp) -> p
-  p<- p %>% 
-    add_move("B2 to C2") %>% 
-    add_move("C2 to C1") %>% 
-    add_tile("C2", color='gray') %>% 
-    add_tile("C1", color='gray') %>% 
-    add_move("C2 to C3") %>% 
+  p<- p %>%
+    add_move("B2 to C2") %>%
+    add_move("C2 to C1") %>%
+    add_tile("C2", color='gray') %>%
+    add_tile("C1", color='gray') %>%
+    add_move("C2 to C3") %>%
     add_move("C1 to B1")
-  
-  print(p)
+  print(tmp)
+  #print(p)
 }

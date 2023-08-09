@@ -2,9 +2,12 @@
 % Please edit documentation in R/make_move.R
 \name{make_move}
 \alias{make_move}
+\alias{make_move.xmas3}
 \title{Make move on binary Board}
 \usage{
-make_move(B, move)
+make_move(x, ...)
+
+\method{make_move}{xmas3}(B, move)
 }
 \arguments{
 \item{B}{the board}

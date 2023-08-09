@@ -1,0 +1,63 @@
+---
+title: "The 3 by 3 Board"
+author: "Aleksander Dietrichson"
+format: html
+editor: visual
+---
+
+```{r}
+#| include: false
+library(xmas3)
+
+```
+
+We start with a 3x3 grid. This should be sufficiently small that a machine learning algorithm will converge in short order and we are able to test the outcome before embarking on a more wide-ranging excercise.
+
+## State Space
+
+A three by three board gives us a state-space of 512 possibilities. However, some proportion of the boards in this space will already have a winning combination on them, and should be excluded form the training because (a) they will not come up in play, as tiles are immediately removed when a scoring combination is found, and (b) there is logically no correct move on these boards. For example Board 73 has three tiles in a row on row 3.
+
+```{r}
+#| label: fig-board-73
+#| fig-cap: "Board 73"
+#| fig-asp: 1
+#| fig-width: 3
+#| echo: false
+
+B <- xmas3board(73,c(3,3))
+plot(B)
+
+```
+
+We will remove these from consideration by generating the action space, scoring each board and removing the ones that have a positive score.
+
+```{r}
+S <- create_state_space(3,3)
+my_scores <- purrr::map(S,score_binary_board) %>% unlist()
+S <- S[my_scores==0] 
+```
+
+Which leaves us with `r length(S)` playable boards.
+
+## Action Space
+
+Our action space *A* is created using the functions from our package
+
+```{r}
+A <- xmas3::create_action_space(3,3)
+A
+```
+
+Which gives us a an *A* of length `r length(A)` .
+
+## Data for Modelling
+
+```{r}
+filename <- here::here("inst/training-data/3x3-")
+ my_data <-  purrr::map(s,~{
+   data.frame(State = as.character(.x) |> paste0(collapse=""),
+              Action = A
+              )
+   
+ }) |> bind_rows()
+```
