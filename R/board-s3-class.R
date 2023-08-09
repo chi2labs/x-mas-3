@@ -69,40 +69,107 @@ plot.xmas3 <- function(x,...){
   my_data <- my_data -.5 #offset
   # y_adjust <- n_rows %/% 2
   # my_data$row <- ifelse(my_data$row)
-# offset <- 0.5
-# chessdat2 <- chessdat + offset
-  g <- ggplot(my_data, aes(column,row)) + geom_point(shape=22,size=20) + theme_bw()
+  # offset <- 0.5
+  # chessdat2 <- chessdat + offset
+  g <- ggplot(my_data, aes(column,row)) + 
+    geom_point(shape=22,size=20)
   g <- g +
     theme_bw()+
-     theme(
-       panel.grid.major = element_blank(),
+    theme(
+      panel.grid.major = element_blank(),
       # panel.grid.major = element_line(linetype = 2, color='gray'),
-           panel.grid.minor = element_line(linetype = 2, color = 'grey'),
-           axis.ticks = element_blank(),
-           #axis.text = element_blank(),
-           axis.title = element_blank())+
+      panel.grid.minor = element_line(linetype = 2, color = 'grey'),
+      axis.ticks = element_blank(),
+      #axis.text = element_blank(),
+      axis.title = element_blank())+
     coord_cartesian(xlim=c(0,n_cols), ylim=c(n_rows,0))+
     scale_x_continuous(breaks = 1:n_cols-.5,labels=LETTERS[1:n_cols],expand = c(0,0))+
     scale_y_continuous(breaks = 1:n_rows-.5,labels = 1:n_rows, expand = c(0,0))
+  class(g) <- c(class(g),"xmas3plot")
+  g
+}
+
+add_move <- function (x, ...) {
+  UseMethod("add_move")
+}
+
+#' Add Tile to Board Plot
+#'
+#' @param x 
+#' @param ... 
+#'
+#' @return ggplot
+#' @export
+add_tile <- function(x,...){
+  UseMethod("add_tile")  
+}
+
+#' Add Tile to Board Plot
+
+#' @param col A-J or 1:10
+#' @param row row in question
+#' @param ... passed on
+#' @param p 
+#'
+#' @export
+
+add_tile.xmas3plot <- function(p, pos,...){
+  .c <- substr(pos,1,1)
+  .r <- substr(pos,2,2) %>% as.numeric()
   
-  if(!is.null(list(...)$move)){ ## TODO: consider moving to separate function.
-    ## Parse move
-    move <- list(...)$move
-    c1 <- stringr::str_sub(move,1,1)
-    r1 <- stringr::str_sub(move,2,2) %>% as.integer()
-    c2 <- stringr::str_sub(move,7,7)
-    r2 <- stringr::str_sub(move,8,8) %>% as.integer()
-    # Find numerical representations of column values
-    c1 <- which(LETTERS == c1)
-    c2 <- which(LETTERS == c2)
-    ##offsets 
-    c1<-c1-.5;r1<-r1-.5;c2<-c2-.5;r2<-r2-.5
-    g <-g+ annotate("segment",x=c1,y=r1,xend=c2,yend=r2, arrow = arrow())
+  if(is.character(.c)){
+    .c <- which(LETTERS==.c) 
+  } 
+  
+  p + annotate("point",x=.c-.5,y=.r-.5,shape=22,size=20,...)
+}
+add_move.xmas3plot <- function(g,move,arr=arrow(),...){
+  ## Parse move
+  c1 <- stringr::str_sub(move,1,1)
+  r1 <- stringr::str_sub(move,2,2) %>% as.integer()
+  c2 <- stringr::str_sub(move,7,7)
+  r2 <- stringr::str_sub(move,8,8) %>% as.integer()
+  # Find numerical representations of column values
+  c1 <- which(LETTERS == c1)
+  c2 <- which(LETTERS == c2)
+  ##offsets 
+  if(c1==c2){
+    c1<-c2-.5->c2
+    if(r1>r2){
+      r1<-r1-.60;
+      r2<-r2-.40;        
+    } else{
+      r1<-r1-.4;
+      r2<-r2-.6;        
+    }
+
   }
+  if(r1==r2){
+    r1<-r2-.5->r2
+    if(c1>c2){
+      c1<-c1-.60;
+      c2<-c2-.40;
+    } else{
+      c1<-c1-.40
+      c2<-c2-.60
+    }
+    
+  }
+  
+  g <-g+ annotate("segment",x=c1,y=r1,xend=c2,yend=r2,arrow=arr,...)
   g
 }
 
 if(interactive()){
-  tmp <- xmas3board(25)
-  plot(tmp) %>% print()
+  tmp <- xmas3board(25,dims = c(3,3))
+  plot(tmp) -> p
+  p<- p %>% 
+    add_move("B2 to C2") %>% 
+    add_move("C2 to C1") %>% 
+    add_tile("C2", color='gray') %>% 
+    add_tile("C1", color='gray') %>% 
+    add_move("C2 to C3") %>% 
+    add_move("C1 to B1")
+  
+  print(p)
 }
