@@ -7,6 +7,7 @@
 #' @return x with class and attributes added
 #' @export
 xmas3board <- function(x=0, dims=c(4,5)){
+ 
   class(x) <- c("xmas3",class(x))
   attr(x,"dims") <- dims
   x
@@ -146,7 +147,7 @@ add_move.xmas3plot <- function(p,move,arr=arrow(),...){
       r1<-r1-.4;
       r2<-r2-.6;        
     }
-
+    
   }
   if(r1==r2){
     r1<-r2-.5->r2
@@ -164,6 +165,89 @@ add_move.xmas3plot <- function(p,move,arr=arrow(),...){
   
 }
 
+
+#' Flip a Board
+#'
+#' @param B xmas3board
+#'
+#' @return The flipped board
+#' @export
+transpose <- function(x,...){
+  UseMethod("transpose")
+}
+
+#' @rdname transpose
+#' @export
+transpose.xmas3 <- function(B){
+  M <- t(as.matrix(B)) 
+  M %>%   adana::bin2int() %>% 
+    xmas3board(dims=dim(M))
+  
+}
+
+#' Transposes a Move
+#' 
+#' Makes vertical moves horizontal and vice-versa
+#'
+#' @param move Move to transpose
+#'
+#' @return the transposition
+#' @export
+
+transpose_move <- function(move){
+  m <- parse_move(move)
+  m
+  paste0(LETTERS[m$rs[1]],
+         m$cs[1],
+         LETTERS[m$rs[2]],
+         m$cs[2]
+  )
+  
+}
+
+#' Returns a Window of the Board
+#'
+#' @param B Board to Window
+#' @param pos Position
+#' @param dims window dimensions
+#'
+#' @return a xmas3 board
+#' @export
+
+window.xmas3 <- function(B,from=c(1,1), dims=c(2,2)){
+  M <- as.matrix(B)
+  
+  M[from[1]:(from[1] + dims[1]-1),
+    from[2]:(from[2] + dims[2]-1)
+    ] %>% 
+    adana::bin2int() %>% 
+    xmas3board(dims)->B
+   attr(B, "pos") <- from # Know where you came from 
+  B
+  #M
+}
+
+#' Calculate Move on Different Board
+#'
+#' When a move has been calculated on a sub-board and needs to be played on in a 
+#' different context (i.e. the full board) it needs to slide
+#' 
+#' @param win window the move was played on.
+#' @param move the move
+#'
+#' @return The Transitioned Move
+#' @export
+#'
+#' @examples
+slide_move <- function(move,win){
+  pos <- attr(win,"pos")
+  
+  if(is.null(pos)) return(move)
+  m <- parse_move(move)
+  m$rs <- m$rs+pos[1]-1
+  m$cs <- m$cs+pos[2]-1 # We're not zero based
+  unparse_move(m)
+}
 #' Parse Move
 #'
 #' @param move Character vector representing the move, e.g. "B1 to B2" 
@@ -183,16 +267,28 @@ parse_move <- function(move){
   list(cs=cs,rs=rs)
 }
 
+unparse_move<-function(m){
+  paste0(LETTERS[m$cs[1]],
+         m$rs[1],
+         LETTERS[m$cs[2]],
+         m$rs[2]
+         )
+}
+
 if(interactive()){
-  tmp <- xmas3board(1,dims = c(3,3))
-  plot(tmp) -> p
-  p<- p %>%
-    add_move("B2 to C2") %>%
-    add_move("C2 to C1") %>%
-    add_tile("C2", color='gray') %>%
-    add_tile("C1", color='gray') %>%
-    add_move("C2 to C3") %>%
-    add_move("C1 to B1")
-  print(tmp)
-  #print(p)
+  B <- xmas3board(2051)
+  print(B)
+  
+  my_move <- ("B1B2")
+  slide_move(my_move,B) %>% print()
+  w1 <- window(B,c(1,1),c(2,3))
+  w2 <- window(B,c(2,2),c(2,3)) 
+  w3 <- window(B,c(2,2),c(2,3)) 
+  w4 <- window(B,c(2,2),c(2,3)) 
+  w5 <- window(B,c(3,1),c(2,5)) 
+  slide_move(my_move,w1) %>% print()
+  slide_move(my_move,w2) %>% print()
+  slide_move(my_move,w3) %>% print()
+  slide_move(my_move,w4) %>% print()
+  slide_move(my_move,w5) %>% print()
 }

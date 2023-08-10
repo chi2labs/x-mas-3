@@ -1,0 +1,36 @@
+---
+title: "Transpositions"
+author: "Aleksander Dietrichson"
+format: html
+editor: visual
+---
+
+## Board and Move Transpositions
+
+```{r}
+#| include: false
+library(xmas3)
+
+```
+
+Since the strategies and tactics learned on a i.e. 3x4 board are in principle the same as those of a 4x3 board it is useful to be able to transpose both boards and moves. We therefore implemented transpose-functions for both.
+
+## Examples
+
+```{r}
+B <- xmas3board(2051,c(3,4))
+my_move <- "A1 to B1"
+
+```
+
+```{r}
+#| label: fig-transpositions
+#| layout-ncol: 2
+#| fig-cap: "Transposition example"
+#| fig-subcap: ["Original","Transposed"]
+#| fig-asp: 1
+#| fig-width: 3
+B %>% plot() %>% add_move(my_move)
+transpose(B) %>% plot() %>% add_move(my_move %>% transpose_move())
+
+```

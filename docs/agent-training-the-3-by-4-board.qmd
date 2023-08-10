@@ -138,5 +138,3 @@ B %>%
   plot() %>% 
   add_move(gatai_move, lwd=1,color="red") 
 ```
-
-
