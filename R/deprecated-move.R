@@ -1,6 +1,6 @@
 #' Make a Move
 #'
-#' @param board the current (or inital) board
+#' @param board the current (or initial) board
 #' @param .r row
 #' @param .c column
 #' @param move Up/Down/Left/Right
