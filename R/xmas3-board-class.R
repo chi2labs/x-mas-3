@@ -7,7 +7,7 @@
 #' @return x with class and attributes added
 #' @export
 xmas3board <- function(x=0, dims=c(4,5)){
- 
+  
   class(x) <- c("xmas3",class(x))
   attr(x,"dims") <- dims
   x
@@ -219,10 +219,10 @@ window.xmas3 <- function(B,from=c(1,1), dims=c(2,2)){
   
   M[from[1]:(from[1] + dims[1]-1),
     from[2]:(from[2] + dims[2]-1)
-    ] %>% 
+  ] %>% 
     adana::bin2int() %>% 
     xmas3board(dims)->B
-   attr(B, "pos") <- from # Know where you came from 
+  attr(B, "pos") <- from # Know where you came from 
   B
   #M
 }
@@ -239,14 +239,15 @@ window.xmas3 <- function(B,from=c(1,1), dims=c(2,2)){
 #' @export
 #'
 #' @examples
-slide_move <- function(move,win){
-  pos <- attr(win,"pos")
+slide_move <- function(move,win,pos){
+  if(missing(pos))
+    pos <- attr(win,"pos")
+    if(is.null(pos)) return(move)
+    m <- parse_move(move)
+    m$rs <- m$rs+pos[1]-1
+    m$cs <- m$cs+pos[2]-1 # We're not zero based
+    unparse_move(m)
   
-  if(is.null(pos)) return(move)
-  m <- parse_move(move)
-  m$rs <- m$rs+pos[1]-1
-  m$cs <- m$cs+pos[2]-1 # We're not zero based
-  unparse_move(m)
 }
 #' Parse Move
 #'
@@ -272,7 +273,7 @@ unparse_move<-function(m){
          m$rs[1],
          LETTERS[m$cs[2]],
          m$rs[2]
-         )
+  )
 }
 
 if(interactive()){

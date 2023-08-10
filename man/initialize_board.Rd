@@ -7,7 +7,7 @@
 initialize_board(avoid_combinations = TRUE)
 }
 \value{
-a 6 by 10 Matrix with the letters \link{A-J} in the cells.
+a 6 by 10 Matrix with the \link{A-J} in the cells.
 }
 \description{
 Initialize a game board

@@ -4,7 +4,7 @@
 \alias{slide_move}
 \title{Calculate Move on Different Board}
 \usage{
-slide_move(move, win)
+slide_move(move, win, pos)
 }
 \arguments{
 \item{move}{the move}
