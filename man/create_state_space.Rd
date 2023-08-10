@@ -4,12 +4,12 @@
 \alias{create_state_space}
 \title{Creates State Space}
 \usage{
-create_state_space(ncol = 4, nrow = 5)
+create_state_space(nrow = 3, ncol = 3)
 }
 \arguments{
-\item{ncol}{width}
-
 \item{nrow}{height}
+
+\item{ncol}{width}
 }
 \value{
 an list of integers with class 4x5.space
