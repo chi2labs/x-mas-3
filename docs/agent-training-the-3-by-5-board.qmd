@@ -1,0 +1,178 @@
+---
+title: "The 3 by 4 Board"
+author: "Aleksander Dietrichson"
+format: html
+editor: visual
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+library(xmas3)
+n_col = 4
+n_row = 3
+S <- create_state_space(n_row,n_col)
+my_scores <- purrr::map(S,score_binary_board) %>% unlist()
+S <- S[my_scores == 0] 
+A <- create_action_space(n_row,n_col)
+```
+
+We start with a 3x5 grid.
+
+## State and Action Spaces
+
+With the grid dimension chosen, we have $2^{(3\times4)}=4096$, possibilities. This should still be within the realm of the possible given the resources available.
+
+We created our $S$ and $A$ using the same functions and trained a model with these parameters.
+
+## Data for Modelling
+
+The data for the modelling exercise was created by playing each possible move for each of the remaining *S.*
+
+## Training the Model
+
+We then using the Q-learning with the *standard default* parameters ($\alpha=.1,\gamma=.1, \epsilon=.1$). This model converged in about 8 minutes.
+
+## Testing the Model
+
+Again testing the model amounts We can now test the model by asking it to play some boards where we know the correct play. For example $S_{32}$ where there is a scoring move.
+
+Let's do a spot_check.
+
+```{r}
+# Read from cache
+
+gatai <- readr::read_rds(here::here("inst/models/q-learning-3x4.rds"))
+S[32]
+predict(gatai,S[32])
+```
+
+Looks good. Let's check a non-scoring one.
+
+```{r}
+S[33]
+predict(gatai,S[33])
+```
+
+Looks good. Let's see if it can think strategically at this level.
+
+```{r}
+#| include: false
+adana::bin2int(
+  c(
+  1,0,0,
+  0,0,0,
+  0,0,0,
+  0,1,1
+  )
+) %>% xmas3board(dims = c(3,4)) -> B
+```
+
+```{r}
+B <- xmas3board(B,c(3,4))
+B
+B %>% as.character() %>% predict(gatai,.)
+```
+
+So, apparently looking three moves ahead.
+
+```{r}
+#| label: fig-s32 
+#| layout-ncol: 2
+#| fig-cap: "Gatai Thinks Two Moved Ahead"
+#| fig-subcap: ["Board  2051","Suggested Move"]
+#| fig-asp: 1
+#| fig-width: 3
+#| echo: false
+
+B %>% 
+  plot()
+B %>% 
+  plot() %>% 
+  add_move("A1B1", lwd=1,color="red") %>% 
+  add_move("B1C1", lwd=1,linetype=2,color="grey") %>% 
+  add_move("C1D1", lwd=1,linetype=2,color="grey")
+
+```
+
+## Competing Moves
+
+```{r}
+
+```
+
+```{r}
+#| label: fig-board-263 
+#| layout-ncol: 3
+#| fig-cap: Board 263
+#| fig-subcap: ["Board","Scoring Moves","Strongest Moved"]
+#| fig-asp: 1
+#| fig-width: 3
+#| echo: false
+p <- plot(S[[263]])
+p
+p %>% 
+  add_move("B3A3") %>% 
+  add_move("A2A3") %>% 
+  add_move("B3A3") %>% 
+  add_move("C2C1") %>% 
+  add_move("C2B2") %>% 
+  add_move("B1C1") %>% 
+  add_move("B1B2") %>% 
+  add_move("B3B2") %>% 
+  add_move("A2B2")
+
+p %>% 
+  add_move("A2A3", color="red", lwd=1) %>% 
+  add_move("C2C1",color="red", lwd=1) %>% 
+  add_move("B3A3",color="red", lwd=1) %>% 
+  add_move("B1C1",color="red", lwd=1)
+  
+
+
+
+
+```
+
+Let's see what Gatai believes:
+
+```{r}
+predict(model,S[263])
+```
+
+So, one of the strongest moves available. However, we cannot be sure whether this was a random choice among scoring moves or the result of a strategic play. We can check this with another board.
+
+## Strategic Moves
+
+In our original State space \$\_{259} does not have a directly scoring move, however, the correct move is A1 to B1, in preparatin for B1xC1 on the next round.
+
+```{r}
+s <- xmas3board(259,c(3,3))
+s
+```
+
+```{r}
+predict(model,s %>% as.character())
+```
+
+So we see that Gatai to makes strategic moves as well.
+
+```{r}
+#| label: fig-board-space-259-adjusted-model  
+#| layout-ncol: 2
+#| fig-cap: "Gatai Thinks Ahead"
+#| fig-subcap: ["Initial Board","Move 1"]
+#| fig-asp: 1
+#| fig-width: 3
+#| echo: false
+p <- plot(s)
+p
+p %>% 
+  add_move("A1B1", color="red", lwd=1) %>% 
+  add_tile("B1", color="darkgrey") %>% 
+  add_tile("C1", color="grey") %>% 
+  add_move("B1C1", lty=2)
+
+```
+
+## Reference

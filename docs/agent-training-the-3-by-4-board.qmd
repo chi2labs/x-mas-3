@@ -1,0 +1,142 @@
+---
+title: "The 3 by 4 Board"
+author: "Aleksander Dietrichson"
+format: html
+editor: visual
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+library(xmas3)
+n_col = 4
+n_row = 3
+S <- create_state_space(n_row,n_col)
+my_scores <- purrr::map(S,score_binary_board) %>% unlist()
+S <- S[my_scores == 0] 
+A <- create_action_space(n_row,n_col)
+```
+
+We start with a 3x4 grid.
+
+## State and Action Spaces
+
+With the grid dimension chosen, we have $2^{(3\times4)}=4096$, possibilities. This should still be within the realm of the possible given the resources available.
+
+We created our $S$ and $A$ using the same functions and trained a model with these parameters.
+
+## Data for Modelling
+
+The data for the modelling exercise was created by playing each possible move for each of the remaining *S.*
+
+## Training the Model
+
+We trained the same type of model (Q-Learning) as before, again with the *standard default* parameters ($\alpha=.1,\gamma=.1, \epsilon=.1$). This model converged in just over 8 seconds.
+
+## Testing the Model
+
+Again testing the model amounts We can now test the model by asking it to play some boards where we know the correct play. For example $S_{32}$ where there is a scoring move.
+
+### Spot Check
+
+Let's do a spot_check.
+
+```{r}
+# Read from cache
+
+gatai <- readr::read_rds(here::here("inst/models/q-learning-3x4.rds"))
+S[32]
+predict(gatai,S[32])
+```
+
+Looks good. Let's check a non-scoring one.
+
+```{r}
+S[33]
+predict(gatai,S[33])
+```
+
+Looks good. Let's see if it can think strategically at this level.
+
+```{r}
+#| include: false
+adana::bin2int(
+  c(
+  1,0,0,
+  0,0,0,
+  0,0,0,
+  0,1,1
+  )
+) %>% xmas3board(dims = c(3,4)) -> B
+```
+
+```{r}
+B <- xmas3board(B,c(3,4))
+B
+B %>% as.character() %>% predict(gatai,.)
+```
+
+So, apparently looking three moves ahead.
+
+```{r}
+#| label: fig-board-2051 
+#| layout-ncol: 2
+#| fig-cap: "Gatai Thinks Two Moves Ahead"
+#| fig-subcap: ["Board  2051","Suggested Move"]
+#| fig-asp: 1
+#| fig-width: 3
+#| echo: false
+
+B %>% 
+  plot()
+B %>% 
+  plot() %>% 
+  add_move("A1B1", lwd=1,color="red") %>% 
+  add_move("B1C1", lwd=1,linetype=2,color="grey") %>% 
+  add_move("C1D1", lwd=1,linetype=2,color="grey")
+
+```
+
+### Competing Moves
+
+```{r}
+#| include: false
+adana::bin2int(
+  c(
+  1,0,1,
+  0,1,0,
+  0,0,1,
+  0,1,1
+  )
+) %>% xmas3board(dims = c(3,4))
+```
+
+Board 2699 has two possible solutions. One scores higher than the other
+
+```{r}
+B <- xmas3board(2699, c(3,4))
+predict(gatai,B %>% as.character()) -> gatai_move
+gatai_move
+```
+
+We see that Gatai chooses the highest scoring move.
+
+```{r}
+#| label: fig-board-2699 
+#| layout-ncol: 2
+#| fig-cap: "Gatai Chooses Highest Scoring Move"
+#| fig-subcap: ["Possible Moves for Board  2699","Gatai's Move"]
+#| fig-asp: 1
+#| fig-width: 3
+#| echo: false
+
+B %>% 
+  plot() %>% 
+  add_move(gatai_move) %>% 
+  add_move("B2A2")
+B %>% 
+  plot() %>% 
+  add_move(gatai_move, lwd=1,color="red") 
+```
+
+

@@ -63,8 +63,8 @@ as.data.frame.xmas3 <- function(x,...){
 #' @return a ggplot
 #' @export
 plot.xmas3 <- function(x,...){
-  n_cols <- attr(x,"dims")[1]
-  n_rows <- attr(x,"dims")[2]
+  n_rows <- attr(x,"dims")[1]
+  n_cols <- attr(x,"dims")[2]
   my_data <- as.data.frame(x)
   my_data <- my_data -.5 #offset
   # y_adjust <- n_rows %/% 2

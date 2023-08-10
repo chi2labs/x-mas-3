@@ -7,9 +7,9 @@
 #' @return an list of integers with class 4x5.space
 #' @export
 create_state_space <- function(nrow=3, ncol=3){
-  classname <- paste0(ncol,"x",nrow,".space")
+  classname <- paste0(nrow,"x",ncol,".space")
   S <- 0:(2^(ncol*nrow)-1)
   purrr::map(S,~{
-   xmas3board(.x,dims = c(ncol,nrow))
+   xmas3board(.x,dims = c(nrow,ncol))
   })
 }

@@ -54,7 +54,7 @@ Which gives us a an *A* of length `r length(A)` .
 
 ## Data for Modelling
 
-The data for the modelling exercise was created by playing each possible move for each of the remaining *S.* 
+The data for the modelling exercise was created by playing each possible move for each of the remaining *S.*
 
 ## Training the Model
 
@@ -62,15 +62,14 @@ We then using the Q-learning algorithm implemented in the {Reinforcement Learnin
 
 ## Testing the Model
 
-We can now test the model by asking it to play some boards where we know the correct play.
-For example $S_{32}$ where there is a scoring move.
+We can now test the model by asking it to play some boards where we know the correct play. For example $S_{32}$ where there is a scoring move.
 
 ```{r}
 # Read from cache
+
 model <- readr::read_rds(here::here("inst/models/q-learning-3x3.rds"))
 predict(model,S[32])
 ```
-
 
 ```{r}
 #| label: fig-s32 
@@ -91,6 +90,7 @@ S[[32]] %>%
 ```
 
 On the other hand $S_{4}$ does not have a scoring move and should be passed.
+
 ```{r}
 predict(model,c(S[4],S[6]))
 ```
@@ -111,7 +111,7 @@ S[[6]] %>%
 
 ```
 
-## Competing Moves and Strategy
+### Competing Moves and Strategy
 
 Board 263 is an interesting case. Since there are three moves that would score points. However two of them are strategically superior (A1 to A1 and C1 to C2), because they both guarantee that there is enough tiles left on the board to make a scoring move on the next round.
 
@@ -138,7 +138,10 @@ p %>%
 
 p %>% 
   add_move("A2A3", color="red", lwd=1) %>% 
-  add_move("C2C1",color="red", lwd=1)
+  add_move("C2C1",color="red", lwd=1) %>% 
+  add_move("B3A3",color="red", lwd=1) %>% 
+  add_move("B1C1",color="red", lwd=1)
+  
 
 
 
@@ -146,63 +149,32 @@ p %>%
 ```
 
 Let's see what Gatai believes:
+
 ```{r}
 predict(model,S[263])
 ```
 
-So, equivalent of C2xC1, and one of the strongest moves available. However, we cannot be sure whether this was a random choice among scoring moves or the result of a strategic play. We can check this with another board.
+So, one of the strongest moves available. However, we cannot be sure whether this was a random choice among scoring moves or the result of a strategic play. We can check this with another board.
 
+### Strategic Moves
 
-## Strategic Moves
-
-In our original State space $_{259} does not have a directly scoring move, however, the correct move is A1 to B1, in preparatin for B1xC1 on the next round.
+In our original State space \$\_{259} does not have a directly scoring move, however, the correct move is A1 to B1, in preparatin for B1xC1 on the next round.
 
 ```{r}
 s <- xmas3board(259,c(3,3))
 s
 ```
+
 ```{r}
 predict(model,s %>% as.character())
 ```
-We see that the model prefers _Pass_ to the correct move. So, while Gatai is capable of tactical moves, it doesn't seem to have learned any strategy. 
 
-```{r}
-#| label: fig-board-space-259  
-#| layout-ncol: 3
-#| fig-cap: "Correct Strategy"
-#| fig-subcap: ["Board","Move 1","Move 2"]
-#| fig-asp: 1
-#| fig-width: 3
-#| echo: false
-p <- plot(s)
-p
-p %>% 
-  add_move("A1B1") %>% 
-  add_tile("B1", color="grey")
-
-s2 <- make_move(s,"A1B1")
-plot(s2) %>% 
-  add_move("B1C1") %>% 
-  add_tile("C1",color="grey")
-```
-
-
-## Adjusting Hyperparameters
-
-To overcome this issue, we may adjust the $\gamma$ parameter and retrain the model. This hyperparameter lets the algorithm know how far into the future to look.
-
-
-```{r}
-# Get from cache
-gatai_2 <- readr::read_rds(here::here("inst/models/q-learning-3x3-adjusted.rds"))
-predict(gatai_2,as.character(s))
-```
-So with this adjustment we have allowed Gatai to make strategic moves as well.
+So we see that Gatai to makes strategic moves as well.
 
 ```{r}
 #| label: fig-board-space-259-adjusted-model  
 #| layout-ncol: 2
-#| fig-cap: "After Gamma-adjustment: Gatai Thinks Ahead"
+#| fig-cap: "Gatai Thinks Ahead"
 #| fig-subcap: ["Initial Board","Move 1"]
 #| fig-asp: 1
 #| fig-width: 3
@@ -216,6 +188,5 @@ p %>%
   add_move("B1C1", lty=2)
 
 ```
-
 
 ## Reference
