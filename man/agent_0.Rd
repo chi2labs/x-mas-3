@@ -2,16 +2,20 @@
 % Please edit documentation in R/agent-0.R
 \name{agent_0}
 \alias{agent_0}
-\title{Makes random move}
+\title{Agent 0}
 \usage{
-agent_0(B)
+agent_0(S, n = 100, ...)
 }
 \arguments{
-\item{B}{}
+\item{S}{Screenshot of board}
+
+\item{n}{number of moves to make}
+
+\item{...}{not in use for this agent}
 }
 \value{
-a list with the resulting board and metadata
+a data.frame containing as least move_sequence
 }
 \description{
-Makes random move
+Makes random moves
 }

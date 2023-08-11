@@ -64,7 +64,7 @@ get_matrix_quadrants <- function(M,dims){
 #' @return data.frame with suggested moves etc.
 #' @importFrom dplyr left_join
 #' @export
-evaluate_board_LUT <- function(B,LUT = Gatai_LUT, dims=c(3,5)){
+evaluate_board_LUT_3x5 <- function(B, LUT=xmas3_LUT_3x5, dims=c(3,5)){
   W <- get_matrix_quadrants(B,dims)
   tile_types <- unique(B %>% as.character() %>% sort())
   res <- data.frame()

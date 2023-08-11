@@ -3,7 +3,7 @@
 #' 
 #' Handles the interaction with the web-driver.
 #' @import R6
-#' @name Robot
+#' @name GataiRobot
 #' 
 #' @examples
 #' \dontrun{
@@ -15,7 +15,7 @@
 #' 
 #' @export
 library(R6) #Not sure why this is needed...
-Robot <-
+GatAIRobot <-
   R6Class("x-mas-3-robot",
           public = list(
             verbose = FALSE,
@@ -69,6 +69,19 @@ Robot <-
       
       readline("Waiting for game do load. Press enter when it does.")
     },
+
+    getScreenShot = function(){
+      NULL
+    },
+    
+    getBoardOnScreen = function(){
+      NULL
+    },
+    play = function(agent = agent_0){
+      S <- self$getScreenShot()
+      moves <- agent_0(S)
+      purrr::walk(moves$sequence,self$makeMove)
+    },
     clickToGame = function(mode=c("arcade","time")){
       if(mode == "arcade"){
         self$message("Clicking through to Arcade Mode")
@@ -94,7 +107,6 @@ Robot <-
     makeMove = function(move){
       #Parse move etc.
       m <- parse_move(move)
-      
       self$message("Moving: ", move)
       orig <- dplyr::filter(self$coords,row==m$rs[1], col==m$cs[1])
       dest <- dplyr::filter(self$coords,row==m$rs[2], col==m$cs[2])
@@ -104,6 +116,7 @@ Robot <-
         return(invisible())
       }
       conf <- self$config
+      # return(invisible()) ## debugging ####
       remDr <- self$remDr
       game_canvas <- self$getGameCanvas()
       remDr$mouseMoveToLocation(x = conf$offset_x + orig$x ,
@@ -119,6 +132,10 @@ Robot <-
           )
     
   )
+
 if(interactive()){
-  rob <- Robot$new(verbose=TRUE)
+  library(RSelenium)
+  library(wdman)
+  gat <- GatAIRobot$new(verbose=TRUE)
+  
 }
