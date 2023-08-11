@@ -4,16 +4,16 @@
 \alias{evaluate_board}
 \title{Evaluate a board based in a Model}
 \usage{
-evaluate_board(B, model, dims = c(3, 5), include_strategy = TRUE)
+evaluate_board(B, q_model, dims = c(3, 5), include_strategy = TRUE)
 }
 \arguments{
 \item{B}{The board}
 
-\item{model}{the model to use}
-
 \item{dims}{dimensions to use for windowing.}
 
 \item{include_strategy}{should strategy be evaluated? (Slower)}
+
+\item{model}{the model to use}
 }
 \value{
 data.frame with suggested move and expected score

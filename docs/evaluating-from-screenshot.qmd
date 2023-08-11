@@ -8,8 +8,7 @@ editor: visual
 ```{r}
 #| include: false
 library(xmas3)
-model_path <- here::here("inst","models","q-learning-3x5.rds")
-gatai <- readr::read_rds(model_path)
+
 ```
 
 In order to connect Gatai with the real interface it is necessary to read and interpret a screenshot. For this purpose the `screenshot_translate_board` function was created.
@@ -29,8 +28,11 @@ M %>% knitr::kable()
 ```
 
 ```{r}
-my_eval <- xfun::cache_rds(
-  evaluate_board(B = M, model = gatai, dims = c(3,5))
-)
+my_eval <- evaluate_board_LUT(M, dims=c(3,5))
+
 ```
 
+```{r}
+my_eval |> dplyr::filter(expected_value>0) |> 
+  knitr::kable()
+```
