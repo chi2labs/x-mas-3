@@ -4,5 +4,14 @@
 \alias{Robot}
 \title{Instance of Robot}
 \description{
-Handles the interaction with the web-driver
+Handles the interaction with the web-driver.
+}
+\examples{
+\dontrun{
+## Play every legal move on the board.
+gatai <- Robot$new()
+gatai$clickToGame()
+gatai$testRemoteDriver()
+}
+
 }
