@@ -2,50 +2,53 @@
 library(xmas3)
 library(ReinforcementLearning)
 library(dplyr)
+library(usethis)
 
 
-n_row <- 3
-n_col <- 5
 
-filename_model <- here::here("inst","models",
-                             paste0("q-learning-",n_row,"x",n_col,".rds")
-)
-message("Filenames:\n",filename_model)
-
-S <- create_state_space(n_row,n_col)
-
-
-## Remove Invalid State Spaces
-my_scores <- purrr::map(S,score_binary_board) %>% unlist()
-S <- S[my_scores==0] 
-message("Removed Invalid States")
-
-gatai <- readr::read_rds(filename_model)
-
-s <- S[1:10]
-max_moves <- 5
-dims <- c(n_row, n_col)
-model <- gatai
-
-my_data <- purrr::map(S,~{
-  m <-0
-  B <-xmas3board(.x,dims = dims)
-  score <- 0
-  move_seq <- ""
-  while (score==0 & m <= max_moves) {
-    m <- m+1
-    my_move <- predict(model,B %>% as.character(.x))
-    move_seq <-c(move_seq,my_move) 
-    B <-make_move(B,my_move)
-    score <- score_binary_board(B)
-    if(my_move=="Pass") break
-  }
-  data.frame(State=.x,
-             score =score, 
-             expected_value = score/m, 
-             n_moves = m, 
-             sequence=paste0(move_seq, collapse = " ")
+create_strategy_LUT <- function(n_row,n_col){
+  
+  filename_model <- here::here("inst","models",
+                               paste0("q-learning-",n_row,"x",n_col,".rds")
   )
-}) %>% bind_rows()
+  LUT_name <- paste0("xmas3_LUT_",n_row,"x",n_col)
+  message("Filenames:\n",filename_model)
+  if(!file.exists(filename_model))stop("Cannot find model at: ",filename_model)
+  
+  S <- create_state_space(n_row,n_col)
+  dims <- c(n_row, n_row)
+  max_moves <- max(dims)
+  ## Remove Invalid State Spaces
+  my_scores <- purrr::map(S,score_binary_board) %>% unlist()
+  S <- S[my_scores==0] 
+  message("Removed Invalid States")
+  
+  model <-readr::read_rds(filename_model)
+  
+  
+  my_data <- purrr::map(S,~{
+    m <-0
+    B <-xmas3board(.x,dims = dims)
+    score <- 0
+    move_seq <- c()
+    while (score==0 & m <= max_moves) {
+      m <- m+1
+      my_move <- predict(model,B %>% as.character(.x))
+      move_seq <-c(move_seq,my_move) 
+      B <-make_move(B,my_move)
+      score <- score_binary_board(B)
+      if(my_move=="Pass") break
+    }
+    data.frame(State=.x,
+               score =score, 
+               expected_value = score/m, 
+               n_moves = m, 
+               sequence=paste0(move_seq, collapse = " -> ")
+    )
+  }) %>% bind_rows()
+  
+  assign(LUT_name,my_data,pos = 1)
+  do.call("use_data", list(as.name(LUT_name), overwrite = TRUE))
+}
 
-readr::write_rds(my_data,file = "inst/LUTS/LUT-3x5.rds")
+create_strategy_LUT(n_row=3,n_col=3)
