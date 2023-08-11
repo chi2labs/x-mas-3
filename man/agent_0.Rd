@@ -4,10 +4,10 @@
 \alias{agent_0}
 \title{Agent 0}
 \usage{
-agent_0(S, n = 100, ...)
+agent_0(B, n = 100, ...)
 }
 \arguments{
-\item{S}{Screenshot of board}
+\item{B}{Board Matrix}
 
 \item{n}{number of moves to make}
 

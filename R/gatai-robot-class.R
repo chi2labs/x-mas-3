@@ -3,7 +3,9 @@
 #' 
 #' Handles the interaction with the web-driver.
 #' @import R6
-#' @name GataiRobot
+#' @name GatAIRobot
+#' 
+#' @import R6
 #' 
 #' @examples
 #' \dontrun{
@@ -14,7 +16,6 @@
 #' }
 #' 
 #' @export
-library(R6) #Not sure why this is needed...
 GatAIRobot <-
   R6Class("x-mas-3-robot",
           public = list(
@@ -24,10 +25,12 @@ GatAIRobot <-
             cDrv = NULL,
             coords =NULL,
             game_canvas = NULL,
+            screenshotFile = character(0),
             initialize = function(
     conf_filename =  system.file("conf/chromebook.yml", package = "xmas3"),
     verbose = FALSE
             ){
+              self$screenshotFile <- tempfile(fileext = ".png")
               if(!file.exists(conf_filename))stop("Config file not found", conf_filename)
               self$config <- yaml::read_yaml(conf_filename)
               self$verbose <- verbose
@@ -69,19 +72,38 @@ GatAIRobot <-
       
       readline("Waiting for game do load. Press enter when it does.")
     },
-
-    getScreenShot = function(){
-      NULL
+    
+    #' @field takeScreenshot
+    #' Takes a screenshot of the current screen
+    takeScreenshot = function(){
+      self$remDr$screenshot(file = self$screenshotFile)
     },
     
+    
+    #' @field getBoardOnScreen
+    #'  description
+    #' Takes a screenshot of the current screen, crops it and
+    #' returns the cropped board.
     getBoardOnScreen = function(){
-      NULL
+      
+      self$takeScreenshot()
+      Board <- screenshot_load_scale_and_crop(self$screenshotFile)
+      B <- screenshot_translate_board(Board)
+      print(B)
+      B
     },
+    
+    #' @field play
+    #' Plays the current board using one of the GatAI agents.
+    #' @param agent a GatAi Agent function.
     play = function(agent = agent_0){
-      S <- self$getScreenShot()
+      S <- self$getBoardOnScreen()
       moves <- agent_0(S)
       purrr::walk(moves$sequence,self$makeMove)
     },
+    
+    #' @field clickToGame
+    #' Clicks into the game from the welcome screen.
     clickToGame = function(mode=c("arcade","time")){
       if(mode == "arcade"){
         self$message("Clicking through to Arcade Mode")
@@ -90,20 +112,28 @@ GatAIRobot <-
         self$remDr$click() 
       }
     },
+    
+    #' @field getGameCanvas
+    #' Returns the binding to the game canvas.
     getGameCanvas = function(){
       self$remDr$findElements(using = "id","unity-canvas")
     },
-      #' @field testRemoveDriver
-      #' Makes every legal move on the board. Mostly for testing.
+    
+    #' @field testRemoveDriver
+    #' Makes every legal move on the board. Convenience function for testing purposes.
     testRemoteDriver = function(){
       A <- create_action_space(6,10)
       A <- A[which(A != "Pass")]
       purrr::walk(A,self$makeMove)
       
     },
+    
     makeMoveSequence = function(moves){
       
     },
+    
+    #' @field makeMove
+    #' Makes a move on the screen
     makeMove = function(move){
       #Parse move etc.
       m <- parse_move(move)
@@ -133,9 +163,17 @@ GatAIRobot <-
     
   )
 
+# Debugging ####
 if(interactive()){
+  library(R6)
   library(RSelenium)
   library(wdman)
-  gat <- GatAIRobot$new(verbose=TRUE)
+  library(xmas3)
+  if(exists("gat")){
+  rm(gat)
+  gc()
+    
+  }
+   gat <- GatAIRobot$new(verbose=TRUE)
   
 }
