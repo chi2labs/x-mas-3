@@ -14,7 +14,4 @@ play_board <- function(Board,agent=agent_0){
   B
 }
 
-# if(interactive()){
-#   B <- initialize_board()
-#   play_board(B,agent_1) %>% print()
-# }
+

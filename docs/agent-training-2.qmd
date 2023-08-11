@@ -1,0 +1,192 @@
+---
+title: "Agent Training"
+author: "Aleksander Dietrichson, PhD"
+monobackgroundcolor: "lightgrey"
+format: html
+---
+
+Based on some notes and experiments it seems reasonable to assume that we should be able to train an RL model on a 5 by 4 grid. It also seems that chess-like notation, which is more human readable, and thus more convenient for the researcher (i.e. me), add minimal overhead in the parsing and scoring processes.
+
+```{r}
+#| include: false
+library(xmas3)
+library(ReinforcementLearning)
+library(dplyr)
+```
+
+## Functions Needed
+
+For the purposes of setting up the agent training for a 4x5 board, we implemented the following functions in the {xmas3} package.
+
+### Create_state_space
+
+```{r}
+xmas3::create_state_space
+```
+
+This function returns a list of integers with the appropriate class (mostly for printing and debugging.)
+
+### create_action_space
+
+This function generates an action space in chess notation given a grid on ncol and nrows.
+
+```{r}
+#| echo: false
+xmas3::create_action_space
+```
+
+### make_move
+
+This function takes as input a board B and a *move* (in chess notation). It makes the move and returns the resulting board.
+
+```{r}
+#| echo: false
+
+xmas3::make_move
+```
+
+### score_binary_board
+
+This function takes as input a binary matrix and calculates the resulting score according to the rules of X-mas-3.
+
+```{r}
+#| echo: false
+xmas3::score_binary_board
+```
+
+These functions will allow us to create the input needed to train a *Reinforcement Learning* (RL) model.
+
+## Creating the Action Space
+
+In principle we have five possible move to make on each tile, Left, Right,Up, Down and Pass. Given the game rules, however, moving a tile right, is equivalent to moving it's right-adjacent neighbor to the left. The possible moves can therefore be reduced to Left,Down and Pass. This allows for a reduced action space *A*, on a given board *B* as shown in the function above. We create our action space *A* using the function provided
+
+```{r}
+A <- create_action_space(5,4)
+```
+
+## Creating the States Space
+
+Our states space *S*, is 4 by 5 binary matrix.
+```{r}
+filename <- here::here("inst/models/4x5-space.rds")
+# if(!exists(filename)){
+#   S <- create_state_space()  
+# } else {
+  S <- readr::read_rds(filename)
+  
+#}
+
+```
+
+
+
+
+
+
+## Hyperparameter Tuning
+
+The purpose of the *machine learning training session* is to provide the AI agent with once of the environments from our environment space *S,* and urge it to take an action from one of the actions in the action space *A*, $a\in{A}$ and then return the resulting environment $s_{i+1}$. If the resulting space represents an improvement on the original one a reward is offered, and if not a penalty is assigned. However, in order to ensure that the agent will be able to think strategically (i.e. more than one move ahead) it is necessary that the penalty for a wrong move be less than one half that of a correct one, and that passing (_Pass_) is not overly discouraged. 
+
+Hyperparameters are often tuned _post-hoc_, but given the limitations discussed earlier I will attempt a _pre-hoc_ tuning excercise for this case. If turns out that the spaces $S{[1..16]}$ are ideal for this purpose, due to the systematic approach we took when creating them. 
+
+$S_{10}$ and $S_{12}$ have solutions (A4 to A3 and A2 to A1, respectively), which will lead to an immediate positive score.
+
+```{r}
+#| label: tbl-state-spaces
+#| echo: false
+#| tbl-cap: "State Spaces 10 and 12"
+#| tbl-subcap: ["$S_{10}$","$S_{12}$"]
+#| tbl-cap-location: "bottom"
+#| layout-ncol: 2
+knitr::kable(S[10])
+
+knitr::kable(S[12])
+
+```
+
+
+$S_{16}$ by contrast does not have an immediate solution, but the move _A5 to A4_ is the correct play, preparing _A4 to A3_ on the next round.
+
+```{r}
+#| label: tbl-state-space-16
+#| echo: false
+#| tbl-cap: "State Space 16"
+#| tbl-subcap: "$S_{16}$"
+
+knitr::kable(S[16], escape = FALSE)
+```
+
+
+### Proposed Scoring
+
+Based on this, I will propose the following scoring.
+
+* Scoring move: Actual game score (50,100,200)
+* Non-scoring move: -20
+* Pass: 0
+
+### Test Model Training
+
+```{r}
+# Define smaller space
+ s <- S[1:16]
+## Convert data to data.frame
+ system.time({
+   
+ 
+ my_data <-  purrr::map(s,~{
+   data.frame(State = as.character(.x) |> paste0(collapse=""),
+              Action = A
+              )
+   
+ }) |> bind_rows()
+
+
+ ## Play each move, each board
+ 
+ my_data2 <- purrr::map2(my_data$State, my_data$Action,~{
+   B <- binary_to_matrix(.x)
+   B2 <- make_move(B,.y)
+   my_score <- score_binary_board( B2 )
+   if(my_score == 0 & .y != "Pass"){
+     my_score <- (-1) #Penalty
+   }
+   #if(my_score == 0 & .y == "Pass"){
+  #   my_score <- (-50) #Penalty
+  # }
+   
+   data.frame(Reward = my_score, 
+              NextState = B2 |> as.character() |> paste0(collapse=""))
+   
+ }) |> bind_rows()
+ 
+ my_data <- bind_cols(my_data,my_data2)
+ 
+ control <- list(alpha = 0.1, gamma = .6, epsilon = 0.1)
+ 
+
+   model <- ReinforcementLearning(
+     data=my_data, s = "State", a = "Action", r = "Reward", s_new = "NextState", 
+     control = control)
+ })
+ 
+```
+
+
+
+## Now let's use predict to check our boards
+
+```{r}
+new_data <- data.frame(State=c(
+  S[[10]] |> as.character() |> paste0(collapse=""),
+  S[[11]] |> as.character() |> paste0(collapse=""),
+  S[[12]] |> as.character() |> paste0(collapse=""),
+ 
+  S[[16]] |> as.character() |> paste0(collapse="")
+  )
+)
+
+predict(model,newdata = new_data$State)
+```
+
+So it did learn strategic moves.

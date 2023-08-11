@@ -44,18 +44,3 @@ score_and_update_board <- function(board, with_score = TRUE){
   
 }
 
-
-
-
-# if(interactive()){
-#   set.seed(4361)
-#   my_board <- initialize_board(avoid_combinations = FALSE) 
-#   my_board %>% print()
-#   
-#   new_board <- update_board(my_board) %>% print()
-#   
-# }
-
-# if(interactive()){
-#   score_and_update_board(test_board)
-# }

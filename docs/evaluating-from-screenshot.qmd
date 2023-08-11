@@ -1,0 +1,38 @@
+---
+title: "Evaluating from A Screenshot"
+author: "Aleksander Dietrichson"
+format: html
+editor: visual
+---
+
+```{r}
+#| include: false
+library(xmas3)
+
+```
+
+In order to connect Gatai with the real interface it is necessary to read and interpret a screenshot. For this purpose the `screenshot_translate_board` function was created.
+
+Getting a screenshot.
+
+```{r}
+filename <- "../inst/screenshots-mac/screenshot-2023-08-3-14.png"
+Board <- xmas3::screenshot_load_scale_and_crop(filename)
+    M <- screenshot_translate_board(Board)
+```
+
+We now have:
+
+```{r}
+M %>% knitr::kable()
+```
+
+```{r}
+my_eval <- evaluate_board_LUT(M, dims=c(3,5))
+
+```
+
+```{r}
+my_eval |> dplyr::filter(expected_value>0) |> 
+  knitr::kable()
+```

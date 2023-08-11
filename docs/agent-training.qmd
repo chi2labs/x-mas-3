@@ -156,10 +156,10 @@ my_data |>
 
 ```
 
-Agent 0 had a mean score of `r eval_agent_0$score |> mean() ` per, while agent 1 scored as much as `r eval_agent_1$score |> mean() `.
+Agent 0 had a mean score of `r eval_agent_0$score |> mean()` per, while agent 1 scored as much as `r eval_agent_1$score |> mean()`.
 
 Agent 1 was programmed to look for a move using the trained model, and make a random move when one was not found. This happened `r eval_agent_1 |> filter(agent!="agent_1") |> nrow()`, i.e. roughly 30%. The agent was programmed to look for 3-tile combinations, but occasionally it stumbled upon better score, this happened `r eval_agent_1 |> filter(score>50) |> nrow()` times. It was even lucky enough to score 150 or 200 points on `r eval_agent_1 |> filter(score>100) |> nrow()` occasions.
 
 ## Evaluation
 
-Playing at 25 minutes per 10.000 moves implies that the agent should be able to play four arcade mode games per minute with an average score of >3600 per game. Not bad considering that it is only looking for parallel combinations. 
+Playing at 25 minutes per 10.000 moves implies that the agent should be able to play four arcade mode games per minute with an average score of \>3600 per game. Not bad considering that it is only looking for parallel combinations.

@@ -121,9 +121,4 @@ Robot <-
           )
     
   )
-# 
-if(interactive()){
-  library(RSelenium)
-  library(wdman)
-  robot <- Robot$new()
-}
+

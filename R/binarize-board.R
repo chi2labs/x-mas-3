@@ -12,9 +12,3 @@ binarize_board <-function(Board, tile = LETTERS[1:10]){
   apply(Board,2,function(x){ifelse(x==tile,1,0)})
 }
 
-# if(interactive()){
-#   B <- initialize_board()
-#   print(B)
-#   binarize_board(B,"A") %>% print()
-#   
-# }
