@@ -35,7 +35,7 @@ Robot <-
               self$startRemoteDriver()
             },
     finalize = function(){
-      self$message("Finalizing")
+      self$message("Finalizing xmas3 robot.")
       tryCatch(self$remDr$close(),
                error = function(e){
                  warning("Unable to close session","run: lsof -i :4567", " From a terminal to find the blocking process")
@@ -80,42 +80,25 @@ Robot <-
     getGameCanvas = function(){
       self$remDr$findElements(using = "id","unity-canvas")
     },
+      #' @field testRemoveDriver
+      #' Makes every legal move on the board. Mostly for testing.
     testRemoteDriver = function(){
-      "Make every legal move on the board."
-      self$message("Testing horizontal moves...")
-      for(.c in 1:9){
-        for(.r in 1:6){
-          self$makeMove(.c=.c,.r=.r,move="R")
-        }
-      }
-      self$message("Testing vertical moves...")
-      for(.r in 1:5){
-        for(.c in 1:10){
-          self$makeMove(.r=.r,.c=.c,"D")
-        }
-      }
+      A <- create_action_space(6,10)
+      A <- A[which(A != "Pass")]
+      purrr::walk(A,self$makeMove)
+      
     },
-    
-    makeMoveChessNotation = function(move){
+    makeMoveSequence = function(moves){
+      
+    },
+    makeMove = function(move){
       #Parse move etc.
-    },
-    # TODO refactor this to accept chess notation
-    makeMove = function(.r,.c, move = c("U","D","L","R")){
-      move <- match.arg(move)
-      coords <- self$coords
-      new_r <- .r 
-      new_c <- .c
+      m <- parse_move(move)
       
-      self$message("Moving: ",.r,"x",.c, " ", move)
+      self$message("Moving: ", move)
+      orig <- dplyr::filter(self$coords,row==m$rs[1], col==m$cs[1])
+      dest <- dplyr::filter(self$coords,row==m$rs[2], col==m$cs[2])
       
-      if(move == "L"){ new_c <- .c-1}
-      if(move == "R"){ new_c <- .c+1}
-      if(move == "U"){ new_r <- .r-1}
-      if(move == "D"){ new_r <- .r+1}
-      
-      orig <- dplyr::filter(self$coords,row==.r,col==.c)
-      dest <- dplyr::filter(self$coords,row==new_r,col==new_c)
-      #Checks
       if(sum(nrow(orig),nrow(dest))!=2){
         self$message("Move off the board detected")
         return(invisible())
@@ -130,8 +113,12 @@ Robot <-
       remDr$mouseMoveToLocation(x = conf$offset_x + dest$x ,
                                 y = conf$offset_y + dest$y , game_canvas[[1]])
       remDr$click()
+      
     }
+    # TODO refactor this to accept chess notation
           )
     
   )
-
+if(interactive()){
+  rob <- Robot$new(verbose=TRUE)
+}
