@@ -3,9 +3,9 @@
 set.seed(5818)
 library(xmas3)
 library(dplyr)
-my_boards <- purrr::map(1:10000L,\(x){initialize_board()})
+my_boards <- purrr::map(1:10000L,function(x){initialize_board()})
 system.time(
-  my_data <- purrr::map_df(my_boards,\(B){
+  my_data <- purrr::map_df(my_boards,function(B){
     play_board(B)$metadata
   })
 )
@@ -17,7 +17,7 @@ readr::write_rds(my_data,here::here("inst","evaluation-data","eval-agent-0-2023-
 
 # Use agent 1
 system.time(
-  my_data2 <- purrr::map_df(my_boards,\(B){
+  my_data2 <- purrr::map_df(my_boards,function(B){
     play_board(B,agent = agent_1)$metadata
   })
 )
