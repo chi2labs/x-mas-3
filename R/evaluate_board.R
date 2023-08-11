@@ -82,8 +82,8 @@ evaluate_board_LUT <- function(B,LUT = Gatai_LUT, dims=c(3,5)){
       
     }
   }
-  res |> 
-    left_join(LUT |> mutate(State=as.numeric(State)))
+  res %>% 
+    left_join(LUT %>%  mutate(State=as.numeric(State)))
     
   
   

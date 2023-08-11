@@ -36,7 +36,7 @@ my_data <-  purrr::map(S ,~{
          Action = A
   )
   
-}) |> bind_rows()
+}) %>%  bind_rows()
 
 message("Created first half of data")
 
@@ -53,7 +53,7 @@ my_data2 <- purrr::map2(my_data$State, my_data$Action,~{
   
   tibble(Reward = my_score, 
          NextState = list(B2) )
-}) |> bind_rows()
+}) %>%  bind_rows()
 
 message("played the games")
 

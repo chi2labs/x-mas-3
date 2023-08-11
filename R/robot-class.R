@@ -1,9 +1,18 @@
 
 #' Instance of Robot
 #' 
-#' Handles the interaction with the web-driver
+#' Handles the interaction with the web-driver.
 #' @import R6
 #' @name Robot
+#' 
+#' @examples
+#' \dontrun{
+#' ## Play every legal move on the board.
+#'gatai <- Robot$new()
+#'gatai$clickToGame()
+#'gatai$testRemoteDriver()
+#' }
+#' 
 #' @export
 library(R6) #Not sure why this is needed...
 Robot <-
@@ -87,6 +96,10 @@ Robot <-
       }
     },
     
+    makeMoveChessNotation = function(move){
+      #Parse move etc.
+    },
+    # TODO refactor this to accept chess notation
     makeMove = function(.r,.c, move = c("U","D","L","R")){
       move <- match.arg(move)
       coords <- self$coords
