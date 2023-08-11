@@ -91,22 +91,3 @@ evaluate_board <- function(B,model, dims=c(3,5),include_strategy = TRUE){
   res
 }
 
-if(interactive()){
-  #library(dplyr)
-  #library(xmas3)
-  #library(adana)
-  if(!exists("gatai")){
-    gatai <- readr::read_rds("./inst/models/q-learning-3x5.rds")
-  }
-  
-  set.seed(1234)
-  B <- initialize_board(avoid_combinations = TRUE)
-  system.time(
-    E <- evaluate_board(B,gatai,c(3,5)) 
-  ) %>% print()
-
-  system.time(
-    E <- evaluate_board(B,gatai,c(3,5),include_strategy = FALSE) 
-  ) %>% print()  
-}
-

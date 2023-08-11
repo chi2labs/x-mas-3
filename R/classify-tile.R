@@ -35,8 +35,4 @@ classify_tile <-function(tile){
   ret
 }
 
-if(interactive()){
-  my_image <- c("inst/image-data/ui-tiles/image-2023-08-01 00_10_16-15.png",
-                "inst/image-data/ui-tiles/image-2023-08-01 00_10_16-19.png")
-  classify_tile(my_image)->test;test %>% print()
-}
+

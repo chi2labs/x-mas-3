@@ -31,8 +31,6 @@ calculate_grid_centroids <- function(surface_width = 1450, surface_height = 890,
   centroid_coordinates
 }
 
-if(interactive()){
-  calculate_grid_centroids() %>% print()
 }
 # # Define the dimensions of the surface and the grid
 # surface_width <- 1450

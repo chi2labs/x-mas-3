@@ -3,3 +3,4 @@
 ^xmas3\.Rcheck$
 ^xmas3.*\.tar\.gz$
 ^xmas3.*\.tgz$
+^xmas3/inst/models

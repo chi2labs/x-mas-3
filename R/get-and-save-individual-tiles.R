@@ -28,8 +28,4 @@ get_and_save_individual_tiles <- function(img,
   }
 }
 
-if(interactive()){
-  system.time(
-    get_and_save_individual_tiles(cropped_board,my_coords)
-  ) %>% print()
-}
+

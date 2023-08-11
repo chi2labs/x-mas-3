@@ -26,6 +26,4 @@ generate_parallel_training_data <- function(){
   
 }
 
- if(interactive()){
-   generate_parallel_training_data() %>% print()
- }
+

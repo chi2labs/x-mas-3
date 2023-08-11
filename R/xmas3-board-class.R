@@ -276,20 +276,4 @@ unparse_move<-function(m){
   )
 }
 
-if(interactive()){
-  B <- xmas3board(2051)
-  print(B)
-  
-  my_move <- ("B1B2")
-  slide_move(my_move,B) %>% print()
-  w1 <- window(B,c(1,1),c(2,3))
-  w2 <- window(B,c(2,2),c(2,3)) 
-  w3 <- window(B,c(2,2),c(2,3)) 
-  w4 <- window(B,c(2,2),c(2,3)) 
-  w5 <- window(B,c(3,1),c(2,5)) 
-  slide_move(my_move,w1) %>% print()
-  slide_move(my_move,w2) %>% print()
-  slide_move(my_move,w3) %>% print()
-  slide_move(my_move,w4) %>% print()
-  slide_move(my_move,w5) %>% print()
-}
+
