@@ -1,29 +1,17 @@
-#' Makes random move
+#' Agent 0
+#' 
+#' Makes random moves
 #'
-#' @param B 
+#' @param S Screenshot of board
+#' @param n number of moves to make
+#' @param ... not in use for this agent
 #'
-#' @return a list with the resulting board and metadata
+#' @return a data.frame containing as least move_sequence 
 #' @export
 
-agent_0 <-function(B){
-   possible_moves <- c("U","D","L","R")
-   .cm <-c() # .cm = can't move
-  .c <- sample(1:10,1)
-  .r <- sample(1:6,1)
-  # Make sure move is legal
-  if(.c == 1  ) {.cm <- c( .cm, "L" )  }
-  if(.c == 10 ) {.cm <- c( .cm, "R" )  }
-  if(.r == 1 )  (.cm <- c( .cm, "U" ) )
-  if(.r == 6)  (.cm <- c( .cm, "D" ) )
-  
-  #Update Possible moves
-   possible_moves <- possible_moves[!possible_moves%in%.cm]
-   # Choose one at random
-   my_move <- sample(possible_moves,1)
-
-  list(
-    Board = move(B,.r,.c,my_move),
-    metadata = data.frame(col=.c,row=.r,move=my_move)
-  )
-  
+agent_0 <-function(S, n=100, ...){
+  # We're playing random moves
+  A <- create_action_space(6,10)
+  A <- A[which(A!="Pass")]
+  data.frame(sequence=sample(A,n,replace=TRUE))
 }
