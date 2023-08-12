@@ -5,6 +5,8 @@ window:
   height: 831
   width: 1200
 board:
-  width: 760
-  height: 480
-
+  width: 720
+  height: 432
+arcade_button:
+  x_cord: 550
+  y_cord: 240

@@ -116,7 +116,10 @@ GatAIRobot <-
               if(mode == "arcade"){
                 self$message("Clicking through to Arcade Mode")
                 self$game_canvas <- self$remDr$findElements(using = "id","unity-canvas")
-                self$remDr$mouseMoveToLocation(x=800,y=250, self$game_canvas[[1]])
+                #self$remDr$mouseMoveToLocation(x=800,y=250, self$game_canvas[[1]])
+                
+                self$remDr$mouseMoveToLocation(x = self$config$arcade$x_cord,
+                                               y = self$config$arcade$y_cord, self$game_canvas[[1]])
                 self$remDr$click() 
               }
             },
@@ -183,7 +186,7 @@ if(interactive()){
     gc()
     
   }
-  gat <- GatAIRobot$new(verbose=TRUE)
-  #gat$play(agent)
+  gat <- GatAIRobot$new(verbose=TRUE,conf_filename = "./inst/conf/chromebook.yml")
+  gat$play(agent_6)
   
 }
