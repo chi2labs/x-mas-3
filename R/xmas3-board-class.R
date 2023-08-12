@@ -247,6 +247,13 @@ slide_move <- function(move,pos){
   
 }
 
+#' Slides a Sequence of Moves
+#'
+#' @param moves 
+#' @param pos 
+#'
+#' @return
+#' @export
 slide_move_sequence <- function(moves,pos){
   m <- parse_move_sequence(moves)
   m <- purrr::map(m,~{ slide_move(.x,pos) } )

@@ -53,6 +53,30 @@ get_matrix_quadrants <- function(M,dims){
 
 
 
+#' Title
+#'
+#' @param G 
+#' @param LUT 
+#' @param dims 
+#'
+#' @return data.frame with move suggestions
+#' @export
+evaluate_3x5_grid <- function(G,LUT=xmas3_LUT_3x5,dims=c(3.5)){
+  tile_types <- unique(G %>% as.character() %>% sort())
+  res <- data.frame()
+  for(tile in tile_types){
+    State <-
+      ifelse(tile==G,1,0) %>% 
+      bin2int() 
+    res <- rbind(
+      res, data.frame(Tile=tile,State)
+    )
+  }
+  res %>% 
+  left_join(LUT %>%  mutate(State=as.numeric(State)),by = c("State"))
+  
+}
+
 #' Evaluate Board Using Lookup Table
 #' 
 #' LUT is available and speeds up the evaluation process

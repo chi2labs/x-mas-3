@@ -16,14 +16,14 @@ agent_7 <-function(B,...){
     ungroup() %>%
     arrange(Q)
   
-  if(nrow(my_moves)==0){
-    message("Found no playable moves. Making random move")
-    A <- create_action_space(6,10)
-    my_moves <- data.frame(
-      Q = c(1),
-      sequence = sample(A, size = 1),
-      n_moves = 1
-    ) 
-  }
-  my_moves
+  # if(nrow(my_moves)==0){
+  #   message("Found no playable moves. Making random move")
+  #   A <- create_action_space(6,10)
+  #   my_moves <- data.frame(
+  #     Q = c(1),
+  #     sequence = sample(A, size = 1),
+  #     n_moves = 1
+  #   ) 
+  # }
+  # my_moves
 }
