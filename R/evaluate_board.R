@@ -2,23 +2,23 @@
 .calculate_expected_values <-  function(q_model,S, dims=c(3,5)){
   max_moves <-max(dims) %>% unique()
   purrr::map(S,~{
-       m <-0
-       B <-xmas3board(.x,dims = dims)
-       score <- 0
-       move_seq <- ""
-       while (score==0 & m <= max_moves) {
-          m <- m+1
-          my_move <- predict(q_model,B %>% as.character(.x))
-          move_seq <-c(move_seq,my_move) 
-          B <-make_move(B,my_move)
-          score <- score_binary_board(B)
-          if(my_move=="Pass") break
-       }
-         data.frame(score =score, 
-                    expected_value = score/m, 
-                    n_moves = m, 
-                    sequence=paste0(move_seq, collapse = " ")
-                    )
+    m <-0
+    B <-xmas3board(.x,dims = dims)
+    score <- 0
+    move_seq <- ""
+    while (score==0 & m <= max_moves) {
+      m <- m+1
+      my_move <- predict(q_model,B %>% as.character(.x))
+      move_seq <-c(move_seq,my_move) 
+      B <-make_move(B,my_move)
+      score <- score_binary_board(B)
+      if(my_move=="Pass") break
+    }
+    data.frame(score =score, 
+               expected_value = score/m, 
+               n_moves = m, 
+               sequence=paste0(move_seq, collapse = " ")
+    )
   }) %>% bind_rows()
   
   
@@ -46,7 +46,7 @@ get_matrix_quadrants <- function(M,dims){
     .get_matrix_window(M, c(dim(M)[1]-dims[1]+1,
                             1), dims), #Q3
     .get_matrix_window(M, c(dim(M)[1]-dims[1]+1,
-                            dim(M)[2]-dims[2]+1), dims) #Q4
+                            dim(M)[2]-dims[2]+1), dims)
   )  
   
 }
@@ -63,6 +63,7 @@ get_matrix_quadrants <- function(M,dims){
 #'
 #' @return data.frame with suggested moves etc.
 #' @importFrom dplyr left_join
+#' @importFrom dplyr select
 #' @export
 evaluate_board_LUT_3x5 <- function(B, LUT=xmas3_LUT_3x5, dims=c(3,5)){
   W <- get_matrix_quadrants(B,dims)
@@ -82,11 +83,21 @@ evaluate_board_LUT_3x5 <- function(B, LUT=xmas3_LUT_3x5, dims=c(3,5)){
       
     }
   }
-  res %>% 
-    left_join(LUT %>%  mutate(State=as.numeric(State)))
-    
+  res <- res %>% 
+    left_join(LUT %>%  mutate(State=as.numeric(State)),by = c("State"))
   
-  
+  res$orig_sequence <- res$sequence
+  if(nrow(res)>0){
+    for(i in 1:nrow(res)){
+      if(is.na(res$sequence[i])) next #Not quite sure why this happened
+      
+      if(res$sequence[i]=="Pass") next
+      
+      res$sequence[i] <- slide_move_sequence(res$sequence[i],c(res$Row[i],
+                                                               res$Column[i]))
+    }
+  }
+  res
 }
 
 #' Evaluate a board based in a Model
@@ -125,7 +136,7 @@ evaluate_board <- function(B,q_model, dims=c(3,5),include_strategy = TRUE){
   #res <- filter(res,(nextMove !="Pass"))
   if(include_strategy){
     expected_value <- .calculate_expected_values(q_model,res$State)
-  res <-  cbind(res,expected_value)
+    res <-  cbind(res,expected_value)
   }
   res
 }

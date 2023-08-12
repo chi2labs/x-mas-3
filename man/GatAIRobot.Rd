@@ -81,7 +81,7 @@ returns the cropped board.}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{GatAIRobot$new(
-  conf_filename = system.file("conf/chromebook.yml", package = "xmas3"),
+  conf_filename = system.file("conf/macbook.yml", package = "xmas3"),
   verbose = FALSE
 )}\if{html}{\out{</div>}}
 }

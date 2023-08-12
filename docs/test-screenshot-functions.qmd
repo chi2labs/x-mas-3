@@ -63,7 +63,6 @@ screenshot_tile_guess_class(my_tile)
 screenshot_translate_board(my_screenshot)
 ```
 
-
 ```{r}
 system.time({
   my_screenshot <- screenshot_load_scale_and_crop(my_files[6])
@@ -74,7 +73,6 @@ system.time({
 
 ```
 
-
 ```{r}
 options(xmas3.switch_ref_names=TRUE)
 my_screenshot <- screenshot_load_scale_and_crop(my_files[7])
@@ -82,7 +80,6 @@ M <- screenshot_translate_board(my_screenshot)
 P <- play_board(M,agent_1)
 P$metadata
 ```
-
 
 ```{r}
 my_screenshot
@@ -113,4 +110,3 @@ my_data <- purrr::map(my_files, function(mf){
 
 })
 ```
-

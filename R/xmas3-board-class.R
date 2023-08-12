@@ -237,11 +237,8 @@ window.xmas3 <- function(B,from=c(1,1), dims=c(2,2)){
 #'
 #' @return The Transitioned Move
 #' @export
-#'
-#' @examples
-slide_move <- function(move,win,pos){
-  if(missing(pos))
-    pos <- attr(win,"pos")
+slide_move <- function(move,pos){
+
     if(is.null(pos)) return(move)
     m <- parse_move(move)
     m$rs <- m$rs+pos[1]-1
@@ -249,6 +246,14 @@ slide_move <- function(move,win,pos){
     unparse_move(m)
   
 }
+
+slide_move_sequence <- function(moves,pos){
+  m <- parse_move_sequence(moves)
+  m <- purrr::map(m,~{ slide_move(.x,pos) } )
+  m %>% unlist() %>% paste(collapse = " -> ")
+}
+
+
 #' Parse Move
 #'
 #' @param move Character vector representing the move, e.g. "B1 to B2" 
@@ -276,4 +281,12 @@ unparse_move<-function(m){
   )
 }
 
-
+#' Parses a Move Sequence
+#'
+#' @param move_seq 
+#'
+#' @return a vector of the parsed moves
+#' @export
+parse_move_sequence <- function(move_seq){
+  stringr::str_split(move_seq, " -> ") %>% unlist()
+}

@@ -1,0 +1,10 @@
+# Config for macbook
+offset_x: 250
+offset_y: 100
+window:
+  height: 831
+  width: 1200
+board:
+  width: 711
+  height: 440
+
