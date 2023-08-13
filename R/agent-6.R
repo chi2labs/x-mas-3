@@ -8,6 +8,7 @@
 #' @return a data.frame containing as least move_sequence 
 #' @export
 agent_6 <-function(B,...){
+  browser()
   my_moves <- evaluate_board_LUT_3x5(B) %>% 
     dplyr::filter(sequence !="Pass") %>% 
     group_by(Q) %>% 
@@ -15,6 +16,7 @@ agent_6 <-function(B,...){
     #slice_head(n=1) %>% #one move sequence per Q
     ungroup() %>%
     arrange(Q)
+  return(my_moves)
   if(nrow(my_moves)==0){
     message("Couldn't find a playable move in the quadrants. Switching focus")
     for(i in 1:4){
