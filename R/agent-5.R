@@ -1,6 +1,6 @@
 #' Agent 5
 #' 
-#' Plays a 5x3 Quarter
+#' Plays a 5x3 Quarter Strategy
 #'
 #' @param B Board Matrix
 #' @param ... not in use for this agent

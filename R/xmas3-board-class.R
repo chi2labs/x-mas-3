@@ -6,7 +6,7 @@
 #'
 #' @return x with class and attributes added
 #' @export
-xmas3board <- function(x=0, dims=c(4,5)){
+xmas3board <- function(x=0, dims=c(4, 5)){
   
   class(x) <- c("xmas3",class(x))
   attr(x,"dims") <- dims
@@ -238,26 +238,29 @@ window.xmas3 <- function(B,from=c(1,1), dims=c(2,2)){
 #' @return The Transitioned Move
 #' @export
 slide_move <- function(move,pos){
-
-    if(is.null(pos)) return(move)
-    m <- parse_move(move)
-    m$rs <- m$rs+pos[1]-1
-    m$cs <- m$cs+pos[2]-1 # We're not zero based
-    unparse_move(m)
+  
+  if(is.null(pos)) return(move)
+  m <- parse_move(move)
+  m$rs <- m$rs+pos[1]-1
+  m$cs <- m$cs+pos[2]-1 # We're not zero based
+  unparse_move(m)
   
 }
 
 #' Slides a Sequence of Moves
 #'
-#' @param moves 
-#' @param pos 
+#' @param moves the moves to slide
+#' @param pos where on the board should we slide
 #'
-#' @return
+#' @return Move sequence transposed
 #' @export
-slide_move_sequence <- function(moves,pos){
-  m <- parse_move_sequence(moves)
-  m <- purrr::map(m,~{ slide_move(.x,pos) } )
-  m %>% unlist() %>% paste(collapse = " -> ")
+slide_move_sequence <- function(moves, pos){
+  purrr::map(moves,~{
+    m <-.x  
+    m <- parse_move_sequence(moves)
+    m <- purrr::map(m,~{ slide_move(.x, pos) } )
+    m %>% unlist() %>% paste(collapse = " -> ")
+  })
 }
 
 

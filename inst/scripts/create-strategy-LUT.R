@@ -54,12 +54,14 @@ create_strategy_LUT <- function(n_row,n_col){
 
 ## Uncomment as needed
 
- create_strategy_LUT(n_row=2, n_col=5)
- create_strategy_LUT(n_row=3, n_col=3)
- create_strategy_LUT(n_row=3, n_col=4)
- create_strategy_LUT(n_row=4, n_col=4)
- create_strategy_LUT(n_row=3, n_col=5)
-
+ # create_strategy_LUT(n_row=2, n_col=5)
+ # create_strategy_LUT(n_row=3, n_col=3)
+ # create_strategy_LUT(n_row=3, n_col=4)
+ # create_strategy_LUT(n_row=4, n_col=4)
+ # create_strategy_LUT(n_row=3, n_col=5)
+# create_strategy_LUT(n_row = 2, n_col=6)
+# create_strategy_LUT( n_row = 6, n_col = 2 )
+# create_strategy_LUT(n_row=5, n_col=3)
 
 
 

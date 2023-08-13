@@ -6,9 +6,9 @@ library(tibble)
 
 
 
-n_row <- 2
-n_col <- 5
-control <- list(alpha = 0.3, gamma = 0.1, epsilon = 0.1)
+n_row <- 3
+n_col <- 6
+control <- list(alpha = 0.3, gamma = 0.6, epsilon = 0.1)
 
 filename_data <- here::here("inst","training-data",
                             paste0("xmas3-",n_row,"x",n_col,"-data.rds")
