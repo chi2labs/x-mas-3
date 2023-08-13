@@ -38,7 +38,15 @@ as.matrix.xmas3 <- function(x){
 #' @export
 
 print.xmas3 <- function(x,...){
-  print(as.matrix.xmas3(x))
+  x <- as.matrix(x)
+  if(typeof(x)=="double"){
+    X <- ifelse(x==1,"O","\u00B7")
+    apply(X,2,function(.r){cat(.r,'\n')})
+  } else{
+  print(x)
+    
+  }
+  #print(as.matrix.xmas3(x))
 }
 
 
