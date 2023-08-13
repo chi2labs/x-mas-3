@@ -8,7 +8,6 @@
 #' @return a data.frame containing as least move_sequence 
 #' @export
 agent_6 <-function(B,...){
-  browser()
   my_moves <- evaluate_board_LUT_3x5(B) %>% 
     dplyr::filter(sequence !="Pass") %>% 
     group_by(Q) %>% 
