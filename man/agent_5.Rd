@@ -15,5 +15,5 @@ agent_5(B, ...)
 a data.frame containing as least move_sequence
 }
 \description{
-Plays a 5x3 Quarter
+Plays a 5x3 Quarter Strategy
 }

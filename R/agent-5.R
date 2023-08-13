@@ -19,17 +19,18 @@ agent_5 <-function(B, ...){
       filter(sequence !="Pass") 
     
   }) %>% bind_rows() 
-   if(nrow(moves)>0){
-  #   ## Slide moves
-      moves$orig_seq <- moves$sequence
+  if(nrow(moves)>0){
+    #   ## Slide moves
+    moves$orig_seq <- moves$sequence
     for(i in 1:nrow(moves)){
       moves$sequence[i] <- slide_move_sequence(
         moves$sequence[i],
         pos = c(moves$Row[i], moves$Column[i])
-        )
-     # browser()
+      )
+      # browser()
     }
-   }
+    
+  }
   return(moves)
 }
 
@@ -37,5 +38,5 @@ if(interactive()){
   set.seed(1234)
   B <- initialize_board()
   agent_5(B) %>% print()
-
+  
 }

@@ -7,9 +7,12 @@
 slide_move_sequence(moves, pos)
 }
 \arguments{
-\item{moves}{}
+\item{moves}{the moves to slide}
 
-\item{pos}{}
+\item{pos}{where on the board should we slide}
+}
+\value{
+Move sequence transposed
 }
 \description{
 Slides a Sequence of Moves
