@@ -255,7 +255,7 @@ slide_move <- function(move,pos){
 #' @return Move sequence transposed
 #' @export
 slide_move_sequence <- function(moves, pos){
-  purrr::map(moves,~{
+  purrr::map_chr(moves,~{
     m <-.x  
     m <- parse_move_sequence(moves)
     m <- purrr::map(m,~{ slide_move(.x, pos) } )
