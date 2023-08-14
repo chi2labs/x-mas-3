@@ -41,7 +41,7 @@ print.xmas3 <- function(x,...){
   x <- as.matrix(x)
   if(typeof(x)=="double"){
     X <- ifelse(x==1,"O","\u00B7")
-    apply(X,2,function(.r){cat(.r,'\n')})
+    apply(X,2,function(.r){cat('|',.r,'|\n')})
   } else{
   print(x)
     
@@ -75,6 +75,7 @@ plot.xmas3 <- function(x,...){
   n_rows <- attr(x,"dims")[1]
   n_cols <- attr(x,"dims")[2]
   my_data <- as.data.frame(x)
+
   my_data <- my_data -.5 #offset
   # y_adjust <- n_rows %/% 2
   # my_data$row <- ifelse(my_data$row)
@@ -89,6 +90,7 @@ plot.xmas3 <- function(x,...){
       # panel.grid.major = element_line(linetype = 2, color='gray'),
       panel.grid.minor = element_line(linetype = 2, color = 'grey'),
       axis.ticks = element_blank(),
+      axis.text=element_text(size=20,face="bold"),
       #axis.text = element_blank(),
       axis.title = element_blank())+
     coord_cartesian(xlim=c(0,n_cols), ylim=c(n_rows,0))+

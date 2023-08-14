@@ -9,7 +9,7 @@ This document was created as part of an exploratory research into the games avai
 
 ## The Game
 
-The game I chose for analysis is called x-mas-treeand is classified as a *puzzle* game on the site.
+The game I chose for analysis is called x-mas-tree and is classified as a *puzzle* game on the site.
 
 ### Setup and purpose
 

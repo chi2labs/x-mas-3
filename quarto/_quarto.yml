@@ -1,0 +1,29 @@
+project:
+  type: book
+
+book:
+  title: "GatAI and the X-Mas-3"
+  author: "Aleksander Dietrichson, PhD"
+  date: "8/13/2023"
+  chapters:
+    - index.qmd
+    - x-mas-3-description.qmd
+    - abstracting-x-mas-3.qmd
+    - board-and-move-transpositions.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+  
+    theme: cyborg
+#    theme: slate
+#    theme: lux
+#    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+
+editor: visual
+

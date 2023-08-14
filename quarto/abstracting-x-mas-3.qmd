@@ -1,0 +1,259 @@
+---
+title: "Abstracting x-mas-3"
+author: "Aleksander Dietrichson, PhD"
+format: html
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(message=FALSE, echo=FALSE, warning = FALSE)
+library(xmas3)
+```
+
+In order to analyze *x-mas-3* and training an AI to play the game, we decided to make an *abstract* version in the game in R/C++. The abstracted version is more suitable for computer-game interaction as it will communicate only the relevant information between the agent and the game. This will be substantially faster than interacting with the UI and allow for a more streamlined training process.
+
+## Abstraction of the Board and Tiles
+
+The board is a 6 by 10 grid each containing a tile out of ten different tile-types. For our purposes we represent the board as a 6x10 matrix with the letters A through J representing the ten different tiles. An example board would me represented thus:
+
+```{r}
+#| echo: false
+#| results: asis
+#| fig-cap: "Example Board"
+set.seed(4361)
+tiles <- LETTERS[1:10]
+board <- matrix(data = sample(tiles,60,replace = TRUE),6,10)
+
+board |> array_to_LaTeX() |> 
+  #paste("{#eq-test}", collapse="") |> 
+  cat()
+```
+
+### Checking for Combinations
+
+Using this structure we can check for the presence of combinations using regular expressions. Using
+
+$$
+\text{([A-J])\\1\\1+}
+$$
+
+as a regular expression will identify three or more consecutive occurrences of similar tiles. Implemented in R below:
+
+```{r}
+#| echo: true
+get_n_combinations <- function(m){
+  my_regex <- "([A-J])\\1\\1+"  
+    rowmatch <- purrr::map_lgl(1:6,~{
+    my_str <- stringr::str_c(m[.x,], collapse = "")
+    grepl(my_regex,my_str) 
+  })
+  colmatch <-purrr::map_lgl(1:10,~{
+    grepl(my_regex,stringr::str_c(m[,.x], collapse = "")) 
+  })
+  sum(colmatch,rowmatch)
+}
+
+get_n_combinations(board)
+```
+
+In this case one match is returned because of the triple "C"s found in column 5.
+
+### Initial Board State
+
+Since the initial state of the board cannot include any scoring combination we need a function that generated a random
+
+```{r}
+#| echo: fenced
+initialize_board <- function(){
+  tiles <- LETTERS[1:10]
+ board <- matrix(data = sample(tiles,60,replace = TRUE),6,10)
+  ## If the initial state scores, generate another one
+  if(get_n_combinations(board)>0){
+    board <- initialize_board()
+  }
+ board
+}
+initialize_board()
+```
+
+### Making moves
+
+Moves are made by specifying a cell, (by clicking on it) and then switching it with one of it's neighbors directly above, below, to the left or to the right. When a move is made the neighboring tile switches places with the first one clicked.
+
+## Algebraic Notation
+
+In order to facilitate the discussion and analysis of positions and moves I decided to use notation inspired by *algebraic notation* in the game of *chess*. Our board is 6x10 (as opposed to 8x8 in chess), so we have columns A through J, and rows 1 through 6. Since there is a component of "gravity" in the game, i.e. tiles fall toward the botton of the screen when tiles are removed from the board, I decided to number rows from the top. This would be congruent with the typical layout of a chess board, but seen from the perpective of the black pieces. An example can be seen in @fig-example-board-algebraic-notation.
+
+```{r}
+#| label: fig-example-board-algebraic-notation
+#| fig-cap: "An Example Board"
+p <- xmas3board(10^20,c(6,10)) |> 
+  plot()
+p
+
+```
+
+Moving the top-left tile to the adjecent square to the right would be denoted: "A1 to B1" or simply "A1B1". The move is illustrated in @fig-example-move.
+
+```{r}
+#| label: fig-example-move
+#| fig-cap: "The Move A1 to B1"
+p |> add_move("A1B1")
+```
+
+```         
+```
+
+## Applying Reinforcement Learning
+
+Reinforcement Learning (RL) is an algorithm that allows an agent (i.e. AI) to interact with an environment over a sequence of observations. The agent seeks to be rewarded and for the reward to be maximized over time. The model consists of a set of environment states $S$ a set of actions $A$ and a set of rewards $R$ (positive or negative).
+
+The algorithm is guaranteed to converge to an optimal policy for each possible state in $S$. RL (and in this case we will use Q-learning) needs to be trained on a set of state-transition tuples formally defined thus:
+
+$$
+(s_i, a_i, r_{i+1}, s_{i+1})
+$$ {#eq-tuples}
+
+where:
+
+-   $s_i$ is the current environment state,
+-   $a_i$ is selected action in the current state,
+-   $r_{i+1}$ represents the reward, and,
+-   $s_{i+1}$ is the resulting state.
+
+### Specifying our Spaces
+
+For $S$ we have ten possibilities for each of the 60 ($6\times10$) cells on our board. For $A$ the agent can make one out of four moves in each of the 60 cells (ignoring for the moment the marginal cases of moving off the board, which is not possible). As for the reward space $R$, this can probably be set to the actual scores of the game, with some smaller penalty for making a non-scoring move or *Passing* (subsequent analysis will make it clear why this needs to be a possibility for practical purposes).
+
+### Reducing our Spaces
+
+For our $S$ as defined above the number of possible states is $10^{60}$, which is a 1 followed by 60 zeros. The action space $A$ is slightly smaller since there are only four possibilities for each cell, so we have "only" $4^{60}$ which is roughly equal to $1.329\times10^{36}$.
+
+Given the magnitude of these numbers it is clear that we cannot reasonably expect the algorithm to converge for several millennia with the computing power currently as our disposal. We therefore need to employ some strategies for reducing the spaces.
+
+::: column-margin
+$10^60$ = 60,`r paste(rep("000",20), collapse=", ")`
+
+```{r}
+#| echo: false
+cat("\n\n  /\\_/\\\n ( o.o )\n  > ^ <\n \nWow, that's a huge number.")
+```
+:::
+
+#### One Type at a Time
+
+We can consider a one-type-at-a-time strategy. The heuristic implemented would then be to first look for moves involving *candy*, then move on to *trees* and so on. For example: staring with an initial board like this:
+
+```{r}
+#| label: example-board
+#| results: asis
+#| echo: false
+
+library(xmas3)
+set.seed(6995)
+example_board <- initialize_board() 
+array_to_LaTeX(board) |> 
+  cat()
+```
+
+And chose to consider the "A" cells we get:
+
+```{r}
+#| label: example-binary-board
+#| results: asis
+#| echo: false
+B <- apply(example_board,2,\(x){ifelse(x=="A",1,0)})
+array_to_LaTeX(B) |> 
+  cat()
+```
+
+This reduces the problem to a binary one and we effectively reduce $S$ to $2^{60}$, which is *merely* 1.15 quintillions. While this represents a huge reduction, it is still far from being feasible. In addition this does not reduce our action space $A$, as you still have four possible moves for each of the 60 cells.
+
+#### Windowing
+
+We can further reduce our problem space by applying a technique knows as *windowing*. This implies dividing the grid into sub-grids and looking for playable moves within that reduced space. If we first consider the quest for a three-tile combinations, the windows in question would be a $3\times2$ and a $2\times3$ sub-matrix for perpendicular ($\perp$)moves. For parallel ($\parallel$) moves, i.e. moves with the same row or column we would have to consider and $4\times1$ respectively. Examples are shown below.
+
+```{r}
+#| include: false
+d <- c(1,0,1,1,0,1)
+M1 <- matrix(d,2,3)
+M2 <- t(M1)
+M3 <- matrix(c(1,1,0,1))
+M4 <- t(M3)
+```
+
+```{=tex}
+\begin{bmatrix} 1 & 1 & 0 \\ 0 & 1 & 1 \end{bmatrix}
+%
+\text{ or}
+%
+\begin{bmatrix} 1 & 0 \\ 1 & 1 \\ 0 & 1 \end{bmatrix}
+%
+\text{ for }\perp\text{moves,}
+```
+and
+
+```{=tex}
+\begin{bmatrix} 1 & 1 & 0 & 1 \end{bmatrix}
+%
+\text{ or}
+%
+\begin{bmatrix} 1 \\ 1 \\ 0 \\ 1 \end{bmatrix}
+%
+\text{ for }\parallel \text{ moves.}
+```
+Is it easy to see that the $3\times2$ matrix above is a transposition of the $2\times3$ one, and therefore it does not matter whether a move if horizontal or vertical the problem is similar in nature for all *perpendicular* moves. The same is true for the $4\times1$ and $1\times4$ matrices, i.e. where there is a winning *parallel* move. Matrix [-@eq-example-windows] illustrates two windows on our original board and Matrix [-@eq-example-windows-binary] shows the same in our binary space (combining the two reduction strategies).
+
+$$
+\begin{bmatrix} G & \color{red}{\textbf{C}} & \color{red}{\textbf{J}} & \color{red}{\textbf{D}} & \color{red}{\textbf{G}} & G & C & G & B & A \\ I & D & E & A & C & B & H & C & E & F \\ J & C & J & F & C & J & \color{red}{\textbf{A}} & \color{red}{\textbf{H}} & B & F \\ H & C & D & F & C & F & \color{red}{\textbf{D}} & \color{red}{\textbf{B}} & G & B \\ D & I & H & I & I & B & \color{red}{\textbf{F}} & \color{red}{\textbf{C}} & C & E \\ B & F & A & J & E & H & I & C & H & G \end{bmatrix}
+$$ {#eq-example-windows}
+
+$$
+\begin{bmatrix} 
+0 & \color{red}{\textbf{1}} & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & 0 & 1 & 0 & 0 & 0 \\ 
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 0 & 0 \\ 
+0 & 1 & 0 & 0 & 1 & 0 & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & 0 & 0 \\ 
+0 & 1 & 0 & 0 & 1 & 0 & \color{red}{\textbf{0}} & \color{red}{\textbf{0}} & 0 & 0 \\ 
+0 & 0 & 0 & 0 & 0 & 0 & \color{red}{\textbf{0}} & \color{red}{\textbf{1}} & 1 & 0 \\ 
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 
+\end{bmatrix}
+$$ {#eq-example-windows-binary}
+
+#### The Reduced Action Spaces
+
+If we employ the windowed approach suggested above, our action space, $A$ shrinks significantly. We will in fact have two different $S$ and $A$ depending on whether we are considering parallel or perpendicular moves.
+
+For a parallel window, we can generalize to the horizontal variant (since the horizontal one is a simple transposition thereof) and we then get only a few relevant combinations. Since any four element set which already has three in a row is will not occur, we are left with: {0000,0001,0010,0011,0100,0101,0110,1000,1001,1011, 1101} for a total of 11 cases out of which only two have a winning move ({1011, 1101}). This reduces $A_{\parallel}$ for $S_{\parallel}$ to three moves: pass (P), flip first (F) or flip last (L). formalized in @eq-action-space-parallel.
+
+$$
+A_{\parallel} = \{P,F,L\}
+$$ {#eq-action-space-parallel}
+
+For the perpendicular case we 62 combinations, these are illustrated in @eq-perpendicular-combinations.
+
+$$
+S_{\perp} = \Biggl\{ \left[{000\atop{000}}\right],
+\left[{000\atop{001}}\right],
+\left[{000\atop{010}}\right] ...
+\left[{001\atop{001}}\right],
+\left[{001\atop{010}}\right]...
+\left[{110\atop{011}}\right]
+\Biggr\}
+$$ {#eq-perpendicular-combinations}
+
+The action space is limited to flipping one out of three positions, First, Middle, Last, or Passing. Illustrated in @eq-action-space-perpendicular.
+
+$$
+A_{\perp}=\{F,M,L,P\}
+$$ {#eq-action-space-perpendicular}
+
+### Caveats
+
+The windowed approach proposed above, along with the one-type-at-a-time technique reduce our $A$ and $S$ to magnitudes that are manageable and allow us to generate a training set. They do limit the potential for the agent in some non-trivial ways, namely:
+
+1.  The Agent will only look for combinations of three tiles, and
+2.  The agent will only look one move ahead.
+
+In view of (2) the more precise description of our endeavor is perhaps to say that we are teaching it *tactics* rather than *strategy*.
