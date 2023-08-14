@@ -1,0 +1,28 @@
+---
+title: "The x-mas-3 Video Game"
+author: "Aleksander Dietrichson, PhD"
+format: html
+editor: visual
+---
+
+This document was created as part of an exploratory research into the games available on the Gato (http://www.gato.us) platform.
+
+## Game
+
+The game I chose for analysis is called x-mas-tree and is classified as a *puzzle* game on the site.
+
+## Setup and Purpose
+
+When starting the game a 6 by 10 grid with different shaped and colored tiles is displayed. These are Christmas-themed, i.e. trees, santas' hats, candy and various Christmas-ornaments. There is a total of ten different types of tiles. An example of a X-mas-3 board can be seen in @fig-xmas-screenshot-1.
+
+![Screenshot of X-mas-3 Board](images/Screenshot%202023-07-29%2011.14.08.png){#fig-xmas-screenshot-1}
+
+The purpose is to move the tiles so that combination of 3,4 or 5 similar tiles appear in the same row or column.
+
+## Rules and Scoring
+
+The tiles can move one position verticallyor horizontally. When a tile is moved the space it occupied is occupied by the tile in the target cell, i.e. the swap places. In the *arcade mode* version of the game the number of moves is limited to 100. There is also a *time mode* version which allows for unlimited moves within a given time-frame. If the move results in one or several 3, 4 or 5 tile combination on the board, these tiles disappear and the tiles above "fall" into the empty spaces created. This is repeated for the subsequent rows and the empty spaces left in the top row are replaced by random tiles, with the limitation that this replacement will not result in additional scoring.
+
+The scoring is 50, 100 and 200 points for 3, 4 and 5 tiles is a row/column respectively[^1].
+
+[^1]: These rules were derived from this researcher's actual play of the game. We have no *official rules*, and the description limits itself to "score points by".
