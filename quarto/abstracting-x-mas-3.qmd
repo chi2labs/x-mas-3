@@ -1,5 +1,5 @@
 ---
-title: "Abstracting x-mas-3"
+title: "Abstracting X-mas-3"
 author: "Aleksander Dietrichson, PhD"
 format: html
 editor: visual
@@ -82,30 +82,6 @@ initialize_board()
 
 Moves are made by specifying a cell, (by clicking on it) and then switching it with one of it's neighbors directly above, below, to the left or to the right. When a move is made the neighboring tile switches places with the first one clicked.
 
-## Algebraic Notation
-
-In order to facilitate the discussion and analysis of positions and moves I decided to use notation inspired by *algebraic notation* in the game of *chess*. Our board is 6x10 (as opposed to 8x8 in chess), so we have columns A through J, and rows 1 through 6. Since there is a component of "gravity" in the game, i.e. tiles fall toward the botton of the screen when tiles are removed from the board, I decided to number rows from the top. This would be congruent with the typical layout of a chess board, but seen from the perpective of the black pieces. An example can be seen in @fig-example-board-algebraic-notation.
-
-```{r}
-#| label: fig-example-board-algebraic-notation
-#| fig-cap: "An Example Board"
-p <- xmas3board(10^20,c(6,10)) |> 
-  plot()
-p
-
-```
-
-Moving the top-left tile to the adjecent square to the right would be denoted: "A1 to B1" or simply "A1B1". The move is illustrated in @fig-example-move.
-
-```{r}
-#| label: fig-example-move
-#| fig-cap: "The Move A1 to B1"
-p |> add_move("A1B1")
-```
-
-```         
-```
-
 ## Applying Reinforcement Learning
 
 Reinforcement Learning (RL) is an algorithm that allows an agent (i.e. AI) to interact with an environment over a sequence of observations. The agent seeks to be rewarded and for the reward to be maximized over time. The model consists of a set of environment states $S$ a set of actions $A$ and a set of rewards $R$ (positive or negative).
@@ -129,18 +105,22 @@ For $S$ we have ten possibilities for each of the 60 ($6\times10$) cells on our 
 
 ### Reducing our Spaces
 
-For our $S$ as defined above the number of possible states is $10^{60}$, which is a 1 followed by 60 zeros. The action space $A$ is slightly smaller since there are only four possibilities for each cell, so we have "only" $4^{60}$ which is roughly equal to $1.329\times10^{36}$.
-
-Given the magnitude of these numbers it is clear that we cannot reasonably expect the algorithm to converge for several millennia with the computing power currently as our disposal. We therefore need to employ some strategies for reducing the spaces.
+For our $S$ as defined above the number of possible states is $10^{60}$, which is a 1 followed by 60 zeros, i.e.:
 
 ::: column-margin
-$10^60$ = 60,`r paste(rep("000",20), collapse=", ")`
-
 ```{r}
 #| echo: false
-cat("\n\n  /\\_/\\\n ( o.o )\n  > ^ <\n \nWow, that's a huge number.")
+
+ascii_gatai("hiding") |> cat()
+cat("Wow, that's a huge number!")
 ```
 :::
+
+$10^{60}$ = 60,`r paste(rep("000",20), collapse=", ")`.
+
+The action space $A$ is slightly smaller since there are only four possibilities for each cell, so we have "only" $4^{60}$ which is roughly equal to $1.329\times10^{36}$.
+
+Given the magnitude of these numbers it is clear that we cannot reasonably expect the algorithm to converge for several millennia with the computing power currently as our disposal. We therefore need to employ some strategies for reducing the spaces.
 
 #### One Type at a Time
 
@@ -257,3 +237,28 @@ The windowed approach proposed above, along with the one-type-at-a-time techniqu
 2.  The agent will only look one move ahead.
 
 In view of (2) the more precise description of our endeavor is perhaps to say that we are teaching it *tactics* rather than *strategy*.
+
+We will later see if it is feasible to generalize this approach and create larger grids.
+
+## Algebraic Notation
+
+In order to facilitate the discussion and analysis of positions and moves I decided to use notation inspired by *algebraic notation* in the game of *chess*. Our board is 6x10 (as opposed to 8x8 in chess), so we have columns A through J, and rows 1 through 6. Since there is a component of "gravity" in the game, i.e. tiles fall toward the botton of the screen when tiles are removed from the board, I decided to number rows from the top. This would be congruent with the typical layout of a chess board, but seen from the perpective of the black pieces. An example can be seen in @fig-example-board-algebraic-notation.
+
+```{r}
+#| label: fig-example-board-algebraic-notation
+#| fig-cap: "An Example Board"
+p <- xmas3board(10^20,c(6,10)) |> 
+  plot()
+p
+
+```
+
+Moving the top-left tile to the adjecent square to the right would be denoted: "A1 to B1" or simply "A1B1". The move is illustrated in @fig-example-move.
+
+```{r}
+#| label: fig-example-move
+#| fig-cap: "The Move A1 to B1"
+p |> add_move("A1B1") 
+```
+
+{{< include transpositions.qmd >}} 

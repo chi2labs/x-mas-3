@@ -24,9 +24,7 @@ Based on prior notes and analysis it seems reasonable to assume that we should b
 * For 4x6 |S| = $2^{4\times5}$ =`r 2^(4*6) |> .nf()`
 * For 5x5 |S| = $2^{5\times5}$ =`r 2^(5*5) |> .nf()`
 
-
-
-It also seems that chess-like notation, which is more human readable, and thus more convenient for the researcher (i.e. me), add minimal overhead in the parsing and scoring processes.
+It seems unlikely that we will be able to train models beyong the 3x6 space with our current infrastructure. It also seems that the algebraic notation, which is more human readable, and thus more convenient for the researcher (i.e. me), will add minimal overhead in the parsing and scoring processes.
 
 ## Functions Needed
 
@@ -70,3 +68,4 @@ xmas3::score_binary_board
 
 These functions will allow us to create the input needed to train a *Reinforcement Learning* (RL) model.
 
+{{< include model-the-3-by-3-board.qmd >}}

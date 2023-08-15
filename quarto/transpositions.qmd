@@ -1,5 +1,5 @@
 ---
-title: "Windowing and Sliding"
+title: "Transpositions"
 author: "Aleksander Dietrichson"
 format: html
 editor: visual
@@ -12,11 +12,39 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Windowing and Sliding
+## Transpositions
+
+Since the strategies and tactics learned on a i.e. 3x4 board are in principle the same as those of a 4x3 board it is useful to be able to transpose both boards and moves. We therefore implemented transpose-functions for both.
+
+### Examples
+
+```{r}
+B <- xmas3board(2051,c(3,4))
+my_move <- "A1 to B1"
+
+```
+
+```{r}
+#| label: fig-transpositions
+#| layout-ncol: 2
+#| fig-cap: "Transposition example"
+#| fig-subcap: ["Original","Transposed"]
+#| fig-asp: 1
+#| fig-width: 3
+B %>% plot() %>% add_move(my_move)
+transpose(B) %>% plot() %>% add_move(my_move %>% transpose_move())
+
+```
+
+
+## Widowing and Sliding
+
 
 Another class of transpositions, as mentioned, are either horizontal or vertical, but does not imply a flip around the matrix's diagonal. For the avoidance of confusion I chose to denominate these operations as *sliding.* And the origin area of a *slide* a *window.*
 
 Since we are operating on simplified sub-boards, and part of our strategy is to window the playing-board we implemented functions to *window* a board, i.e. subdivide it into smaller pieces for analysis. When moves are suggested for the sub-division we need to *slide* these moves over on the real playing board (i.e. the larger one).
+
+### Examples
 
 ```{r}
 library(xmas3)

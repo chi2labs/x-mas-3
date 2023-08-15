@@ -1,0 +1,200 @@
+---
+title: "The 3 by 3 Board"
+author: "Aleksander Dietrichson"
+format: html
+editor: visual
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+library(xmas3)
+
+```
+
+We start with a 3x3 grid. This should be sufficiently small that a machine learning algorithm will converge in short order and we are able to test the outcome before embarking on a more wide-ranging exercise.
+
+## State Space
+
+A three by three board gives us a state-space of 512 possibilities. However, some proportion of the boards in this space will already have a winning combination on them, and should be excluded form the training because (a) they will not come up in play, as tiles are immediately removed when a scoring combination is found, and (b) there is logically no correct move on these boards. For example Board 56 has three touching tiles in column B.
+
+```{r}
+#| label: fig-board-56
+#| fig-cap: "Board 56"
+#| fig-asp: 1
+#| fig-width: 3
+#| echo: false
+
+B <- xmas3board(56,c(3,3))
+plot(B)
+
+```
+
+We will remove these from consideration by generating the action space, scoring each board and removing the ones that have a positive score.
+
+```{r}
+#| eval: true
+S <- create_state_space(3,3)
+my_scores <- purrr::map(S,score_binary_board) %>% unlist()
+S <- S[my_scores==0] 
+```
+
+Which leaves us with `r length(S)` playable boards.
+
+## Action Space
+
+Our action space *A* is created using the functions from our package
+
+```{r}
+A <- xmas3::create_action_space(3,3)
+A |> paste(collapse = ", ") |> cat()
+```
+
+Which gives us a an *A* of length `r length(A)` .
+
+## Data for Modelling
+
+The data for the modelling exercise was created by playing each possible move for each of the remaining *S.*
+
+## Training the Model
+
+We then using the Q-learning algorithm implemented in the {Reinforcement Learning} package[@ReinforcementLearning], with the *standard default* parameters ($\alpha=.1,\gamma=.1, \epsilon=.1$).
+
+## Testing the Model
+
+We can now test the model by asking it to play some boards where we know the correct play. For example $S_{32}$ where there is a scoring move.
+
+```{r}
+S[[32]]
+```
+
+```{r}
+# Read from cache
+model <- readr::read_rds(here::here("../models/q-learning-3x3.rds"))
+predict(model,S[32])
+```
+
+```{r}
+#| label: fig-s32 
+#| layout-ncol: 2
+#| fig-cap: "State Space 32"
+#| fig-subcap: ["Space 32","Suggested Move"]
+#| fig-asp: 1
+#| fig-width: 3
+#| echo: false
+
+S[[32]] %>% 
+  plot()
+
+my_move <-predict(model,S[32])
+S[[32]] %>% 
+  plot() %>% add_move(my_move)
+
+```
+
+On the other hand $S_{4}$ does not have a scoring move and should be passed. The same is true for $S_{6}$
+
+```{r}
+#| layout-ncol: 2
+S[[4]]
+
+S[[6]]
+```
+
+```{r}
+predict(model,S[4]) |> cat()
+```
+
+```{r}
+#| label: fig-s4-and-6 
+#| layout-ncol: 2
+#| fig-cap: State Spaces 4 and 6
+#| fig-subcap: ["Space 4","Space 6"]
+#| fig-asp: 1
+#| fig-width: 3
+#| echo: false
+S[[4]] %>% 
+  plot()
+
+S[[6]] %>% 
+  plot()
+
+```
+
+### Competing Moves and Strategy
+
+Board 263 is an interesting case. Since there are three moves that would score points. However two of them are strategically superior (A1 to A1 and C1 to C2), because they both guarantee that there is enough tiles left on the board to make a scoring move on the next round.
+
+```{r}
+#| label: fig-board-263 
+#| layout-ncol: 3
+#| fig-cap: Board 263
+#| fig-subcap: ["Board","Scoring Moves","Strongest Moved"]
+#| fig-asp: 1
+#| fig-width: 3
+#| echo: false
+p <- plot(S[[263]])
+p
+p %>% 
+  add_move("B3A3") %>% 
+  add_move("A2A3") %>% 
+  add_move("B3A3") %>% 
+  add_move("C2C1") %>% 
+  add_move("C2B2") %>% 
+  add_move("B1C1") %>% 
+  add_move("B1B2") %>% 
+  add_move("B3B2") %>% 
+  add_move("A2B2")
+
+p %>% 
+  add_move("A2A3", color="red", lwd=1) %>% 
+  add_move("C2C1",color="red", lwd=1) %>% 
+  add_move("B3A3",color="red", lwd=1) %>% 
+  add_move("B1C1",color="red", lwd=1)
+  
+
+
+
+
+```
+
+Let's see what Gatai believes:
+
+```{r}
+predict(model,S[263])
+```
+
+So, one of the strongest moves available. However, we cannot be sure whether this was a random choice among scoring moves or the result of a strategic play. We can check this with another board.
+
+### Strategic Moves
+
+In our original State space \$\_{259} does not have a directly scoring move, however, the correct move is A1 to B1, in preparatin for B1xC1 on the next round.
+
+```{r}
+s <- xmas3board(259,c(3,3))
+s
+```
+
+```{r}
+predict(model,s %>% as.character())
+```
+
+So we see that Gatai to makes strategic moves as well.
+
+```{r}
+#| label: fig-board-space-259-adjusted-model  
+#| layout-ncol: 2
+#| fig-cap: "Gatai Thinks Ahead"
+#| fig-subcap: ["Initial Board","Move 1"]
+#| fig-asp: 1
+#| fig-width: 3
+#| echo: false
+p <- plot(s)
+p
+p %>% 
+  add_move("A1B1", color="red", lwd=1) %>% 
+  add_tile("B1", color="darkgrey") %>% 
+  add_tile("C1", color="grey") %>% 
+  add_move("B1C1", lty=2)
+
+```

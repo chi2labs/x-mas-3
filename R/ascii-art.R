@@ -8,7 +8,7 @@
 #'
 #' @examples
 #' ascii_gatai()
-ascii_gatai <- function(whichone=c("default","scared","surprised","tree")){
+ascii_gatai <- function(whichone=c("default","scared","surprised","bigtree","tree", "hiding")){
   w <- match.arg(whichone)
   my_art <- list(
     default = "
@@ -18,13 +18,24 @@ ascii_gatai <- function(whichone=c("default","scared","surprised","tree")){
   > ^ <
 
 ",
-    tree = "
+    hiding = "
+      |\\__/,|   (`\\
+    _.|o o  |_   ) )
+---(((---(((---------",
+    
+    bigtree = "
     /\\
    //\\\\
   ///\\\\\\
  ////\\\\\\\\
 /////\\\\\\\\\\
    [][]
+",
+    tree = "
+    /\\
+   //\\\\
+  ///\\\\\\
+    []
 "
   )
   my_art[[w]]

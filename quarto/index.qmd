@@ -1,37 +1,10 @@
 ```{r}
 #| include: false
+
+library(xmas3)
 knitr::opts_chunk$set(
   echo = FALSE
 )
-```
-
-```{r}
-#| echo: false
-cat_ascii <- "
-
-
-  /\\_/\\
- ( o.o )
- > ^ <
- 
-"
-
-gatai_ascii <- "
-
-  /\\_/\\
- ( o.o )
-  > ^ <
- 
-"
-
-tree_ascii <- "
-    /\\
-   //\\\\
-  ///\\\\\\
- ////\\\\\\\\
-/////\\\\\\\\\\
-   [][]
-"
 ```
 
 ```{r}
@@ -39,25 +12,18 @@ tree_ascii <- "
 #| fig-cap: "GatAI the AI"
 #| layout-ncol: 2
 #| echo: false
-cat(gatai_ascii)
+cat(ascii_gatai())
 cat("\n\n\nGatai, the AI\nOne smart cat")
 ```
 
 # Preface {.unnumbered}
 
-In August of 2023 I undertook to do some exploratory research on video-games available on the gato.us website. The purpose of this exercise was to better understand the potential problem space and the application of artificial intelligence (AI) to some of its extent. This volume is a write-up of some of the results and experiences, and furthermore a chronicle of the process I followed.
+In August of 2023, I undertook to do some exploratory research on video-games available on the gato.us website. The purpose of this exercise was to better understand the potential problem space and the application of artificial intelligence (AI) to some of its extent. This volume is a write-up of some of the results and experiences, and furthermore a chronicle of the process I followed.
 
 ```{r}
 #| label: x-mas-3-ascii
 #| layout-ncol: 2
 #| echo: false
 cat("\n\nIn the Red Corner:\nOur Nemesis\nX-Mas-3")
-cat(tree_ascii)
-```
-
-```{r}
-#| echo: false
-#| label: fig-xmas3
-#| fig-cap: "X-Mas-3"
-
+cat(ascii_gatai("bigtree"))
 ```

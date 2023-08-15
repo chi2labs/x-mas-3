@@ -9,7 +9,7 @@ book:
     - index.qmd
     - x-mas-3-description.qmd
     - abstracting-x-mas-3.qmd
-    - board-and-move-transpositions.qmd
+    - model-training.qmd
     - summary.qmd
     - references.qmd
 

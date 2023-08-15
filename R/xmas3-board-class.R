@@ -41,7 +41,7 @@ print.xmas3 <- function(x,...){
   x <- as.matrix(x)
   if(typeof(x)=="double"){
     X <- ifelse(x==1,"O","\u00B7")
-    apply(X,2,function(.r){cat('|',.r,'|\n')})
+    apply(X,1,function(.r){cat('|',.r,'|\n')})
   } else{
   print(x)
     
