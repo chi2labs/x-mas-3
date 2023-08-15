@@ -9,7 +9,7 @@
 #' @examples
 #' ascii_gatai()
 ascii_gatai <- function(whichone=c("default","scared","surprised",
-                                   "cool", "cash",
+                                   "cool", "cash","computer",
                                    "bigtree","tree", "hiding")){
   w <- match.arg(whichone)
   my_art <- list(
@@ -37,6 +37,14 @@ ascii_gatai <- function(whichone=c("default","scared","surprised",
  (⌐■_■ ) 
   > ^ <
 ",
+    computer = '
+      ___
+  _.-|   |          |\\__/,|   (`\\
+ {   |   |          |o o  |__ _) )
+  "-.|___|        _.( T   )  `  /
+  .--\'-`-.     _((_ `^--\' /_<  \\
+.+|______|__.-||__)`-\'(((/  (((/
+',
     bigtree = "
     /\\
    //\\\\
