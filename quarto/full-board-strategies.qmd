@@ -1,0 +1,9 @@
+---
+title: "Full Board Strategies"
+format: html
+editor: visual
+---
+
+## Applicable Models
+
+## Monte Carlo Simulations

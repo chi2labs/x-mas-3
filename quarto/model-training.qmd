@@ -4,6 +4,7 @@ author: "Aleksander Dietrichson, PhD"
 #monobackgroundcolor: "lightgrey"
 format: html
 ---
+
 ```{r}
 #| include: false
 library(xmas3)
@@ -12,19 +13,16 @@ library(dplyr)
 .nf <- function(x){format(x,big.mark=",")}
 ```
 
+Based on prior notes and analysis it seems reasonable to assume that we should be able to train an RL model on several grid sizes. We will start with the smallest sizes and work our way up, considering the actual magnitude of the combinations, which rise rapidly:
 
-Based on prior notes and analysis it seems reasonable to assume that we should be able to train an RL model on several grid sizes. We will start with the smallest sizes and work our way up, considering the actual magnitute of the combinations, which rise rapidly:
-
-* For 3x3 |S| = $2^{3\times3}$ =`r 2^(3*3) |> .nf()`
-* For 3x4 |S| = $2^{3\times4}$ =`r 2^(3*4) |> .nf()`
-* For 3x5 |S| = $2^{3\times5}$ =`r 2^(3*5) |> .nf()`
-* For 4x4 |S| = $2^{4\times4}$ =`r 2^(4*4) |> .nf()`
-* For 3x6 |S| = $2^{3\times5}$ =`r 2^(3*6) |> .nf()`
-* For 4x5 |S| = $2^{4\times5}$ =`r 2^(4*5) |> .nf()`
-* For 4x6 |S| = $2^{4\times5}$ =`r 2^(4*6) |> .nf()`
-* For 5x5 |S| = $2^{5\times5}$ =`r 2^(5*5) |> .nf()`
-
-
+-   For 3x3 \|S\| = $2^{3\times3}$ =`r 2^(3*3) |> .nf()`
+-   For 3x4 \|S\| = $2^{3\times4}$ =`r 2^(3*4) |> .nf()`
+-   For 3x5 \|S\| = $2^{3\times5}$ =`r 2^(3*5) |> .nf()`
+-   For 4x4 \|S\| = $2^{4\times4}$ =`r 2^(4*4) |> .nf()`
+-   For 3x6 \|S\| = $2^{3\times5}$ =`r 2^(3*6) |> .nf()`
+-   For 4x5 \|S\| = $2^{4\times5}$ =`r 2^(4*5) |> .nf()`
+-   For 4x6 \|S\| = $2^{4\times5}$ =`r 2^(4*6) |> .nf()`
+-   For 5x5 \|S\| = $2^{5\times5}$ =`r 2^(5*5) |> .nf()`
 
 It also seems that chess-like notation, which is more human readable, and thus more convenient for the researcher (i.e. me), add minimal overhead in the parsing and scoring processes.
 
@@ -115,7 +113,7 @@ make_move <- \(B, move){
   tmp <- M[r2,c2]
   M[r2, c2] <- M[r1,c1]
   M[r1, c1] <- tmp
-  M %>%  adana::bin2int() %>%
+  M |>  adana::bin2int() |>
     xmas3board(dims =attr(B, "dims") )
   
 }
@@ -164,5 +162,14 @@ score_binary_board <-\(B){
 
 These functions will allow us to create the input needed to train a *Reinforcement Learning* (RL) model.
 
+## Procedure
+
+We will attempt to train models for each of the grid-sized mentioned above. However, it is likely that not all sizes will converge. In fact, our prediction is that we will not make it past 3x6 \~ 6x3.
+
 {{< include model-the-3x3-board.qmd >}}
 
+{{< include model-the-3x4-board.qmd >}}
+
+## Training above 3x4
+
+We followed the same procedure as in the previous cases with similar results. As predicted the last model to converge was the one for the 3x6 grid. This took approximately 4 hours.

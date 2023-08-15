@@ -52,7 +52,7 @@ library(ggplot2)
 ```{r}
 #| label: fig-window-example
 #| layout-ncol: 3
-#| fig-subcap: ["Board with Window", "Moves A1 to A1 and B1 to A1", "Transitioned Moves"]
+#| fig-subcap: ["Board with Window", "Moves A1xA2 and B1xA1", "Transitioned Moves"]
 #| fig-cap: "Example of windowing"
 #| warning: false
 set.seed(200)

@@ -1,5 +1,6 @@
 project:
   type: book
+  output-dir: ../docs/q/
 
 book:
   title: "GatAI and the X-Mas-3"
@@ -10,20 +11,23 @@ book:
     - x-mas-3-description.qmd
     - abstracting-x-mas-3.qmd
     - model-training.qmd
-    - summary.qmd
+    - full-board-strategies.qmd
     - references.qmd
 
 bibliography: references.bib
 
 format:
   html:
-  
     theme: cyborg
+    number-depth: 2
+    monofont: "JetBrains Mono"
+    header-includes: |
+      <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=JetBrains Mono" type="text/css"/>
+
+  
 #    theme: slate
 #    theme: lux
 #    theme: cosmo
-  pdf:
-    documentclass: scrreprt
 
 editor: visual
 
