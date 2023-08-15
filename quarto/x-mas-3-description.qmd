@@ -1,5 +1,5 @@
 ---
-title: "The x-mas-3 Video Game"
+title: "The X-mas-3 Video Game"
 author: "Aleksander Dietrichson, PhD"
 format: html
 editor: visual

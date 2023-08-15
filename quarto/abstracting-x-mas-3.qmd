@@ -10,6 +10,7 @@ editor: visual
 #| include: false
 knitr::opts_chunk$set(message=FALSE, echo=FALSE, warning = FALSE)
 library(xmas3)
+
 ```
 
 In order to analyze *x-mas-3* and training an AI to play the game, we decided to make an *abstract* version in the game in R/C++. The abstracted version is more suitable for computer-game interaction as it will communicate only the relevant information between the agent and the game. This will be substantially faster than interacting with the UI and allow for a more streamlined training process.
@@ -43,7 +44,10 @@ as a regular expression will identify three or more consecutive occurrences of s
 
 ```{r}
 #| echo: true
-get_n_combinations <- function(m){
+#| eval: false
+#| code-fold: true
+#| code-block-border-left: true
+get_n_combinations <- \(m){
   my_regex <- "([A-J])\\1\\1+"  
     rowmatch <- purrr::map_lgl(1:6,~{
     my_str <- stringr::str_c(m[.x,], collapse = "")
@@ -65,8 +69,11 @@ In this case one match is returned because of the triple "C"s found in column 5.
 Since the initial state of the board cannot include any scoring combination we need a function that generated a random
 
 ```{r}
-#| echo: fenced
-initialize_board <- function(){
+#| echo: true
+#| eval: false
+#| code-fold: true
+#| code-block-border-left: true
+initialize_board <- \(){
   tiles <- LETTERS[1:10]
  board <- matrix(data = sample(tiles,60,replace = TRUE),6,10)
   ## If the initial state scores, generate another one
@@ -261,4 +268,4 @@ Moving the top-left tile to the adjecent square to the right would be denoted: "
 p |> add_move("A1B1") 
 ```
 
-{{< include transpositions.qmd >}} 
+{{< include transpositions.qmd >}}

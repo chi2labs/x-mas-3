@@ -1,6 +1,6 @@
 ---
-title: "Transpositions"
-author: "Aleksander Dietrichson"
+# title: "Transpositions"
+# author: "Aleksander Dietrichson"
 format: html
 editor: visual
 ---
@@ -36,9 +36,7 @@ transpose(B) %>% plot() %>% add_move(my_move %>% transpose_move())
 
 ```
 
-
-## Widowing and Sliding
-
+## Windowing and Sliding
 
 Another class of transpositions, as mentioned, are either horizontal or vertical, but does not imply a flip around the matrix's diagonal. For the avoidance of confusion I chose to denominate these operations as *sliding.* And the origin area of a *slide* a *window.*
 
@@ -53,6 +51,8 @@ library(ggplot2)
 
 ```{r}
 #| label: fig-window-example
+#| layout-ncol: 3
+#| fig-subcap: ["Board with Window", "Moves A1 to A1 and B1 to A1", "Transitioned Moves"]
 #| fig-cap: "Example of windowing"
 #| warning: false
 set.seed(200)
@@ -61,9 +61,6 @@ B <- xmas3board(100000000000000,c(6,10))
 p <- plot(B)
 p<-p+ggplot2::annotate("rect",xmin=2,ymin=2,ymax=4,xmax=5, color="red", alpha=.2)
 p
-```
-
-```{r}
 
 B2 <- window(B, from = c(3,3),c(2,3))
 my_move <- "B1A1"
@@ -72,10 +69,6 @@ plot(B2) %>%
   add_move(my_move) %>% 
   add_move(my_move2)
 
-
-```
-
-```{r}
 
 p %>% 
   add_move(slide_move(my_move,c(3,3))) %>% 

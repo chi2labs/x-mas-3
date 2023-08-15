@@ -12,7 +12,7 @@ library(xmas3)
 
 ```
 
-We start with a 3x3 grid. This should be sufficiently small that a machine learning algorithm will converge in short order and we are able to test the outcome before embarking on a more wide-ranging excercise.
+We start with a 3x3 grid. This should be sufficiently small that a machine learning algorithm will converge in short order and we are able to test the outcome before embarking on a more wide-ranging exercise.
 
 ## State Space
 
@@ -188,5 +188,3 @@ p %>%
   add_move("B1C1", lty=2)
 
 ```
-
-## Reference
