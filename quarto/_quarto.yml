@@ -12,6 +12,7 @@ book:
     - abstracting-x-mas-3.qmd
     - model-training.qmd
     - full-board-strategies.qmd
+    - gatai-in-the-wild.qmd
     - references.qmd
 
 bibliography: references.bib

@@ -1,9 +1,14 @@
 ---
-title: "Full Board Strategies"
+#title: "Full Board Strategies"
+crossref:
+  chapters: true
 format: html
 editor: visual
 ---
+# Full Board Strategies
 
 ## Applicable Models
+
+From the model training already performed we have a total of six models: 3x3, 3x4, 3x5, 3x6 and 4x4, for sub-boards (windowed grids) as well as their relevant transpositions 5x4 and 6x4. 
 
 ## Monte Carlo Simulations
