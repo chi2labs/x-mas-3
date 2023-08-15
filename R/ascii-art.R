@@ -9,7 +9,7 @@
 #' @examples
 #' ascii_gatai()
 ascii_gatai <- function(whichone=c("default","scared","surprised",
-                                   "cool",
+                                   "cool", "cash",
                                    "bigtree","tree", "hiding")){
   w <- match.arg(whichone)
   my_art <- list(
@@ -17,6 +17,13 @@ ascii_gatai <- function(whichone=c("default","scared","surprised",
 
   /\\_/\\
  ( o.o )
+  > ^ <
+
+",
+    cash = "
+
+  /\\_/\\
+ ( $.$ )
   > ^ <
 
 ",
