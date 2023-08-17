@@ -1,13 +1,9 @@
 ---
-title: "The X-mas-3 Video Game"
+title: "The Game"
 author: "Aleksander Dietrichson, PhD"
 format: html
 editor: visual
 ---
-
-This document was created as part of an exploratory research into the games available on the Gato (http://www.gato.us) platform.
-
-## Game
 
 The game I chose for analysis is called x-mas-tree and is classified as a *puzzle* game on the site.
 

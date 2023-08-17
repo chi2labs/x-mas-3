@@ -1,0 +1,51 @@
+---
+title: "The Showdown"
+format: html
+editor: visual
+---
+
+```{r}
+#| include: false
+library(xmas3)
+```
+
+## Arcade Mode
+
+## Time Mode
+
+```{r}
+#| include: false
+#| echo: false
+#| layout-ncol: 2
+
+cat(
+  "Game over...",
+  ascii_gatai("bigtreebroken")  
+)
+
+cat("\n\n\n\n\n",
+    ascii_gatai("cool"),"Hasta la vista, baby." )
+
+# cat("\n\n\n\n\n\n
+#                 /\\_/\\
+#                (⌐■_■ ) 
+#                 > ^ <
+#  Hasta la vista, baby.
+#     ")
+
+```
+
+----
+
+:::{.column-margin}
+```{r}
+#| echo: false
+cat(
+  "Game over...",
+  ascii_gatai("bigtreebroken"),"______________"  
+)
+
+cat(ascii_gatai("cool"),"Hasta la vista, baby.")
+```
+
+:::
