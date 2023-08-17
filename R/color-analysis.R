@@ -16,32 +16,59 @@ color_analysis <- function(img){
     if(is.character(.x)){
       .x <- image_read(.x)
     }
+    
     tmp <- as.raster(.x) %>% as.character()
     tmp <- str_sub(tmp,1,7) %>% 
       col2rgb()
-    l <- length(tmp)/3
-    l <- seq(l/4,l,by=l/4)
     
+    cols <- image_info(.x)$width # Length of q-line
+    rows <- image_info(.x)$height #height of q-lines
+    
+    
+    M <- matrix(rows,cols,data=1:(rows*cols))
+    
+    mid_row <- ceiling(rows / 2)
+    mid_col <- ceiling(cols / 2)
+    
+    # q1 <- M[1:mid_row, 1:mid_col]
+    # q2 <- M[1:mid_row, (mid_col + 1):cols]
+    # q3 <- M[(mid_row + 1):rows, 1:mid_col]
+    # q4 <- M[(mid_row + 1):rows, (mid_col + 1):cols]
+    # 
+    
+    # Slices
+    l <- length(M)
+    q1=M[1:l/4]
+    q2=M[(l/4):(l/2)]
+    q3=M[l/2:(l*3/4)]
+    q4=M[(l*3/4):l]
+    
+    th = c(q1,q2)
+    lh = c(q2,q4)
     data.frame(
       R   = mean(tmp[1,]),
       G   = mean(tmp[2,]),
       B   = mean(tmp[3,]),
-      #Q1
-      Q1R = mean(tmp[1,1:l[1]]), 
-      Q1G = mean(tmp[2,1:l[1]]), 
-      Q1B = mean(tmp[3,1:l[1]]), 
+      R_S   = sd(tmp[1,]),
+      G_S   = sd(tmp[2,]),
+      B_S   = sd(tmp[3,]),
       
-      Q2R = mean(tmp[1,l[1]:l[2]]), 
-      Q2G = mean(tmp[2,l[1]:l[2]]), 
-      Q2B = mean(tmp[3,l[1]:l[2]]),
+
+      Q1R = mean(tmp[1,q1]), 
+      Q1G = mean(tmp[2,q1]), 
+      Q1B = mean(tmp[3,q1]), 
       
-      Q3R = mean(tmp[1,l[2]:l[3]]), 
-      Q3G = mean(tmp[2,l[2]:l[3]]), 
-      Q3B = mean(tmp[3,l[2]:l[3]]), 
+      Q2R = mean(tmp[1,q2]), 
+      Q2G = mean(tmp[2,q2]), 
+      Q2B = mean(tmp[3,q2]),
       
-      Q4R = mean(tmp[1,l[3]:l[4]]), 
-      Q4G = mean(tmp[2,l[3]:l[4]]), 
-      Q4B = mean(tmp[3,l[3]:l[4]]) 
+      Q3R = mean(tmp[1,q3]), 
+      Q3G = mean(tmp[2,q3]), 
+      Q3B = mean(tmp[3,q3]), 
+      
+      Q4R = mean(tmp[1,q4]), 
+      Q4G = mean(tmp[2,q4]), 
+      Q4B = mean(tmp[3,q4]) 
       
     )
   })

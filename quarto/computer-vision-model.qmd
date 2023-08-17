@@ -1,0 +1,142 @@
+---
+title: "Computer Vision"
+author: "Aleksander Dietrichson, PhD"
+format: html
+editor: visual
+bibliography: references.bib
+---
+
+In the previous chapters we have abstracted the game and trained models on theoretical abstractions. While the Monte Carlo simulations we conducted showed encouraging results, we have still not provided evidence that Gatai would be able to play this game in the real worlds. In order for us to interact with the real-world game console we either need to obtain the game's source code and interact through the *Unity* platform, or else interact through its graphical user interface (GUI).
+
+## Interacting with the GUI
+
+As we did not have access to the source code, we were left with the latter option: interacting with the GUI. This avenue presented us with some additional challenges, most of which are, incidentally, solvable by applying artificial intelligence.
+
+::: column-margin
+There is, of course, the third possibility of manual interaction with the GUI, but this was never seriously considered.
+
+```{r}
+#| echo: false
+library(xmas3)
+ascii_gatai("computer") |> cat()
+
+```
+:::
+
+### Robot Play
+
+In order to interact with the GUI in an automated fashion we needed to implement a robot capable of controlling a web-browser. This robot would in turn be governed by Gatai. The robot is required to start and load the video-game from its base URL. In order for Gatai to evaluate the board on the computer screen, the robot needs to take and return a screenshot to be evaluated by Gatai. This evaluation will return suggested move, communicated back to the robot, and made on the actual game-board. Once the moves have been made and the board has been updated, a new screenshot is taken; and the process repeats itself until the game is over. @fig-flowchart shows an overview of the workflow hitherto described.
+
+```{mermaid}
+%%| label: fig-flowchart
+%%| fig-cap: "Basic Workflow for Automated Interaction"
+
+%%{init: {'theme': 'dark', "flowchart": { "curve": "straight"}}}%%
+flowchart LR
+    A --> |start| B
+    A[GatAI] -->|moves| B[Robot]
+    B -->|load| C[Chrome]
+    B -->|play moves| C
+    C -->|screenshot| B
+    B -->|screenshot| A
+```
+
+*Selenium* is our go-to solution when browser automatization is required. Given the prior implementation of Gatai, it made sense to interact with *Selenium* using the package available on CRAN [@RSelenium].
+
+## Screenshot Evaluation
+
+Opening a URL, taking, screenshot to Gatai, are all relatively trivial operations with the infrastructure provided by @RSelenium. Making moves on the board is a little more cumbersome, but amounts to calculating the coordinates of the grid, and translating the moves returned by Gatai to these coordinates.
+
+The real bottleneck in this workflow is the transition from a graphic format (in this case a png format) to a board matrix which Gatai can evaluate.
+
+## Analysis
+
+We start with a screenshot from the play interface. This is the raw material returned from *Selenium*.
+
+```{r}
+#| include: false
+library(xmas3)
+library(magick)
+img <- image_read(here::here("inst", "image-data","ui-screenshots",
+                             "screenshot-2023-07-31-1701-2.png"))
+```
+
+```{r}
+#| label: fig-raw-screenshot
+#| fig-cap: "Screenshot from X-mas-3: Taken by Robot"
+#| echo: false
+
+img |> image_ggplot()
+```
+
+### Board on Screen
+
+The board area is a subset of this screen and we can crop it.
+
+```{r}
+#| label: fig-raw-board
+#| fig-cap: "Screenshot from X-mas-3: Taken by Robot"
+#| echo: false
+image_crop(img,geometry = "760x470+425+135") |> 
+  image_ggplot()
+```
+
+From this board we can calculate the tile centroids and create a grid.
+
+```{r}
+#| include: false
+my_coords <- calculate_grid_centroids(760,470)
+img2 <-image_crop(img,geometry = "760x470+425+135") 
+img3 <-image_draw(img2)
+rect(
+  xleft =   my_coords$x-40,
+  xright =  my_coords$x+40,
+  ytop =    my_coords$y-40,
+  ybottom = my_coords$y+40,
+  border = "white", lty = "solid", lwd = 5)
+dev.off()
+```
+
+```{r}
+#| label: fig-cropped-board-with-grid
+#| fig-cap: "Board Surface with Coordinate Grid"
+#| echo: false
+#| message: false
+image_ggplot(img3)
+```
+
+We are now able to extract the individual tiles from the board on the computer screen.
+
+::: {#fig-example-tiles layout-ncol="5"}
+![Star](images/ui-tiles/image-2023-08-01%2000_10_16-1.png)
+
+![Red](images/ui-tiles/image-2023-08-01%2000_10_16-2.png)
+
+![Spotted](images/ui-tiles/image-2023-08-01%2000_10_16-3.png)
+
+![Wreath](images/ui-tiles/image-2023-08-01%2000_10_16-4.png)
+
+![Stocking](images/ui-tiles/image-2023-08-01%2000_10_16-5.png)
+
+![Candy](images/ui-tiles/image-2023-08-01%2000_10_16-8.png)
+
+![Berries](images/ui-tiles/image-2023-08-01%2000_10_16-9.png)
+
+![Tree](images/ui-tiles/image-2023-08-01%2000_10_16-10.png)
+
+![Striped](images/ui-tiles/image-2023-08-01%2000_10_16-14.png)
+
+![Hat](images/ui-tiles/image-2023-08-01%2000_10_16-24.png)
+
+Example tiles, with nomenclature added.
+:::
+
+Now that we have these tiles at our disposal, in binary format, our first inclination was to define a set of reference tiles and simply compare the tile in question with the reference one, on a byte by byte basis. The problem with this approach is that there exist minute differences between *like* tiles, probably due to imprecisions introduces when cropping, as well as screen-resolution issues etc. These discepancies are big enough that a direct comparison is impossible, or at least impracticable.
+
+## Algorithm for Classification
+
+Image classification can be done with a series of algorithms --support vector machines (SVM), convoluted neural networks (CNN), k-nearest neighbors etcetera. However, given the very restricted space, and the presumably very small within-class differences (they are in principle identical, differences are introduced by imperfections in the data-retrieval procedures), we decided that *multinomial logistic regression* would be the correct choice for this use case. This is conveniently implemented in the nnet @nnet package, available open source on the CRAN network.
+
+{{< include multinomial-logistic-regression.qmd >}}
+
+We can now distinguish the tiles from one another and effectively automate the interaction with the live video-game.

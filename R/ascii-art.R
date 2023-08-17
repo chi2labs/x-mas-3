@@ -10,13 +10,23 @@
 #' ascii_gatai()
 ascii_gatai <- function(whichone=c("default","scared","surprised",
                                    "cool", "cash","computer",
-                                   "bigtree","tree", "hiding")){
+                                   "isee",
+                                   "bigtree","tree",
+                                   "bigtreebroken",
+                                   "bigtreedown","treedown","hiding")){
   w <- match.arg(whichone)
   my_art <- list(
     default = "
 
   /\\_/\\
  ( o.o )
+  > ^ <
+
+",
+    isee = "
+
+  /\\_/\\
+ ( @.@ )
   > ^ <
 
 ",
@@ -39,13 +49,14 @@ ascii_gatai <- function(whichone=c("default","scared","surprised",
 ",
     computer = '
       ___
-  _.-|   |          |\\__/,|   (`\\
- {   |   |          |o o  |__ _) )
-  "-.|___|        _.( T   )  `  /
-  .--\'-`-.     _((_ `^--\' /_<  \\
+  _.-|   |           /\\_/\\   (`\\
+ {   |   |          (o.o )__ _) )
+  "-.|___|        _.> ^ <   `  /
+  .--\'-`-.     _((_ ` --  /_<  \\
 .+|______|__.-||__)`-\'(((/  (((/
 ',
     bigtree = "
+    *
     /\\
    //\\\\
   ///\\\\\\
@@ -53,11 +64,31 @@ ascii_gatai <- function(whichone=c("default","scared","surprised",
 /////\\\\\\\\\\
    [][]
 ",
+    bigtreedown = "
+   [][]
+\\\\\\\\\\/////    
+ \\\\\\\\////
+  \\\\\\///
+   \\\\//
+    \\/
+",
     tree = "
     /\\
    //\\\\
   ///\\\\\\
     []
+",
+    treedown = "
+    []
+  \\\\\\///
+   \\\\//
+    \\/
+",
+    bigtreebroken = "
+    
+    []
+\\\\\\\\\\/////   /\\    
+ \\\\\\\\////   //\\\\    *
 "
   )
   my_art[[w]]

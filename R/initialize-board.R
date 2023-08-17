@@ -9,5 +9,11 @@ initialize_board <- function(avoid_combinations = TRUE){
   if(avoid_combinations && get_n_combinations(board)>0){
     board <- initialize_board()
   }
+  class(board) <- c("xmas3full",class(board))
   board
+}
+
+print.xmas3full<- function(B){
+  M <- matrix(data = CIRCLED_TILES[B],dim(B)[1],dim(B)[2])
+  apply(M,1,function(.r){cat('|',.r,'|\n')})
 }

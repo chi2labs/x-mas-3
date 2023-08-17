@@ -47,7 +47,7 @@ Let's do a spot_check.
 
 ```{r}
 # Read from cache
-gatai <- readr::read_rds(here::here("../models/q-learning-3x4.rds"))
+gatai <- readr::read_rds(here::here("models", "q-learning-3x4.rds"))
 S[[32]]
 gatai |> predict(S[32])
 ```

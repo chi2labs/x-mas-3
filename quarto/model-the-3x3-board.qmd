@@ -72,8 +72,8 @@ S[[32]]
 
 ```{r}
 # Read from cache
-model <- readr::read_rds(here::here("../models/q-learning-3x3.rds"))
-predict(model,S[32])
+gatai <- readr::read_rds(here::here("models","q-learning-3x3.rds"))
+gatai |> predict(S[32])
 ```
 
 ```{r}
@@ -88,7 +88,7 @@ predict(model,S[32])
 S[[32]] %>% 
   plot()
 
-my_move <-predict(model,S[32])
+my_move <-predict(gatai,S[32])
 S[[32]] %>% 
   plot() %>% add_move(my_move)
 
@@ -104,7 +104,7 @@ S[[6]]
 ```
 
 ```{r}
-predict(model,c(S[4],S[6])) |> cat()
+gatai |> predict(c(S[4],S[6])) |> cat()
 ```
 
 ```{r}
@@ -163,7 +163,7 @@ p %>%
 Let's see what Gatai believes:
 
 ```{r}
-predict(model,S[263])
+gatai |> predict(S[263])
 ```
 
 So, one of the strongest moves available. However, we cannot be sure whether this was a random choice among scoring moves or the result of a strategic play. We can check this with another board.
@@ -178,7 +178,7 @@ B
 ```
 
 ```{r}
-predict(model,B[1])
+gatai |> predict(B[1])
 ```
 
 So we see that Gatai is capable of making strategic moves as well.

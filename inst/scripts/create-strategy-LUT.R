@@ -25,8 +25,8 @@ create_strategy_LUT <- function(n_row,n_col){
   
   model <-readr::read_rds(filename_model)
   
-  
-  my_data <- purrr::map(S,~{
+  message("Red model, Starting to play")
+   my_data <- purrr::map(S,~{
     m <-0
     B <-xmas3board(.x, dims = c(n_row, n_col))
     # Check this here
@@ -62,6 +62,8 @@ create_strategy_LUT <- function(n_row,n_col){
 # create_strategy_LUT(n_row = 2, n_col=6)
 # create_strategy_LUT( n_row = 6, n_col = 2 )
 # create_strategy_LUT(n_row=5, n_col=3)
+# create_strategy_LUT(n_row=3, n_col=6)
+create_strategy_LUT(n_row=6, n_col=3)
 
 
 

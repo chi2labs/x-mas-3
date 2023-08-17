@@ -6,8 +6,8 @@ library(tibble)
 
 
 
-n_row <- 3
-n_col <- 6
+n_row <- 6
+n_col <- 3
 control <- list(alpha = 0.3, gamma = 0.6, epsilon = 0.1)
 
 filename_data <- here::here("inst","training-data",
