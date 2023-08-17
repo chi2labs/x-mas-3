@@ -28,12 +28,26 @@ evaluate_grid <- function(G){
 #' Get a Subset of a Board
 #'
 #' @param B 
-#' @param from coordinates of the top-left cell
-#' @param dims dimensions
+#' @param from coordinates of the top-left cell either as a integer vector (e.g. c(2,2)) or in algebraic notation (e.g. B2)
+#' 
+#' @param dims dimensions either a integer vector or a geometry (e.g. "3x4")
 #'
 #' @return The sub-matrix
 #' @export
 get_sub_board <- function(B,from,dims){
+  if(is.character(from)){
+    #Parse algebraic notation
+    prs <- parse_move(from)
+    from <- c(prs$rs, prs$cs)
+    
+  }
+  
+  if(is.character(dims)){
+    #parse dimensions
+    prs <- stringr::str_split(dims,"x", simplify = TRUE)
+    dims <- c(prs[1],prs[2]) %>% as.numeric()
+  }
+  
   B[from[1]:(from[1] + dims[1]-1),
     from[2]:(from[2] + dims[2]-1)
   ] -> B
@@ -44,9 +58,10 @@ get_sub_board <- function(B,from,dims){
 
 
 # 
-if(interactive()){
-  set.seed(1234)
-  B <- initialize_board()
-  G <- get_sub_board(B, c(1,1) ,c(3,5) )
-  evaluate_grid(G) %>% print()
-}
+# if(interactive()){
+#   set.seed(1234)
+#   B <- initialize_board()
+#   G <- get_sub_board(B, c(1,1) ,c(3,5) )
+#   G2 <- get_sub_board(B,"A1","3x5")
+#   print(G==G2)
+# }

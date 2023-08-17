@@ -9,9 +9,9 @@ get_sub_board(B, from, dims)
 \arguments{
 \item{B}{}
 
-\item{from}{coordinates of the top-left cell}
+\item{from}{coordinates of the top-left cell either as a integer vector (e.g. c(2,2)) or in algebraic notation (e.g. B2)}
 
-\item{dims}{dimensions}
+\item{dims}{dimensions either a integer vector or a geometry (e.g. "3x4")}
 }
 \value{
 The sub-matrix

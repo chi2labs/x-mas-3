@@ -4,7 +4,10 @@
 \alias{ascii_gatai}
 \title{Get ASCII from the Collection}
 \usage{
-ascii_gatai(whichone = c("default", "scared", "surprised", "tree", "hiding"))
+ascii_gatai(
+  whichone = c("default", "scared", "surprised", "cool", "cash", "computer", "isee",
+    "bigtree", "tree", "bigtreebroken", "bigtreedown", "treedown", "hiding")
+)
 }
 \arguments{
 \item{whichone}{}

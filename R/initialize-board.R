@@ -13,7 +13,8 @@ initialize_board <- function(avoid_combinations = TRUE){
   board
 }
 
+#' @export
 print.xmas3full<- function(B){
-  M <- matrix(data = CIRCLED_TILES[B],dim(B)[1],dim(B)[2])
+  M <- matrix(data = CIRCLED_TILES[as.character(B)],dim(B)[1],dim(B)[2])
   apply(M,1,function(.r){cat('|',.r,'|\n')})
 }
