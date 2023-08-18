@@ -5,10 +5,91 @@ crossref:
 format: html
 editor: visual
 ---
+
 # Full Board Strategies
 
 ## Applicable Models
 
-From the model training already performed we have a total of six models: 3x3, 3x4, 3x5, 3x6 and 4x4, for sub-boards (windowed grids) as well as their relevant transpositions 5x4 and 6x4. 
+From the model training already performed we have a total of six models: 3x3, 3x4, 3x5, 3x6 and 4x4, for sub-boards (windowed grids) as well as their relevant transpositions. Any of these can be used to scan the entire board looking for playable moves or move sequences (i.e. strategic moves) by using the *windowing* technique already described. Each evaluation of a sub-boards will return a best move or move-sequence and expected value of the sequence (which may be of magnitude 1). We may have some intuition about which strategy is optimal, e.g. all 3x3 sub-boards are included in a series of other geometries (3x4,3x5,3x6 and 4x4), and the best strategy can be derived mathematically, we chose the *statistics route* to chose the optimal strategy.
 
 ## Monte Carlo Simulations
+
+We conducted Monte Carlo simulations of ten thousand (10,000) random boards, each played with each of the available geometries. This is the equivalent of playing 100 games (in arcade mode) with each strategy. The score on the move, number of moves and expected score per move (relevant if strategic moves are made) were calculated as well. The summary statistics are shown in @fig-expected-values-boxplot and @tbl-expected-values-by-geometry respectively.
+
+```{r}
+#| include: false
+library(dplyr)
+library(xmas3)
+library(ggplot2)
+library(ggdark)
+theme_set(dark_theme_bw())
+my_data <- dir(here::here("monte-carlo"),full.names = TRUE) |> 
+  purrr::map(readr::read_rds) |> 
+  bind_rows()
+```
+
+```{r}
+#| echo: false
+#| label: fig-expected-values-boxplot
+#| fig-cap: "Boxplot of Expected Values for the 'Best Move' Strategy, by Geometry"
+my_data |> 
+  ggplot(aes(expected_value,geometry))+
+  geom_boxplot()
+```
+
+```{r}
+#| echo: false
+#| label: tbl-expected-values-by-geometry
+#| tbl-cap: "Expected Score by Geometry"
+my_data |> 
+  group_by(geometry) |> 
+  summarise(
+    Median = median(expected_value),
+    Mean = mean(expected_value),
+    SD = sd(expected_value)
+  ) |> 
+  knitr::kable(digits = 3)
+```
+
+We can see that the 4x4 geometry is marginally superior when using the *best move* strategy.
+
+### Time of Evaluation
+
+As we will be developing full board strategies for both *arcade* and *time mode* in the actual game, we also analyzed the time it took Gatai to evaluate the boards using each of the geometries. The results are shown in @fig-time-per-round.
+
+```{r}
+#| echo: false
+#| label: fig-time-per-round
+#| fig-cap: "Time per Move by Geometry"
+
+my_data |> 
+  group_by(geometry) |> 
+  summarize(
+    time = mean(time)
+  ) |> 
+  ungroup() |> 
+  ggplot(aes(geometry,time, group=1))+
+  geom_line()+
+  geom_point(size=4)+
+  ylim(c(0,.5))
+
+
+```
+
+## Optimal Strategies
+
+### Arcade
+
+For the *arcade* version of the game it is clear that we should use the geometry which optimizes the expected score per move, as the only constraint we have here is that we have 100 moves to complete the game.
+
+### Time Mode
+
+Playing X-mas-3 via the graphical user interface add significant overhead because of the image processing needed. However playing a series of pre-defined moves on the board has relatively low overhead. This suggests a strategy that will optimize the number of playable moved on the board *per unit time.*
+
+::: column-margin
+```{r}
+#| echo: false
+ascii_gatai("beafraid") |> cat()
+cat("Be afraid, Chris. Be very afraid...")
+```
+:::

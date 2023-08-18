@@ -23,6 +23,10 @@ The board is a 6 by 10 grid each containing a tile out of ten different tile-typ
 #| echo: false
 #| results: asis
 #| fig-cap: "Example Board"
+
+library(ggdark)
+library(ggplot2)
+theme_set(dark_theme_bw())
 set.seed(4361)
 tiles <- LETTERS[1:10]
 board <- matrix(data = sample(tiles,60,replace = TRUE),6,10)

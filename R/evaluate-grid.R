@@ -21,7 +21,12 @@ evaluate_grid <- function(G){
   }
   res %>% 
     left_join(LUT %>%  mutate(State=as.numeric(State)),by = c("State")) %>% 
-    filter(sequence != "Pass")
+    #filter(sequence != "Pass") %>% 
+    mutate(orig_seq = sequence) -> res
+  res$sequence <- purrr::map(res$sequence,~{
+    slide_move_sequence(.x,attr(G, "pos"))
+  })
+  res
 
 }
 
@@ -53,6 +58,7 @@ get_sub_board <- function(B,from,dims){
   ] -> B
   
   attr(B, "pos" )<-from
+  class(B) <- c("xmas3Board",class(B))
   B
 }
 

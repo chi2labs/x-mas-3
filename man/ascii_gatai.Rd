@@ -6,7 +6,7 @@
 \usage{
 ascii_gatai(
   whichone = c("default", "scared", "surprised", "cool", "cash", "computer", "isee",
-    "bigtree", "tree", "bigtreebroken", "bigtreedown", "treedown", "hiding")
+    "beafraid", "bigtree", "tree", "bigtreebroken", "bigtreedown", "treedown", "hiding")
 )
 }
 \arguments{

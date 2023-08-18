@@ -11,6 +11,7 @@
 ascii_gatai <- function(whichone=c("default","scared","surprised",
                                    "cool", "cash","computer",
                                    "isee",
+                                   "beafraid",
                                    "bigtree","tree",
                                    "bigtreebroken",
                                    "bigtreedown","treedown","hiding")){
@@ -54,6 +55,12 @@ ascii_gatai <- function(whichone=c("default","scared","surprised",
   "-.|___|        _.> ^ <   `  /
   .--\'-`-.     _((_ ` --  /_<  \\
 .+|______|__.-||__)`-\'(((/  (((/
+',
+    beafraid = '
+ /\\___/\\
+ \\ -.- /
+ `-.^.-\'
+   /"\\      
 ',
     bigtree = "
     *

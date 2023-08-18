@@ -10,8 +10,11 @@ format: html
 ```{r}
 #| include: false
 library(xmas3)
+library(ggdark)
 library(ReinforcementLearning)
 library(dplyr)
+library(ggplot2)
+theme_set(dark_theme_bw())
 .nf <- function(x){format(x,big.mark=",")}
 ```
 

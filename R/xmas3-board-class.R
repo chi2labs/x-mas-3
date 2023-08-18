@@ -83,16 +83,8 @@ plot.xmas3 <- function(x,...){
   # chessdat2 <- chessdat + offset
   g <- ggplot(my_data, aes(column,row)) + 
     geom_point(shape=22,size=20)
+  g <- g +theme_xmas3()
   g <- g +
-    theme_bw()+
-    theme(
-      panel.grid.major = element_blank(),
-      # panel.grid.major = element_line(linetype = 2, color='gray'),
-      panel.grid.minor = element_line(linetype = 2, color = 'grey'),
-      axis.ticks = element_blank(),
-      axis.text=element_text(size=20,face="bold"),
-      #axis.text = element_blank(),
-      axis.title = element_blank())+
     coord_cartesian(xlim=c(0,n_cols), ylim=c(n_rows,0))+
     scale_x_continuous(breaks = 1:n_cols-.5,labels=LETTERS[1:n_cols],expand = c(0,0))+
     scale_y_continuous(breaks = 1:n_rows-.5,labels = 1:n_rows, expand = c(0,0))
@@ -291,6 +283,21 @@ parse_move <- function(move){
     as.integer()
   
   list(cs=cs,rs=rs)
+}
+
+#' Parse Geometry
+#' 
+#' Translate a geometry expressed as a character vector (e.g. "3x4") to a numeric representation.
+#' (e.g. c(3,4)) 
+#'
+#' @param g geometry to parse
+#'
+#' @return a two element numeric vector
+#' @export
+parse_geometry <- function(g){
+  prs <- stringr::str_split(g,"x", simplify = TRUE)
+  dims <- c(prs[1],prs[2]) %>% as.numeric()
+  dims
 }
 
 unparse_move<-function(m){
