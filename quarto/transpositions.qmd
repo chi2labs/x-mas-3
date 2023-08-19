@@ -38,7 +38,7 @@ transpose(B) %>% plot() %>% add_move(my_move %>% transpose_move())
 
 ## Windowing and Sliding
 
-Another class of transpositions, as mentioned, are either horizontal or vertical, but does not imply a flip around the matrix's diagonal. For the avoidance of confusion I chose to denominate these operations as *sliding.* And the origin area of a *slide* a *window.*
+Another class of transpositions applies to those that are either horizontal or vertical, but do not imply a flip around the matrix's diagonal. For the avoidance of confusion I chose to denominate these operations as *sliding.* And the origin area of a *slide* a *window.*
 
 Since we are operating on simplified sub-boards, and part of our strategy is to window the playing-board we implemented functions to *window* a board, i.e. subdivide it into smaller pieces for analysis. When moves are suggested for the sub-division we need to *slide* these moves over on the real playing board (i.e. the larger one).
 

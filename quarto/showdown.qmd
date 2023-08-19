@@ -9,9 +9,15 @@ editor: visual
 library(xmas3)
 ```
 
+Now, then. With tactics and strategies honed, and a full-board strategy in plac; Gatai is ready to take on X-mas-3 in a one-to-one showdown. The format was to play 5 games in either of the two possible modes all through the graphical user interface.
+
 ## Arcade Mode
 
+For the *arcade mode* games Gatai simply scanned the board for the best-scoring move and made that move.
+
 ## Time Mode
+
+For the time-mode version of the game, Gatai would still scan the board for the best moves, but then, if more than one move or move sequence is possible, try to make all of then, in a pattern that minimizes the risk for interference between the moves.
 
 ```{r}
 #| include: false
@@ -35,9 +41,9 @@ cat("\n\n\n\n\n",
 
 ```
 
-----
+------------------------------------------------------------------------
 
-:::{.column-margin}
+::: column-margin
 ```{r}
 #| echo: false
 cat(
@@ -47,5 +53,4 @@ cat(
 
 cat(ascii_gatai("cool"),"Hasta la vista, baby.")
 ```
-
 :::

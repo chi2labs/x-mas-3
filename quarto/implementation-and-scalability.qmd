@@ -1,0 +1,20 @@
+---
+format: html
+editor: visual
+---
+
+# Scalability {.appendix}
+
+The implementation proposed in the previous chapters was qualified by its intended audience. As I intended to present part of this work at an R conference, I aimed to provide a body of work reproducible by members of the R community, without the need to use third-party services. This approach is perfectly legitimate and indeed recommended for the stage of *exploratory research* in a project of this nature. However, for a production level implementation we would likely have made some different choices.
+
+## *Reinforcement Learning*
+
+This algorithm is already available and implemented *open source* in C++, which is considerably more efficient (albeit equally accurate) than the R implementation of the same. The algorithm is also available from all of the major cloud providers (Amazon Web Services, Google Cloud, Microsoft Azure) and in a production environment this would be the obvious go-to for implementation as it would not only decrease the time needed for training (due to parallel processing) but also provide the convenience afforded by its streamlined integration into already existing work-flows of cloud-based systems.
+
+## Vision Model
+
+Computer vision is also widely available from cloud providers, however, given the very restricted field of vision required for a video-game, it is highly unlikely that anything is gained from using these *general purpose models.* In fact, it is easily argued that their implementation might be counter-productive. As an example the model trained for X-mas-3 only used \~250 input cases and returned in \< 0.5 seconds with perfect accuracy, all on commodity hardware.
+
+## GUI By-Pass
+
+Ideally, a production level implementation will include access to the source-code of the game under scrutiny. This will obviate some of the need to recreate and/or abstract the game in question as we would be able run the back-end part of the source without the need to interact with a GUI and its corresponding vision model, which would facilitate the setup of the training tasks and consequently reduce time-to-production by orders of magnitude.

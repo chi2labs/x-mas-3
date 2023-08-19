@@ -60,7 +60,7 @@ The data for the modelling exercise was created by playing each possible move fo
 
 ### Training the Model
 
-We then using the Q-learning algorithm implemented in the in [@ReinforcementLearning], with the *standard default* parameters ($\alpha=.1,\gamma=.1, \epsilon=.1$).
+We then using the Q-learning algorithm implemented in the opensource _ReinforcementLearning_ package [@ReinforcementLearning], with the *standard default* parameters ($\alpha=.1,\gamma=.1, \epsilon=.1$).
 
 ### Testing the Model
 

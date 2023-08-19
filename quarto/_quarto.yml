@@ -6,6 +6,7 @@ book:
   title: "GatAI v. X-Mas-3"
   author: "Aleksander Dietrichson, PhD"
   date: "8/13/2023"
+
   chapters:
     - index.qmd
     - x-mas-3-description.qmd
@@ -15,9 +16,16 @@ book:
     - computer-vision-model.qmd
     - showdown.qmd
     - references.qmd
+  appendices:
+     - implementation-and-scalability.qmd
+     - business-case.qmd
 
 bibliography: references.bib
-
+#csl: https://www.zotero.org/styles/chicago-fullnote-bibliography-16th-edition
+# csl: nature.csl
+# reference-location: margin
+# citation-location: margin
+footnote-location: margin
 format:
   html:
     theme: cyborg
