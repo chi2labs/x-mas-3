@@ -101,7 +101,7 @@ GatAIRobot <-
               max_moves <- 100
               move_n <- 0
               while(move_n < max_moves){
-                message("Move n#", move_n)
+                self$message("Move number: ", move_n)
                 S <- self$getBoardOnScreen()
                 moves <- agent(S)
                 move_n <- move_n + sum(moves$n_moves) # update Move count

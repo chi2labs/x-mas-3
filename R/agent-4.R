@@ -1,6 +1,6 @@
 #' Agent 4
 #' 
-#' Plays a 4x4 Grid 
+#' Plays a 4x4 Best Move Strategy
 #'
 #' @param B Board Matrix
 #' @param ... not in use for this agent
