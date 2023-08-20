@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Aleksander Dietrichson, PhD">
+
+<title>GatAI v. X-Mas-3 - 5&nbsp; Computer Vision</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./showdown.html" rel="next">
+<link href="./full-board-strategies.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=JetBrains Mono" type="text/css">
+
+
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./computer-vision-model.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Computer Vision</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">GatAI v. X-Mas-3</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./x-mas-3-description.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">The Game</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./abstracting-x-mas-3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-mas-3</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./model-training.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Model Training</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./full-board-strategies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Full Board Strategies</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./computer-vision-model.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Computer Vision</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./showdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The Showdown</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./implementation-and-scalability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Scalability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./business-case.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Business Cases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#interacting-with-the-gui" id="toc-interacting-with-the-gui" class="nav-link active" data-scroll-target="#interacting-with-the-gui"><span class="header-section-number">5.1</span> Interacting with the GUI</a>
+  <ul class="collapse">
+  <li><a href="#robot-play" id="toc-robot-play" class="nav-link" data-scroll-target="#robot-play">Robot Play</a></li>
+  </ul></li>
+  <li><a href="#screenshot-evaluation" id="toc-screenshot-evaluation" class="nav-link" data-scroll-target="#screenshot-evaluation"><span class="header-section-number">5.2</span> Screenshot Evaluation</a></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis"><span class="header-section-number">5.3</span> Analysis</a>
+  <ul class="collapse">
+  <li><a href="#board-on-screen" id="toc-board-on-screen" class="nav-link" data-scroll-target="#board-on-screen">Board on Screen</a></li>
+  </ul></li>
+  <li><a href="#algorithm-for-classification" id="toc-algorithm-for-classification" class="nav-link" data-scroll-target="#algorithm-for-classification"><span class="header-section-number">5.4</span> Algorithm for Classification</a></li>
+  <li><a href="#multinomial-logistic-regression" id="toc-multinomial-logistic-regression" class="nav-link" data-scroll-target="#multinomial-logistic-regression"><span class="header-section-number">5.5</span> Multinomial Logistic Regression</a>
+  <ul class="collapse">
+  <li><a href="#training-data" id="toc-training-data" class="nav-link" data-scroll-target="#training-data">Training Data</a></li>
+  <li><a href="#model-testing" id="toc-model-testing" class="nav-link" data-scroll-target="#model-testing">Model Testing</a></li>
+  <li><a href="#spot-check" id="toc-spot-check" class="nav-link" data-scroll-target="#spot-check">Spot Check</a></li>
+  <li><a href="#model-evaluation" id="toc-model-evaluation" class="nav-link" data-scroll-target="#model-evaluation">Model Evaluation</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Computer Vision</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aleksander Dietrichson, PhD </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In the previous chapters we have abstracted the game and trained models on theoretical abstractions. While the Monte Carlo simulations we conducted showed encouraging results, we have still not provided evidence that Gatai would be able to play this game in the real worlds. In order for us to interact with the real-world game console we either need to obtain the game’s source code and interact through the <em>Unity</em> platform, or else interact through its graphical user interface (GUI).</p>
+<section id="interacting-with-the-gui" class="level2 page-columns page-full" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="interacting-with-the-gui"><span class="header-section-number">5.1</span> Interacting with the GUI</h2>
+<p>As we did not have access to the source code, we were left with the latter option: interacting with the GUI. This avenue presented us with some additional challenges, most of which are, incidentally, solvable by applying artificial intelligence.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>There is, of course, the third possibility of manual interaction with the GUI, but this was never seriously considered.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+      ___
+  _.-|   |           /\_/\   (`\
+ {   |   |          (o.o )__ _) )
+  "-.|___|        _.&gt; ^ &lt;   `  /
+  .--'-`-.     _((_ ` --  /_&lt;  \
+.+|______|__.-||__)`-'(((/  (((/</code></pre>
+</div>
+</div>
+</div></div><section id="robot-play" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="robot-play">Robot Play</h3>
+<p>In order to interact with the GUI in an automated fashion we needed to implement a robot capable of controlling a web-browser. This robot would in turn be governed by Gatai. The robot is required to start and load the video-game from its base URL. In order for Gatai to evaluate the board on the computer screen, the robot needs to take and return a screenshot to be evaluated by Gatai. This evaluation will return suggested move, communicated back to the robot, and made on the actual game-board. Once the moves have been made and the board has been updated, a new screenshot is taken; and the process repeats itself until the game is over. <a href="#fig-flowchart">Figure&nbsp;<span>5.1</span></a> shows an overview of the workflow hitherto described.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-flowchart" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-flowchart">%%{init: {'theme': 'dark', "flowchart": { "curve": "straight"}}}%%
+flowchart LR
+    A --&gt; |start| B
+    A[GatAI] --&gt;|moves| B[Robot]
+    B --&gt;|load| C[Chrome]
+    B --&gt;|play moves| C
+    C --&gt;|screenshot| B
+    B --&gt;|screenshot| A
+</pre>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;5.1: Basic Workflow for Automated Interaction</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><em>Selenium</em> is our go-to solution when browser automatization is required. Given the prior implementation of Gatai, it made sense to interact with <em>Selenium</em> using the package available on CRAN <span class="citation" data-cites="RSelenium">(<a href="references.html#ref-RSelenium" role="doc-biblioref">Harrison 2022</a>)</span>.</p>
+<div class="no-row-height column-margin column-container"></div></section>
+</section>
+<section id="screenshot-evaluation" class="level2 page-columns page-full" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="screenshot-evaluation"><span class="header-section-number">5.2</span> Screenshot Evaluation</h2>
+<p>Opening a URL, taking, screenshot to Gatai, are all relatively trivial operations with the infrastructure provided by <span class="citation" data-cites="RSelenium">Harrison (<a href="references.html#ref-RSelenium" role="doc-biblioref">2022</a>)</span>. Making moves on the board is a little more cumbersome, but amounts to calculating the coordinates of the grid, and translating the moves returned by Gatai to these coordinates.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-RSelenium" class="csl-entry" role="listitem">
+Harrison, John. 2022. <span>“RSelenium: R Bindings for ’Selenium WebDriver’.”</span> <a href="https://docs.ropensci.org/RSelenium/">https://docs.ropensci.org/RSelenium/</a>.
+</div></div><p>The real bottleneck in this workflow is the transition from a graphic format (in this case a png format) to a board matrix which Gatai can evaluate.</p>
+</section>
+<section id="analysis" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="analysis"><span class="header-section-number">5.3</span> Analysis</h2>
+<p>We start with a screenshot from the play interface. This is the raw material returned from <em>Selenium</em>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-raw-screenshot" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="computer-vision-model_files/figure-html/fig-raw-screenshot-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;5.2: Screenshot from X-mas-3: Taken by Robot</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="board-on-screen" class="level3">
+<h3 class="anchored" data-anchor-id="board-on-screen">Board on Screen</h3>
+<p>The board area is a subset of this screen and we can crop it.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-raw-board" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="computer-vision-model_files/figure-html/fig-raw-board-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;5.3: Screenshot from X-mas-3: Taken by Robot</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>From this board we can calculate the tile centroids and create a grid.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-cropped-board-with-grid" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="computer-vision-model_files/figure-html/fig-cropped-board-with-grid-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;5.4: Board Surface with Coordinate Grid</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We are now able to extract the individual tiles from the board on the computer screen.</p>
+<div id="fig-example-tiles" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 20.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ui-tiles/image-2023-08-01 00_10_16-1.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Star</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 20.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ui-tiles/image-2023-08-01 00_10_16-2.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Red</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 20.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ui-tiles/image-2023-08-01 00_10_16-3.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Spotted</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 20.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ui-tiles/image-2023-08-01 00_10_16-4.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Wreath</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 20.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ui-tiles/image-2023-08-01 00_10_16-5.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Stocking</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 20.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ui-tiles/image-2023-08-01 00_10_16-8.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Candy</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 20.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ui-tiles/image-2023-08-01 00_10_16-9.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Berries</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 20.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ui-tiles/image-2023-08-01 00_10_16-10.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Tree</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 20.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ui-tiles/image-2023-08-01 00_10_16-14.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Striped</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 20.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ui-tiles/image-2023-08-01 00_10_16-24.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Hat</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.5: Example tiles, with nomenclature added.</figcaption><p></p>
+</figure>
+</div>
+<p>Now that we have these tiles at our disposal, in binary format, our first inclination was to define a set of reference tiles and simply compare the tile in question with the reference one, on a byte by byte basis. The problem with this approach is that there exist minute differences between <em>like</em> tiles, probably due to imprecisions introduces when cropping, as well as screen-resolution issues etc. These discepancies are big enough that a direct comparison is impossible, or at least impracticable.</p>
+</section>
+</section>
+<section id="algorithm-for-classification" class="level2 page-columns page-full" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="algorithm-for-classification"><span class="header-section-number">5.4</span> Algorithm for Classification</h2>
+<p>Image classification can be done with a series of algorithms –support vector machines (SVM), convoluted neural networks (CNN), k-nearest neighbors etcetera. However, given the very restricted space, and the presumably very small within-class differences (they are in principle identical, differences are introduced by imperfections in the data-retrieval procedures), we decided that <em>multinomial logistic regression</em> would be the correct choice for this use case. This is conveniently implemented in the nnet <span class="citation" data-cites="nnet">Venables and Ripley (<a href="references.html#ref-nnet" role="doc-biblioref">2002</a>)</span> package, available open source on the CRAN network.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-nnet" class="csl-entry" role="listitem">
+Venables, W. N., and B. D. Ripley. 2002. <span>“Modern Applied Statistics with s.”</span> <a href="https://www.stats.ox.ac.uk/pub/MASS4/">https://www.stats.ox.ac.uk/pub/MASS4/</a>.
+</div></div></section>
+<section id="multinomial-logistic-regression" class="level2 page-columns page-full" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="multinomial-logistic-regression"><span class="header-section-number">5.5</span> Multinomial Logistic Regression</h2>
+<p><em>Multinominal Logistic Regression</em> is a classification model, which fits the likelihood of membership in a specified set of classes to a vector of variables. For our purposes we will always use the classification with the highest likelihood as our hard prediction.</p>
+<section id="training-data" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="training-data">Training Data</h3>
+<p>In order to train the data I classified 254 tiles into the ten known classes. Each tile then ran through a color analysis which parsed the image file, reduced the colors-space to Red, Green and Blue and calculated mean and standard deviation of these primary colors, as well as for each quadrant of the tile. The latter procedure was included with the intention of including shape. All the operations mentioned in this paragraph were conducted using the open source <em>magick</em> <span class="citation" data-cites="magick">(<a href="references.html#ref-magick" role="doc-biblioref">Ooms 2023</a>)</span> package.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-magick" class="csl-entry" role="listitem">
+Ooms, Jeroen. 2023. <span>“Magick: Advanced Graphics and Image-Processing in r.”</span>
+</div></div></section>
+<section id="model-testing" class="level3">
+<h3 class="anchored" data-anchor-id="model-testing">Model Testing</h3>
+<p>The <em>standard</em> way to test a classification model is to hold out some percentage of the data (typically 20%) and then use that to test the model <em>post-hoc,</em> by using the model to predict the class of this subset and comparing the results. In this case, however, given the paucity of traning data, and the unusually restricted space within which we are operating I chose to use all the classified data and testing the model by predicting a sample of the unclassified tiles, on the assumption that a visual scan of the resulting data would be sufficient to asses the solidity of the model.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>my_tiles <span class="ot">&lt;-</span> <span class="fu">dir</span>(image_path,<span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for the unclassified tiles</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>my_tiles <span class="ot">&lt;-</span> my_tiles[<span class="sc">!</span>my_tiles<span class="sc">%in%</span>my_data<span class="sc">$</span>image] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="spot-check" class="level3">
+<h3 class="anchored" data-anchor-id="spot-check">Spot Check</h3>
+<p>To do a quick spot-check we can select a tile at random and review the prediction.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tile <span class="ot">&lt;-</span> <span class="fu">sample</span>(my_tiles,<span class="dv">1</span>) <span class="co"># Get a random tile</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(tile) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">info=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-random-tile" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="computer-vision-model_files/figure-html/fig-random-tile-1.png" class="img-fluid figure-img" width="36"></p>
+<figcaption class="figure-caption">Figure&nbsp;5.6: A Random Tile for Spot Check</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>image_data <span class="ot">&lt;-</span> <span class="fu">color_analysis</span>(tile)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predict</span>(GataiVision,image_data,<span class="at">type=</span><span class="st">"prob"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Gatai Vision Evaluation </caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">red</td>
+<td style="text-align: left;">0.99999112225723985059033793731941841543</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">berries</td>
+<td style="text-align: left;">0.00000483932151900513408807925908039493</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wreath</td>
+<td style="text-align: left;">0.00000250990639197149458325267548652882</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hat</td>
+<td style="text-align: left;">0.00000093383879242709282040896170279387</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">spotted</td>
+<td style="text-align: left;">0.00000043625972012212495253506618769768</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">stocking</td>
+<td style="text-align: left;">0.00000011479610486495123883806421076492</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">candy</td>
+<td style="text-align: left;">0.00000004324977876972456998086455424828</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tree</td>
+<td style="text-align: left;">0.00000000037045295545499253517161763724</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">star</td>
+<td style="text-align: left;">0.00000000000000006226561609299316148730</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">striped</td>
+<td style="text-align: left;">0.00000000000000000000000000000003927107</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>We see that Gatai is quite convinced of its classification of the tile in <a href="#fig-random-tile">Figure&nbsp;<span>5.6</span></a>, which is has never seen before.</p>
+</section>
+<section id="model-evaluation" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="model-evaluation">Model Evaluation</h3>
+<p>We can now run the rest of the tiles through the model to see what happens. These correspond to tiles that Gatai has never seen before. In total we ran 526 unseen tiles through the model with perfect precision. I am repeating the five first classifications if each class below, for brevity, and to illustrate the alternative evaluation method. By grouping the tiles by classification it is easy for a human to scan and see if there is an odd one out.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>analysis <span class="ot">&lt;-</span> <span class="fu">color_analysis</span>(my_tiles)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(GataiVision, <span class="at">newdata =</span> analysis)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>my_new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">png =</span> my_tiles, <span class="at">pred =</span> pred) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="fig-tiles-berries" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="./ui-tiles/image-2023-08-01 00_10_16-41.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-47.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-58.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-14.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-21.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.7: Classified as: berries by GataiVision</figcaption><p></p>
+</figure>
+</div>
+<div id="fig-tiles-candy" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="./ui-tiles/image-2023-08-01 00_10_16-31.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-37.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-17.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-26.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-45.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.8: Classified as: candy by GataiVision</figcaption><p></p>
+</figure>
+</div>
+<div id="fig-tiles-hat" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="./ui-tiles/image-2023-08-01 00_10_16-24.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-27.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-29.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-53.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-15.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.9: Classified as: hat by GataiVision</figcaption><p></p>
+</figure>
+</div>
+<div id="fig-tiles-red" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="./ui-tiles/image-2023-08-01 00_10_16-2.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-22.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-40.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-43.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-6.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.10: Classified as: red by GataiVision</figcaption><p></p>
+</figure>
+</div>
+<div id="fig-tiles-spotted" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="./ui-tiles/image-2023-08-01 00_10_16-18.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-3.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-33.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-24.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-33.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.11: Classified as: spotted by GataiVision</figcaption><p></p>
+</figure>
+</div>
+<div id="fig-tiles-star" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="./ui-tiles/image-2023-08-01 00_10_16-1.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-28.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-45.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-25.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-36.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.12: Classified as: star by GataiVision</figcaption><p></p>
+</figure>
+</div>
+<div id="fig-tiles-stocking" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="./ui-tiles/image-2023-08-01 00_10_16-19.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-5.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-50.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-30.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-52.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.13: Classified as: stocking by GataiVision</figcaption><p></p>
+</figure>
+</div>
+<div id="fig-tiles-striped" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="./ui-tiles/image-2023-08-01 00_10_16-20.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-23.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-25.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-59.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-16.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.14: Classified as: striped by GataiVision</figcaption><p></p>
+</figure>
+</div>
+<div id="fig-tiles-tree" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="./ui-tiles/image-2023-08-01 00_10_16-12.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-17.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-36.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-38.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_17-19.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.15: Classified as: tree by GataiVision</figcaption><p></p>
+</figure>
+</div>
+<div id="fig-tiles-wreath" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="./ui-tiles/image-2023-08-01 00_10_16-13.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-4.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-52.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-57.png" class="img-fluid figure-img"> <img src="./ui-tiles/image-2023-08-01 00_10_16-7.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.16: Classified as: wreath by GataiVision</figcaption><p></p>
+</figure>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+
+  /\_/\
+ ( @.@ )
+  &gt; ^ &lt;
+
+ I see.</code></pre>
+</div>
+</div>
+</div></div><p>We can now distinguish the tiles from one another and effectively automate the interaction with the live video-game.</p>
+
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./full-board-strategies.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Full Board Strategies</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./showdown.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The Showdown</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

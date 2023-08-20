@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Aleksander Dietrichson, PhD">
+
+<title>GatAI v. X-Mas-3 - 3&nbsp; Model Training</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./full-board-strategies.html" rel="next">
+<link href="./abstracting-x-mas-3.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=JetBrains Mono" type="text/css">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./model-training.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Model Training</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">GatAI v. X-Mas-3</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./x-mas-3-description.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">The Game</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./abstracting-x-mas-3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-mas-3</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./model-training.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Model Training</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./full-board-strategies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Full Board Strategies</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./computer-vision-model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Computer Vision</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./showdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The Showdown</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./implementation-and-scalability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Scalability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./business-case.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Business Cases</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#functions-needed" id="toc-functions-needed" class="nav-link active" data-scroll-target="#functions-needed"><span class="header-section-number">3.1</span> Functions Needed</a>
+  <ul class="collapse">
+  <li><a href="#create_state_space" id="toc-create_state_space" class="nav-link" data-scroll-target="#create_state_space">create_state_space</a></li>
+  <li><a href="#create_action_space" id="toc-create_action_space" class="nav-link" data-scroll-target="#create_action_space">create_action_space</a></li>
+  <li><a href="#make_move" id="toc-make_move" class="nav-link" data-scroll-target="#make_move">make_move</a></li>
+  <li><a href="#score_binary_board" id="toc-score_binary_board" class="nav-link" data-scroll-target="#score_binary_board">score_binary_board</a></li>
+  </ul></li>
+  <li><a href="#procedure" id="toc-procedure" class="nav-link" data-scroll-target="#procedure"><span class="header-section-number">3.2</span> Procedure</a></li>
+  <li><a href="#the-3x3-board" id="toc-the-3x3-board" class="nav-link" data-scroll-target="#the-3x3-board"><span class="header-section-number">3.3</span> The 3x3 Board</a>
+  <ul class="collapse">
+  <li><a href="#state-space" id="toc-state-space" class="nav-link" data-scroll-target="#state-space">State Space</a></li>
+  <li><a href="#action-space" id="toc-action-space" class="nav-link" data-scroll-target="#action-space">Action Space</a></li>
+  <li><a href="#data-for-modelling" id="toc-data-for-modelling" class="nav-link" data-scroll-target="#data-for-modelling">Data for Modelling</a></li>
+  <li><a href="#training-the-model" id="toc-training-the-model" class="nav-link" data-scroll-target="#training-the-model">Training the Model</a></li>
+  <li><a href="#testing-the-model" id="toc-testing-the-model" class="nav-link" data-scroll-target="#testing-the-model">Testing the Model</a></li>
+  </ul></li>
+  <li><a href="#the-3x4-board" id="toc-the-3x4-board" class="nav-link" data-scroll-target="#the-3x4-board"><span class="header-section-number">3.4</span> The 3x4 Board</a>
+  <ul class="collapse">
+  <li><a href="#state-space-1" id="toc-state-space-1" class="nav-link" data-scroll-target="#state-space-1">State Space</a></li>
+  <li><a href="#action-space-1" id="toc-action-space-1" class="nav-link" data-scroll-target="#action-space-1">Action Space</a></li>
+  <li><a href="#data-for-modelling-1" id="toc-data-for-modelling-1" class="nav-link" data-scroll-target="#data-for-modelling-1">Data for Modelling</a></li>
+  <li><a href="#training-the-model-1" id="toc-training-the-model-1" class="nav-link" data-scroll-target="#training-the-model-1">Training the Model</a></li>
+  <li><a href="#testing-the-model-1" id="toc-testing-the-model-1" class="nav-link" data-scroll-target="#testing-the-model-1">Testing the Model</a></li>
+  </ul></li>
+  <li><a href="#training-above-3x4" id="toc-training-above-3x4" class="nav-link" data-scroll-target="#training-above-3x4"><span class="header-section-number">3.5</span> Training above 3x4</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-model-training" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Model Training</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aleksander Dietrichson, PhD </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Based on prior notes and analysis it seems reasonable to assume that we should be able to train an RL model on several grid sizes. We will start with the smallest sizes and work our way up, considering the actual magnitude of the combinations, which rise rapidly:</p>
+<ul>
+<li>For 3x3 |S| = <span class="math inline">\(2^{3\times3}\)</span> =512</li>
+<li>For 3x4 |S| = <span class="math inline">\(2^{3\times4}\)</span> =4,096</li>
+<li>For 3x5 |S| = <span class="math inline">\(2^{3\times5}\)</span> =32,768</li>
+<li>For 4x4 |S| = <span class="math inline">\(2^{4\times4}\)</span> =65,536</li>
+<li>For 3x6 |S| = <span class="math inline">\(2^{3\times5}\)</span> =262,144</li>
+<li>For 4x5 |S| = <span class="math inline">\(2^{4\times5}\)</span> =1,048,576</li>
+<li>For 4x6 |S| = <span class="math inline">\(2^{4\times5}\)</span> =16,777,216</li>
+<li>For 5x5 |S| = <span class="math inline">\(2^{5\times5}\)</span> =33,554,432</li>
+</ul>
+<p>It also seems that chess-like notation, which is more human readable, and thus more convenient for the researcher (i.e.&nbsp;me), add minimal overhead in the parsing and scoring processes.</p>
+<section id="functions-needed" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="functions-needed"><span class="header-section-number">3.1</span> Functions Needed</h2>
+<p>For the purposes of setting up the agent training for a 4x5 board, we implemented the following functions in the {xmas3} package.</p>
+<section id="create_state_space" class="level3">
+<h3 class="anchored" data-anchor-id="create_state_space">create_state_space</h3>
+<div class="cell" data-code-block-border-left="true">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>create_state_space <span class="ot">&lt;-</span> \(<span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol=</span><span class="dv">3</span>){</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  classname <span class="ot">&lt;-</span> <span class="fu">paste0</span>(nrow,<span class="st">"x"</span>,ncol,<span class="st">".space"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  S <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span>(<span class="dv">2</span><span class="sc">^</span>(ncol<span class="sc">*</span>nrow)<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(S,<span class="sc">~</span>{</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xmas3board</span>(.x,<span class="at">dims =</span> <span class="fu">c</span>(nrow,ncol))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>This function returns a list of integers with the appropriate class (mostly for printing and debugging.)</p>
+</section>
+<section id="create_action_space" class="level3">
+<h3 class="anchored" data-anchor-id="create_action_space">create_action_space</h3>
+<p>This function generates an action space in chess notation given a grid on ncol and nrows.</p>
+<div class="cell" data-code-block-border-left="true">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>\(B){</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.matrix</span>(B)) B <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(B)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Magic numbers here are:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 7,14,28 - three in a row/col</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 15, 30 - four in a row/col</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 31 - five in a row</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  rows <span class="ot">&lt;-</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">apply</span>(B,<span class="dv">1</span>,<span class="cf">function</span>(x){</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      v <span class="ot">&lt;-</span> <span class="fu">paste0</span>(x, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">strtoi</span>(v,<span class="dv">2</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  cols <span class="ot">&lt;-</span> </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">apply</span>(B,<span class="dv">2</span>,<span class="cf">function</span>(x){</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      v <span class="ot">&lt;-</span> <span class="fu">paste0</span>(x, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">strtoi</span>(v,<span class="dv">2</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  totals <span class="ot">&lt;-</span> <span class="fu">c</span>(cols,rows)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  score <span class="ot">&lt;-</span> <span class="fu">sum</span>(</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(totals<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">7</span>,<span class="dv">14</span>,<span class="dv">28</span>))<span class="sc">*</span><span class="dv">50</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(totals<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">15</span>,<span class="dv">30</span>))<span class="sc">*</span><span class="dv">100</span>, </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(totals<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">31</span>))<span class="sc">*</span><span class="dv">200</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  score</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="make_move" class="level3">
+<h3 class="anchored" data-anchor-id="make_move">make_move</h3>
+<p>This function takes as input a board B and a <em>move</em> (in chess notation). It makes the move and returns the resulting board.</p>
+<div class="cell" data-code-block-border-left="true">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>make_move <span class="ot">&lt;-</span> \(B, move){</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># If no move is made the board remains unaltered</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(move <span class="sc">==</span> <span class="st">"Pass"</span>) <span class="fu">return</span>(B) </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Parse out move</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  M <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(B)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">parse_move</span>(move)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  r1<span class="ot">&lt;-</span>m<span class="sc">$</span>rs[<span class="dv">1</span>];r2<span class="ot">&lt;-</span>m<span class="sc">$</span>rs[<span class="dv">2</span>];c1<span class="ot">&lt;-</span>m<span class="sc">$</span>cs[<span class="dv">1</span>];c2<span class="ot">&lt;-</span>m<span class="sc">$</span>cs[<span class="dv">2</span>]</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  tmp <span class="ot">&lt;-</span> M[r2,c2]</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  M[r2, c2] <span class="ot">&lt;-</span> M[r1,c1]</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  M[r1, c1] <span class="ot">&lt;-</span> tmp</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  M <span class="sc">|&gt;</span>  adana<span class="sc">::</span><span class="fu">bin2int</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xmas3board</span>(<span class="at">dims =</span><span class="fu">attr</span>(B, <span class="st">"dims"</span>) )</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="score_binary_board" class="level3">
+<h3 class="anchored" data-anchor-id="score_binary_board">score_binary_board</h3>
+<p>This function takes as input a binary matrix and calculates the resulting score according to the rules of X-mas-3.</p>
+<div class="cell" data-code-block-border-left="true">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>score_binary_board <span class="ot">&lt;-</span>\(B){</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.matrix</span>(B)) B <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(B)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Magic numbers here are:</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 7,14,28 - three in a row/col</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 15, 30 - four in a row/col</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 31 - five in a row</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  rows <span class="ot">&lt;-</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">apply</span>(B,<span class="dv">1</span>,<span class="cf">function</span>(x){</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      v <span class="ot">&lt;-</span> <span class="fu">paste0</span>(x, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">strtoi</span>(v,<span class="dv">2</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  cols <span class="ot">&lt;-</span> </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">apply</span>(B,<span class="dv">2</span>,<span class="cf">function</span>(x){</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      v <span class="ot">&lt;-</span> <span class="fu">paste0</span>(x, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">strtoi</span>(v,<span class="dv">2</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  totals <span class="ot">&lt;-</span> <span class="fu">c</span>(cols,rows)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  score <span class="ot">&lt;-</span> <span class="fu">sum</span>(</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(totals<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">7</span>,<span class="dv">14</span>,<span class="dv">28</span>))<span class="sc">*</span><span class="dv">50</span>,</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(totals<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">15</span>,<span class="dv">30</span>))<span class="sc">*</span><span class="dv">100</span>, </span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(totals<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">31</span>))<span class="sc">*</span><span class="dv">200</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  score</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>These functions will allow us to create the input needed to train a <em>Reinforcement Learning</em> (RL) model.</p>
+</section>
+</section>
+<section id="procedure" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="procedure"><span class="header-section-number">3.2</span> Procedure</h2>
+<p>We will attempt to train models for each of the grid-sized mentioned above. However, it is likely that not all sizes will converge. In fact, our prediction is that we will not make it past 3x6 ~ 6x3.</p>
+</section>
+<section id="the-3x3-board" class="level2 page-columns page-full" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="the-3x3-board"><span class="header-section-number">3.3</span> The 3x3 Board</h2>
+<p>We start with a 3x3 grid. This should be sufficiently small that a machine learning algorithm will converge in short order and we are able to test the outcome before embarking on a more wide-ranging exercise.</p>
+<section id="state-space" class="level3">
+<h3 class="anchored" data-anchor-id="state-space">State Space</h3>
+<p>A three by three board gives us a state-space of 512 possibilities. However, some proportion of the boards in this space will already have a winning combination on them, and should be excluded form the training because (a) they will not come up in play, as tiles are immediately removed when a scoring combination is found, and (b) there is logically no correct move on these boards. For example Board 56 has three touching tiles in column B.</p>
+<div class="cell" data-fig.asp="1">
+<div class="cell-output-display">
+<div id="fig-board-56" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-board-56-1.png" class="img-fluid figure-img" width="288"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.1: Board 56</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We will remove these from consideration by generating the action space, scoring each board and removing the ones that have a positive score.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">create_state_space</span>(<span class="dv">3</span>,<span class="dv">3</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>my_scores <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(S,score_binary_board) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>()</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> S[my_scores<span class="sc">==</span><span class="dv">0</span>] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Which leaves us with 265 playable boards.</p>
+</section>
+<section id="action-space" class="level3">
+<h3 class="anchored" data-anchor-id="action-space">Action Space</h3>
+<p>Our action space <em>A</em> is created using the functions from our package</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> xmas3<span class="sc">::</span><span class="fu">create_action_space</span>(<span class="dv">3</span>,<span class="dv">3</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>A <span class="sc">|&gt;</span> <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">", "</span>) <span class="sc">|&gt;</span> <span class="fu">cat</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A1 to B1, B1 to C1, A2 to B2, B2 to C2, A3 to B3, B3 to C3, A1 to A2, A2 to A3, B1 to B2, B2 to B3, C1 to C2, C2 to C3, Pass</code></pre>
+</div>
+</div>
+<p>Which gives us a an <em>A</em> of length 13 .</p>
+</section>
+<section id="data-for-modelling" class="level3">
+<h3 class="anchored" data-anchor-id="data-for-modelling">Data for Modelling</h3>
+<p>The data for the modelling exercise was created by playing each possible move for each of the remaining <em>S.</em></p>
+</section>
+<section id="training-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="training-the-model">Training the Model</h3>
+<p>We then using the Q-learning algorithm implemented in the opensource <em>ReinforcementLearning</em> package <span class="citation" data-cites="ReinforcementLearning">(<a href="references.html#ref-ReinforcementLearning" role="doc-biblioref">Proellochs and Feuerriegel 2020</a>)</span>, with the <em>standard default</em> parameters (<span class="math inline">\(\alpha=.1,\gamma=.1, \epsilon=.1\)</span>).</p>
+</section>
+<section id="testing-the-model" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="testing-the-model">Testing the Model</h3>
+<p>We can now test the model by asking it to play some boards where we know the correct play. For example <span class="math inline">\(S_{32}\)</span> where there is a scoring move.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>S[[<span class="dv">32</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>| · O · |
+| · · O |
+| · · O |</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read from cache</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>gatai <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"models"</span>,<span class="st">"q-learning-3x3.rds"</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span> <span class="fu">predict</span>(S[<span class="dv">32</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "B1 to C1"</code></pre>
+</div>
+</div>
+<div id="fig-s32" class="cell quarto-layout-panel" data-fig.asp="1">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-s32-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-s32-1.png" class="img-fluid figure-img" data-ref-parent="fig-s32" width="288"></p>
+<figcaption class="figure-caption">(a) Space 32</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-s32-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-s32-2.png" class="img-fluid figure-img" data-ref-parent="fig-s32" width="288"></p>
+<figcaption class="figure-caption">(b) Suggested Move</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.2: State Space 32</figcaption><p></p>
+</figure>
+</div>
+<p>On the other hand <span class="math inline">\(S_{4}\)</span> does not have a scoring move and should be passed. The same is true for <span class="math inline">\(S_{6}\)</span></p>
+<div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>S[[<span class="dv">4</span>]]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>S[[<span class="dv">6</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<pre><code>| · · · |
+| · · O |
+| · · O |</code></pre>
+</div>
+<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<pre><code>| · · O |
+| · · · |
+| · · O |</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span> <span class="fu">predict</span>(<span class="fu">c</span>(S[<span class="dv">4</span>],S[<span class="dv">6</span>])) <span class="sc">|&gt;</span> <span class="fu">cat</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pass Pass</code></pre>
+</div>
+</div>
+<div id="fig-s4-and-6" class="cell quarto-layout-panel" data-fig.asp="1">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-s4-and-6-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-s4-and-6-1.png" class="img-fluid figure-img" data-ref-parent="fig-s4-and-6" width="288"></p>
+<figcaption class="figure-caption">(a) Space 4</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-s4-and-6-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-s4-and-6-2.png" class="img-fluid figure-img" data-ref-parent="fig-s4-and-6" width="288"></p>
+<figcaption class="figure-caption">(b) Space 6</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.3: State Spaces 4 and 6</figcaption><p></p>
+</figure>
+</div>
+<section id="competing-moves-and-strategy" class="level4">
+<h4 class="anchored" data-anchor-id="competing-moves-and-strategy">Competing Moves and Strategy</h4>
+<p>Board 263 is an interesting case. Since there are three moves that would score points. However two of them are strategically superior (A1 to A1 and C1 to C2), because they both guarantee that there is enough tiles left on the board to make a scoring move on the next round.</p>
+<div id="fig-board-263" class="cell quarto-layout-panel" data-fig.asp="1">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
+<div id="fig-board-263-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-board-263-1.png" class="img-fluid figure-img" data-ref-parent="fig-board-263" width="288"></p>
+<figcaption class="figure-caption">(a) Board</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
+<div id="fig-board-263-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-board-263-2.png" class="img-fluid figure-img" data-ref-parent="fig-board-263" width="288"></p>
+<figcaption class="figure-caption">(b) Scoring Moves</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
+<div id="fig-board-263-3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-board-263-3.png" class="img-fluid figure-img" data-ref-parent="fig-board-263" width="288"></p>
+<figcaption class="figure-caption">(c) Strongest Moved</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.4: Board 263</figcaption><p></p>
+</figure>
+</div>
+<p>Let’s see what Gatai believes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span> <span class="fu">predict</span>(S[<span class="dv">263</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "B1 to C1"</code></pre>
+</div>
+</div>
+<p>So, one of the strongest moves available. However, we cannot be sure whether this was a random choice among scoring moves or the result of a strategic play. We can check this with another board.</p>
+</section>
+<section id="strategic-moves" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="strategic-moves">Strategic Moves</h4>
+<p>In our original State space $_{259} does not have a directly scoring move, however, the correct move is A1 to B1, in preparatin for B1xC1 on the next round.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">xmas3board</span>(<span class="dv">259</span>,<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">3</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>B</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>| O · · |
+| · · O |
+| · · O |</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span> <span class="fu">predict</span>(B[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "A1 to B1"</code></pre>
+</div>
+</div>
+<p>So we see that Gatai is capable of making strategic moves as well.</p>
+<div id="fig-board-space-259-adjusted-model" class="cell quarto-layout-panel" data-fig.asp="1">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-board-space-259-adjusted-model-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-board-space-259-adjusted-model-1.png" class="img-fluid figure-img" data-ref-parent="fig-board-space-259-adjusted-model" width="288"></p>
+<figcaption class="figure-caption">(a) Initial Board</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-board-space-259-adjusted-model-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-board-space-259-adjusted-model-2.png" class="img-fluid figure-img" data-ref-parent="fig-board-space-259-adjusted-model" width="288"></p>
+<figcaption class="figure-caption">(b) Suggested Move and Projection</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.5: Gatai Thinks Ahead</figcaption><p></p>
+</figure>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  /\_/\
+ (⌐■_■ ) 
+  &gt; ^ &lt;</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Cool model.</code></pre>
+</div>
+</div>
+</div></div></section>
+</section>
+</section>
+<section id="the-3x4-board" class="level2 page-columns page-full" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="the-3x4-board"><span class="header-section-number">3.4</span> The 3x4 Board</h2>
+<section id="state-space-1" class="level3">
+<h3 class="anchored" data-anchor-id="state-space-1">State Space</h3>
+<p>With the grid dimension chosen, we have <span class="math inline">\(2^{(3\times4)}=4096\)</span>, possibilities. This should still be within the realm of the possible given the resources available.</p>
+</section>
+<section id="action-space-1" class="level3">
+<h3 class="anchored" data-anchor-id="action-space-1">Action Space</h3>
+<p>The action space <span class="math inline">\(A\)</span> has a magnitude of 19.</p>
+</section>
+<section id="data-for-modelling-1" class="level3">
+<h3 class="anchored" data-anchor-id="data-for-modelling-1">Data for Modelling</h3>
+<p>The data for the modelling exercise was created by playing each possible move for each of the remaining <em>S.</em></p>
+</section>
+<section id="training-the-model-1" class="level3">
+<h3 class="anchored" data-anchor-id="training-the-model-1">Training the Model</h3>
+<p>We trained the same type of model (Q-Learning) as before, again with the <em>standard default</em> parameters (<span class="math inline">\(\alpha=.1,\gamma=.1, \epsilon=.1\)</span>). This model converged in just over 8 seconds.</p>
+</section>
+<section id="testing-the-model-1" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="testing-the-model-1">Testing the Model</h3>
+<p>Again testing the model amounts We can now test the model by asking it to play some boards where we know the correct play. For example <span class="math inline">\(S_{32}\)</span> where there is a scoring move.</p>
+<section id="spot-checks" class="level4">
+<h4 class="anchored" data-anchor-id="spot-checks">Spot Checks</h4>
+<p>Let’s do a spot_check.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read from cache</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>gatai <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"models"</span>, <span class="st">"q-learning-3x4.rds"</span>))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>S[[<span class="dv">32</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>| · · O · |
+| · · · O |
+| · · · O |</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span> <span class="fu">predict</span>(S[<span class="dv">32</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C1 to D1"</code></pre>
+</div>
+</div>
+<p>Looks good. Let’s check a non-scoring one.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>S[[<span class="dv">33</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>| · · O O |
+| · · · · |
+| · · · · |</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(S[<span class="dv">33</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Pass"</code></pre>
+</div>
+</div>
+<p>So, it seems we have an somewhat intelligent model. Let’s see if it can think strategically at this level.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">xmas3board</span>(<span class="dv">2051</span> ,<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>))</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>B</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>| O · · · |
+| · · · O |
+| · · · O |</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span> <span class="fu">predict</span>(B[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "A1 to B1"</code></pre>
+</div>
+</div>
+<p>So, apparently looking three moves ahead.</p>
+<div id="fig-board-2051" class="cell quarto-layout-panel" data-fig.asp="1">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-board-2051-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-board-2051-1.png" class="img-fluid figure-img" data-ref-parent="fig-board-2051" width="288"></p>
+<figcaption class="figure-caption">(a) Board 2051</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-board-2051-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-board-2051-2.png" class="img-fluid figure-img" data-ref-parent="fig-board-2051" width="288"></p>
+<figcaption class="figure-caption">(b) Suggested Move</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.6: Gatai Thinks Two Moves Ahead</figcaption><p></p>
+</figure>
+</div>
+</section>
+<section id="competing-moves" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="competing-moves">Competing Moves</h4>
+<p>Board 2699 has two possible solutions. One scores higher than the other</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">xmas3board</span>(<span class="dv">2699</span>, <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>))[<span class="dv">1</span>]</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>B</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2699</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span> <span class="fu">predict</span>(B) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "B2 to B3"</code></pre>
+</div>
+</div>
+<p>We see that Gatai chooses the highest scoring move.</p>
+<div id="fig-board-2699" class="cell quarto-layout-panel" data-fig.asp="1">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-board-2699-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-board-2699-1.png" class="img-fluid figure-img" data-ref-parent="fig-board-2699" width="288"></p>
+<figcaption class="figure-caption">(a) Scoring Moves for Board 2699</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-board-2699-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="model-training_files/figure-html/fig-board-2699-2.png" class="img-fluid figure-img" data-ref-parent="fig-board-2699" width="288"></p>
+<figcaption class="figure-caption">(b) Gatai’s Move</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.7: Gatai Chooses Highest Scoring Move</figcaption><p></p>
+</figure>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+
+  /\_/\
+ ( $.$ )
+  &gt; ^ &lt;</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>In it to win it, baby.</code></pre>
+</div>
+</div>
+</div></div></section>
+</section>
+</section>
+<section id="training-above-3x4" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="training-above-3x4"><span class="header-section-number">3.5</span> Training above 3x4</h2>
+<p>We followed the same procedure as in the previous cases with similar results. As predicted the last model to converge was the one for the 3x6 grid. This took approximately 4 hours.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-ReinforcementLearning" class="csl-entry" role="listitem">
+Proellochs, Nicolas, and Stefan Feuerriegel. 2020. <span>“ReinforcementLearning: Model-Free Reinforcement Learning.”</span>
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./abstracting-x-mas-3.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-mas-3</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./full-board-strategies.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Full Board Strategies</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
