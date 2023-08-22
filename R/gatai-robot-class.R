@@ -26,10 +26,11 @@ GatAIRobot <-
             coords =NULL,
             game_canvas = NULL,
             screenshotFile = character(0),
+            board_geometry= NULL,
             initialize = function(
     
-              #conf_filename =  system.file("conf/chromebook.yml", package = "xmas3"),
-              conf_filename =  system.file("conf/macbook.yml", package = "xmas3"),
+              conf_filename =  system.file("conf/chromebook.yml", package = "xmas3"),
+              #conf_filename =  system.file("conf/macbook.yml", package = "xmas3"),
               verbose = FALSE
             ){
               self$screenshotFile <- tempfile(fileext = ".png")
@@ -37,7 +38,13 @@ GatAIRobot <-
               self$config <- yaml::read_yaml(conf_filename)
               self$verbose <- verbose
               self$coords <- calculate_grid_centroids(self$config$board$width,self$config$board$height)
-              self$startRemoteDriver()
+              self$config$coords <- self$coords
+              b <- self$config$board
+              self$board_geometry <- geometry_area(b$width,
+                                                   b$height,
+                                                   self$config$offset_x,
+                                                   self$config$offset_y)
+             self$startRemoteDriver()
             },
             finalize = function(){
               self$message("Finalizing xmas3 robot.")
@@ -58,9 +65,9 @@ GatAIRobot <-
             startRemoteDriver = function(){
               self$message("Initializing x-mas-3 Robot")
               self$message("Starting Selenium")  
-              selenium(retcommand = TRUE)
+              selenium(retcommand = TRUE, check=FALSE)
               #selenium()
-              self$cDrv <- chrome()
+              self$cDrv <- chrome(check=FALSE)
               self$remDr <- remoteDriver(
                 remoteServerAddr = "localhost",
                 port = 4567L,
@@ -88,8 +95,11 @@ GatAIRobot <-
             #' returns the cropped board.
             getBoardOnScreen = function(){
               self$takeScreenshot()
-              Board <- screenshot_load_scale_and_crop(self$screenshotFile)
-              B <- screenshot_translate_board(Board)
+              Board <- screenshot_load_scale_and_crop(
+                self$screenshotFile,
+                my_geometry = self$board_geometry
+                )
+              B <- screenshot_translate_board(Board, conf = self$config)
               # Do check here if board is empty of "done" ####
               B
             },
@@ -184,9 +194,9 @@ if(interactive()){
   if(exists("gat")){
     rm(gat)
     gc()
-    
+
   }
-  gat <- GatAIRobot$new(verbose=TRUE,conf_filename = "./inst/conf/chromebook.yml")
-  gat$play(agent_6)
+  #gat <- GatAIRobot$new(verbose=TRUE,conf_filename = "./inst/conf/chromebook.yml")
+  # gat$play(agent_6)
   
 }
