@@ -8,7 +8,16 @@
 #' @return a data.frame containing as least move_sequence 
 #' @export
 agent_4 <-function(B, ...){
- 
+  suggested_moves <- play_strategy(B, "4x4")
+  print(suggested_moves)
+  suggested_moves
+}
+
+
+agent_5 <-function(B, ...){
+  suggested_moves <- play_strategy(B, "6x3")
+  print(suggested_moves)
+  suggested_moves
 }
 
 # if(interactive()){
