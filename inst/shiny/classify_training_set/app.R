@@ -3,11 +3,11 @@
 # the computer vision algorithm
 library(shiny)
 
-my_files <- dir(here::here("inst","image-data","ui-tiles"),full.names = TRUE)
+my_files <- dir(here::here("training-tiles"),full.names = TRUE, pattern = ".png")
 
 my_files <- sample(my_files,length(my_files))
 
-file_path <- here::here("inst","training-data","image-classification.csv")
+file_path <- here::here("training-tiles","chromebook-image-classification.csv")
 
 ui <- fluidPage(
   titlePanel("Classification"),
