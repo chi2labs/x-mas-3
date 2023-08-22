@@ -58,14 +58,23 @@ GatAIRobot <-
             startRemoteDriver = function(){
               self$message("Initializing x-mas-3 Robot")
               self$message("Starting Selenium")  
-              selenium(retcommand = TRUE)
-              #selenium()
-              self$cDrv <- chrome()
-              self$remDr <- remoteDriver(
-                remoteServerAddr = "localhost",
-                port = 4567L,
-                browserName = "chrome"
+              my_command <- "/usr/bin/java -Dwebdriver.chrome.driver='/Users/sasha/chromedriver' -Dwebdriver.gecko.driver='/Users/sasha/Library/Application Support/binman_geckodriver/macos/0.33.0/geckodriver' -Dphantomjs.binary.path='/Users/sasha/Library/Application Support/binman_phantomjs/macosx/2.1.1/phantomjs-2.1.1-macosx/bin/phantomjs' -jar '/Users/sasha/Library/Application Support/binman_seleniumserver/generic/4.0.0-alpha-2/selenium-server-standalone-4.0.0-alpha-2.jar' -port 4567"
+              
+              system(my_command, wait = FALSE)
+              Sys.sleep(1)
+              self$remDr <- remoteDriver$new(
+                browserName = "chrome",  
+                port = 4567L
+                
               )
+              # selenium(retcommand = TRUE)
+              # #selenium()
+              # self$cDrv <- chrome()
+              # self$remDr <- remoteDriver(
+              #   remoteServerAddr = "localhost",
+              #   port = 4567L,
+              #   browserName = "chrome"
+              # )
               self$message("Connecting to Chome Driver")
               self$remDr$open()
               self$remDr$setWindowSize(width = 1200,height = 831)
@@ -88,7 +97,6 @@ GatAIRobot <-
             #' returns the cropped board.
             getBoardOnScreen = function(){
               self$takeScreenshot()
-              Board <- screenshot_load_scale_and_crop(self$screenshotFile)
               B <- screenshot_translate_board(Board)
               # Do check here if board is empty of "done" ####
               B

@@ -13,7 +13,7 @@
 #' @export
 screenshot_get_tile <- function(board,.c, .r, 
                                 conf = robot_config_mac(), 
-                                tile_width = 40, tile_height = 40){
+                                tile_width = 72, tile_height = 80){
   my_row <- conf$coords %>% 
     dplyr::filter(.data$col==.c,.data$row==.r)
   
