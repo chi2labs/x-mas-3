@@ -11,12 +11,12 @@
 #' @export 
 color_analysis <- function(img){
   
-  purrr::map_df(c(img),function(.x){
-    
-    if(is.character(.x)){
-      .x <- image_read(.x)
-    }
-    
+  
+  
+  
+  
+  .color_analysis <- function(img){
+    .x <- img
     tmp <- as.raster(.x) %>% as.character()
     tmp <- str_sub(tmp,1,7) %>% 
       col2rgb()
@@ -53,7 +53,7 @@ color_analysis <- function(img){
       G_S   = sd(tmp[2,]),
       B_S   = sd(tmp[3,]),
       
-
+      
       Q1R = mean(tmp[1,q1]), 
       Q1G = mean(tmp[2,q1]), 
       Q1B = mean(tmp[3,q1]), 
@@ -70,6 +70,15 @@ color_analysis <- function(img){
       Q4G = mean(tmp[2,q4]), 
       Q4B = mean(tmp[3,q4]) 
       
-    )
+    ) # Data frame
+  }
+  if("magick-image" %in% class(img)){
+    return(.color_analysis(img))
+  }
+  purrr::map_df(c(img),function(.x){
+    if(is.character(.x)){
+      .x <- image_read(.x)
+    }
+    .color_analysis(.x)
   })
 }
