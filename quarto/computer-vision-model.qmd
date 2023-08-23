@@ -137,7 +137,7 @@ Now that we have these tiles at our disposal, in binary format, our first inclin
 
 ## Algorithm for Classification
 
-Image classification can be done with a series of algorithms --support vector machines (SVM), convoluted neural networks (CNN), k-nearest neighbors etcetera. However, given the very restricted space, and the presumably very small within-class differences (they are in principle identical, differences are introduced by imperfections in the data-retrieval procedures), we decided that *multinomial logistic regression* would be the correct choice for this use case. This is conveniently implemented in the nnet @nnet package, available open source on the CRAN network.
+Image classification can be done with a series of algorithms --support vector machines (SVM), convoluted neural networks (CNN), k-nearest neighbors etcetera. However, given the very restricted space, and the presumably very small within-class differences (they are in principle identical, differences are introduced by imperfections in the data-retrieval procedures), we decided that *multinomial logistic regression* would be the correct choice for this use case. This is conveniently implemented in the nnet [@nnet] package, available open source on the CRAN network.
 
 {{< include multinomial-logistic-regression.qmd >}}
 

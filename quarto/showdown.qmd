@@ -14,7 +14,7 @@ theme_set(ggdark::dark_theme_minimal())
 
 Now, then. With tactics and strategies honed, and a full-board strategy in place; Gatai is ready to take on X-mas-3 in a one-to-one showdown.
 
-While observing the games played wee noticed a couple of GUI *timing glitches*, where a screenshot of the board was transmitted to the AI before the board could update, prompting Gatai to essentially make the same move (or move sequence) twice (the second time on an unevaluated board). These problems were not prevalent, but did cause some decay in the actual observed to expected value ratio. We also noticed that on one occasion the *background image* of the GUI (which rotates between games) interfered with the vision model causing Gatai to misclassify *stripes* as *candy.*
+While observing the games played we noticed a couple of GUI *timing glitches*, where a screenshot of the board was transmitted to the AI before the board could update, prompting Gatai to essentially make the same move (or move sequence) twice (the second time on an unevaluated board). These problems were not prevalent, but did cause some decay in the actual observed to expected value ratio. We also noticed that on one occasion the *background image* of the GUI (which rotates between games) interfered with the vision model causing Gatai to misclassify *stripes* as *candy.*
 
 ## Arcade Mode
 
