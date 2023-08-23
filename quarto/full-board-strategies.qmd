@@ -10,7 +10,7 @@ editor: visual
 
 ## Applicable Models
 
-From the model training already performed we have a total of six models: 3x3, 3x4, 3x5, 3x6 and 4x4, for sub-boards (windowed grids) as well as their relevant transpositions. Any of these can be used to scan the entire board looking for playable moves or move sequences (i.e. strategic moves) by using the *windowing* technique already described. Each evaluation of a sub-boards will return a best move or move-sequence and expected value of the sequence (which may be of magnitude 1). We may have some intuition about which strategy is optimal, e.g. all 3x3 sub-boards are included in a series of other geometries (3x4,3x5,3x6 and 4x4), and the best strategy can be derived mathematically, we chose the *statistics route* to the optimal strategy.
+From the model training already performed we have a total of six models: 3x3, 3x4, 3x5, 3x6 and 4x4, for sub-boards (windowed grids) as well as their relevant transpositions. Any of these can be used to scan the entire board looking for playable moves or move sequences (i.e. strategic moves) by using the *windowing* technique already described. Each evaluation of a sub-boards will return a best move or move-sequence and expected value of the sequence (which may be of magnitude 1). We may have some intuition about which strategy is optimal, e.g. all 3x3 sub-boards are included in a series of other geometries (3x4,3x5,3x6 and 4x4), and the best strategy can be derived mathematically. We chose the *statistics route* to the optimal strategy.
 
 ## Monte Carlo Simulations
 
