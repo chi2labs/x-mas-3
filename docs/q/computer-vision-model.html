@@ -302,7 +302,7 @@ div.csl-indent {
 .+|______|__.-||__)`-'(((/  (((/</code></pre>
 </div>
 </div>
-</div></div><section id="robot-play" class="level3 page-columns page-full">
+</div></div><section id="robot-play" class="level3">
 <h3 class="anchored" data-anchor-id="robot-play">Robot Play</h3>
 <p>In order to interact with the GUI in an automated fashion we needed to implement a robot capable of controlling a web-browser. This robot would in turn be governed by Gatai. The robot is required to start and load the video-game from its base URL. In order for Gatai to evaluate the board on the computer screen, the robot needs to take and return a screenshot to be evaluated by Gatai. This evaluation will return suggested move, communicated back to the robot, and made on the actual game-board. Once the moves have been made and the board has been updated, a new screenshot is taken; and the process repeats itself until the game is over. <a href="#fig-flowchart">Figure&nbsp;<span>5.1</span></a> shows an overview of the workflow hitherto described.</p>
 <div class="cell">
@@ -326,14 +326,12 @@ flowchart LR
 </div>
 </div>
 <p><em>Selenium</em> is our go-to solution when browser automatization is required. Given the prior implementation of Gatai, it made sense to interact with <em>Selenium</em> using the package available on CRAN <span class="citation" data-cites="RSelenium">(<a href="references.html#ref-RSelenium" role="doc-biblioref">Harrison 2022</a>)</span>.</p>
-<div class="no-row-height column-margin column-container"></div></section>
 </section>
-<section id="screenshot-evaluation" class="level2 page-columns page-full" data-number="5.2">
+</section>
+<section id="screenshot-evaluation" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="screenshot-evaluation"><span class="header-section-number">5.2</span> Screenshot Evaluation</h2>
 <p>Opening a URL, taking, screenshot to Gatai, are all relatively trivial operations with the infrastructure provided by <span class="citation" data-cites="RSelenium">Harrison (<a href="references.html#ref-RSelenium" role="doc-biblioref">2022</a>)</span>. Making moves on the board is a little more cumbersome, but amounts to calculating the coordinates of the grid, and translating the moves returned by Gatai to these coordinates.</p>
-<div class="no-row-height column-margin column-container"><div id="ref-RSelenium" class="csl-entry" role="listitem">
-Harrison, John. 2022. <span>“RSelenium: R Bindings for ’Selenium WebDriver’.”</span> <a href="https://docs.ropensci.org/RSelenium/">https://docs.ropensci.org/RSelenium/</a>.
-</div></div><p>The real bottleneck in this workflow is the transition from a graphic format (in this case a png format) to a board matrix which Gatai can evaluate.</p>
+<p>The real bottleneck in this workflow is the transition from a graphic format (in this case a png format) to a board matrix which Gatai can evaluate.</p>
 </section>
 <section id="analysis" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="analysis"><span class="header-section-number">5.3</span> Analysis</h2>
@@ -465,21 +463,17 @@ Harrison, John. 2022. <span>“RSelenium: R Bindings for ’Selenium WebDriver�
 <p>Now that we have these tiles at our disposal, in binary format, our first inclination was to define a set of reference tiles and simply compare the tile in question with the reference one, on a byte by byte basis. The problem with this approach is that there exist minute differences between <em>like</em> tiles, probably due to imprecisions introduces when cropping, as well as screen-resolution issues etc. These discepancies are big enough that a direct comparison is impossible, or at least impracticable.</p>
 </section>
 </section>
-<section id="algorithm-for-classification" class="level2 page-columns page-full" data-number="5.4">
+<section id="algorithm-for-classification" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="algorithm-for-classification"><span class="header-section-number">5.4</span> Algorithm for Classification</h2>
 <p>Image classification can be done with a series of algorithms –support vector machines (SVM), convoluted neural networks (CNN), k-nearest neighbors etcetera. However, given the very restricted space, and the presumably very small within-class differences (they are in principle identical, differences are introduced by imperfections in the data-retrieval procedures), we decided that <em>multinomial logistic regression</em> would be the correct choice for this use case. This is conveniently implemented in the nnet <span class="citation" data-cites="nnet">Venables and Ripley (<a href="references.html#ref-nnet" role="doc-biblioref">2002</a>)</span> package, available open source on the CRAN network.</p>
-<div class="no-row-height column-margin column-container"><div id="ref-nnet" class="csl-entry" role="listitem">
-Venables, W. N., and B. D. Ripley. 2002. <span>“Modern Applied Statistics with s.”</span> <a href="https://www.stats.ox.ac.uk/pub/MASS4/">https://www.stats.ox.ac.uk/pub/MASS4/</a>.
-</div></div></section>
+</section>
 <section id="multinomial-logistic-regression" class="level2 page-columns page-full" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="multinomial-logistic-regression"><span class="header-section-number">5.5</span> Multinomial Logistic Regression</h2>
 <p><em>Multinominal Logistic Regression</em> is a classification model, which fits the likelihood of membership in a specified set of classes to a vector of variables. For our purposes we will always use the classification with the highest likelihood as our hard prediction.</p>
-<section id="training-data" class="level3 page-columns page-full">
+<section id="training-data" class="level3">
 <h3 class="anchored" data-anchor-id="training-data">Training Data</h3>
 <p>In order to train the data I classified 254 tiles into the ten known classes. Each tile then ran through a color analysis which parsed the image file, reduced the colors-space to Red, Green and Blue and calculated mean and standard deviation of these primary colors, as well as for each quadrant of the tile. The latter procedure was included with the intention of including shape. All the operations mentioned in this paragraph were conducted using the open source <em>magick</em> <span class="citation" data-cites="magick">(<a href="references.html#ref-magick" role="doc-biblioref">Ooms 2023</a>)</span> package.</p>
-<div class="no-row-height column-margin column-container"><div id="ref-magick" class="csl-entry" role="listitem">
-Ooms, Jeroen. 2023. <span>“Magick: Advanced Graphics and Image-Processing in r.”</span>
-</div></div></section>
+</section>
 <section id="model-testing" class="level3">
 <h3 class="anchored" data-anchor-id="model-testing">Model Testing</h3>
 <p>The <em>standard</em> way to test a classification model is to hold out some percentage of the data (typically 20%) and then use that to test the model <em>post-hoc,</em> by using the model to predict the class of this subset and comparing the results. In this case, however, given the paucity of traning data, and the unusually restricted space within which we are operating I chose to use all the classified data and testing the model by predicting a sample of the unclassified tiles, on the assumption that a visual scan of the resulting data would be sufficient to asses the solidity of the model.</p>
@@ -696,7 +690,17 @@ Ooms, Jeroen. 2023. <span>“Magick: Advanced Graphics and Image-Processing in r
 </div></div><p>We can now distinguish the tiles from one another and effectively automate the interaction with the live video-game.</p>
 
 
-
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-RSelenium" class="csl-entry" role="listitem">
+Harrison, John. 2022. <span>“RSelenium: R Bindings for ’Selenium WebDriver’.”</span> <a href="https://docs.ropensci.org/RSelenium/">https://docs.ropensci.org/RSelenium/</a>.
+</div>
+<div id="ref-magick" class="csl-entry" role="listitem">
+Ooms, Jeroen. 2023. <span>“Magick: Advanced Graphics and Image-Processing in r.”</span>
+</div>
+<div id="ref-nnet" class="csl-entry" role="listitem">
+Venables, W. N., and B. D. Ripley. 2002. <span>“Modern Applied Statistics with s.”</span> <a href="https://www.stats.ox.ac.uk/pub/MASS4/">https://www.stats.ox.ac.uk/pub/MASS4/</a>.
+</div>
+</div>
 </section>
 </section>
 
