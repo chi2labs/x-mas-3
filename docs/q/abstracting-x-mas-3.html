@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Aleksander Dietrichson, PhD">
 
-<title>GatAI v. X-Mas-3 - 2&nbsp; Abstracting X-mas-3</title>
+<title>GatAI v. X-Mas-3 - 2&nbsp; Abstracting X-Mas-3</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -112,7 +130,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./abstracting-x-mas-3.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-mas-3</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./abstracting-x-mas-3.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-Mas-3</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -152,7 +170,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./abstracting-x-mas-3.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-mas-3</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-Mas-3</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -218,7 +236,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#abstraction-of-the-board-and-tiles" id="toc-abstraction-of-the-board-and-tiles" class="nav-link active" data-scroll-target="#abstraction-of-the-board-and-tiles"><span class="header-section-number">2.1</span> Abstraction of the Board and Tiles</a>
+  <li><a href="#abstracting-the-board-and-tiles" id="toc-abstracting-the-board-and-tiles" class="nav-link active" data-scroll-target="#abstracting-the-board-and-tiles"><span class="header-section-number">2.1</span> Abstracting the Board and Tiles</a>
   <ul class="collapse">
   <li><a href="#checking-for-combinations" id="toc-checking-for-combinations" class="nav-link" data-scroll-target="#checking-for-combinations">Checking for Combinations</a></li>
   <li><a href="#initial-board-state" id="toc-initial-board-state" class="nav-link" data-scroll-target="#initial-board-state">Initial Board State</a></li>
@@ -247,19 +265,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-mas-3</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-Mas-3</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Aleksander Dietrichson, PhD </p>
-          </div>
-  </div>
     
   
     
@@ -268,9 +280,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>In order to analyze <em>x-mas-3</em> and training an AI to play the game, we decided to make an <em>abstract</em> version in the game in R/C++. The abstracted version is more suitable for computer-game interaction as it will communicate only the relevant information between the agent and the game. This will be substantially faster than interacting with the UI and allow for a more streamlined training process.</p>
-<section id="abstraction-of-the-board-and-tiles" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="abstraction-of-the-board-and-tiles"><span class="header-section-number">2.1</span> Abstraction of the Board and Tiles</h2>
+<p>In order to analyze <em>x-mas-3</em> and training an AI to play the game, we decided to make an <em>abstract</em> version in the game in R <span class="citation" data-cites="Rlanguage">(<a href="references.html#ref-Rlanguage" role="doc-biblioref">R Core Team 2023</a>)</span> and C++ <span class="citation" data-cites="ISO:2012:III">(<a href="references.html#ref-ISO:2012:III" role="doc-biblioref">ISO 2012</a>)</span>. The abstracted version is more suitable for computer-game interaction as it will communicate only the relevant information between the agent and the game. This will be substantially faster than interacting with the UI and allow for a more streamlined training process.</p>
+<section id="abstracting-the-board-and-tiles" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="abstracting-the-board-and-tiles"><span class="header-section-number">2.1</span> Abstracting the Board and Tiles</h2>
 <p>The board is a 6 by 10 grid each containing a tile out of ten different tile-types. For our purposes we represent the board as a 6x10 matrix with the letters A through J representing the ten different tiles. An example board would me represented thus:</p>
 <span class="math display">\[\begin{bmatrix} G &amp; C &amp; J &amp; D &amp; G &amp; G &amp; C &amp; G &amp; B &amp; A \\ I &amp; D &amp; E &amp; A &amp; C &amp; B &amp; H &amp; C &amp; E &amp; F \\ J &amp; C &amp; J &amp; F &amp; C &amp; J &amp; A &amp; H &amp; B &amp; F \\ H &amp; C &amp; D &amp; F &amp; C &amp; F &amp; D &amp; B &amp; G &amp; B \\ D &amp; I &amp; H &amp; I &amp; I &amp; B &amp; F &amp; C &amp; C &amp; E \\ B &amp; F &amp; A &amp; J &amp; E &amp; H &amp; I &amp; C &amp; H &amp; G \end{bmatrix}\]</span>
 <section id="checking-for-combinations" class="level3">
@@ -293,16 +305,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grepl</span>(my_regex,stringr<span class="sc">::</span><span class="fu">str_c</span>(m[,.x], <span class="at">collapse =</span> <span class="st">""</span>)) </span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  })</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(colmatch,rowmatch)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">get_n_combinations</span>(board)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>In this case one match is returned because of the triple “C”s found in column 5.</p>
 </section>
 <section id="initial-board-state" class="level3">
 <h3 class="anchored" data-anchor-id="initial-board-state">Initial Board State</h3>
-<p>Since the initial state of the board cannot include any scoring combination we need a function that generated a random</p>
+<p>Since the initial state of the board cannot include any scoring combination we need a function that generates a random initial state <em>until</em> the board’s score is zero. We implemented this recursively.</p>
 <div class="cell" data-code-block-border-left="true">
 <details>
 <summary>Code</summary>
@@ -326,9 +336,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="applying-reinforcement-learning" class="level2 page-columns page-full" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="applying-reinforcement-learning"><span class="header-section-number">2.2</span> Applying Reinforcement Learning</h2>
-<p>Reinforcement Learning (RL) is an algorithm that allows an agent (i.e.&nbsp;AI) to interact with an environment over a sequence of observations. The agent seeks to be rewarded and for the reward to be maximized over time. The model consists of a set of environment states <span class="math inline">\(S\)</span> a set of actions <span class="math inline">\(A\)</span> and a set of rewards <span class="math inline">\(R\)</span> (positive or negative).</p>
-<p>The algorithm is guaranteed to converge to an optimal policy for each possible state in <span class="math inline">\(S\)</span>. RL (and in this case we will use Q-learning) needs to be trained on a set of state-transition tuples formally defined thus:</p>
-<p><span id="eq-tuples"><span class="math display">\[
+<p>Reinforcement Learning (RL) <span class="citation" data-cites="watkins1992q">(<a href="references.html#ref-watkins1992q" role="doc-biblioref">Watkins and Dayan 1992</a>)</span> is an algorithm that allows an agent (i.e.&nbsp;AI) to interact with an environment over a sequence of observations. The agent seeks to be rewarded and for the reward to be maximized over time. The model consists of a set of environment states <span class="math inline">\(S\)</span> a set of actions <span class="math inline">\(A\)</span> and a set of rewards <span class="math inline">\(R\)</span> (positive or negative).</p>
+<p>The algorithm is guaranteed to converge to an optimal policy for each possible state in <span class="math inline">\(S\)</span>. RL (and in this case we will use Q-learning) needs to be trained on a set of state-transition <em>tuples</em> formally defined in <a href="#eq-tuples"><span>2.1</span></a>. <span id="eq-tuples"><span class="math display">\[
 (s_i, a_i, r_{i+1}, s_{i+1})
 \tag{2.1}\]</span></span></p>
 <p>where:</p>
@@ -371,7 +380,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="windowing" class="level4">
 <h4 class="anchored" data-anchor-id="windowing">Windowing</h4>
-<p>We can further reduce our problem space by applying a technique knows as <em>windowing</em>. This implies dividing the grid into sub-grids and looking for playable moves within that reduced space. If we first consider the quest for a three-tile combinations, the windows in question would be a <span class="math inline">\(3\times2\)</span> and a <span class="math inline">\(2\times3\)</span> sub-matrix for perpendicular (<span class="math inline">\(\perp\)</span>)moves. For parallel (<span class="math inline">\(\parallel\)</span>) moves, i.e.&nbsp;moves with the same row or column we would have to consider and <span class="math inline">\(4\times1\)</span> respectively. Examples are shown below.</p>
+<p>We can further reduce our problem space by applying a technique knows as <em>windowing</em>. This implies dividing the grid into sub-grids and looking for playable moves within those reduced spaces. If we first consider the quest for a three-tile combinations, the windows in question would be a <span class="math inline">\(3\times2\)</span> and a <span class="math inline">\(2\times3\)</span> sub-matrix for perpendicular (<span class="math inline">\(\perp\)</span>)moves. For parallel (<span class="math inline">\(\parallel\)</span>) moves, i.e.&nbsp;moves with the same row or column we would have to consider <span class="math inline">\(1\times4\)</span> and <span class="math inline">\(4\times1\)</span> respectively. Examples are shown below.</p>
 <span class="math display">\[\begin{bmatrix} 1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp; 1 \end{bmatrix}
 %
 \text{ or}
@@ -530,6 +539,17 @@ A_{\perp}=\{F,M,L,P\}
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-ISO:2012:III" class="csl-entry" role="listitem">
+ISO. 2012. <em><span class="nocase">ISO/IEC 14882:2011 Information technology — Programming languages — C++</span></em>. Geneva, Switzerland: International Organization for Standardization. <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=50372">http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=50372</a>.
+</div>
+<div id="ref-Rlanguage" class="csl-entry" role="listitem">
+R Core Team. 2023. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div id="ref-watkins1992q" class="csl-entry" role="listitem">
+Watkins, Christopher JCH, and Peter Dayan. 1992. <span>“Q-Learning.”</span> <em>Machine Learning</em> 8: 279–92.
+</div>
+</div>
 </section>
 </section>
 

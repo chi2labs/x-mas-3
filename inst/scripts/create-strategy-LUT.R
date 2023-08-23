@@ -4,11 +4,9 @@ library(ReinforcementLearning)
 library(dplyr)
 library(usethis)
 
-
-
 create_strategy_LUT <- function(n_row,n_col){
   
-  filename_model <- here::here("inst","models",
+  filename_model <- here::here("models",
                                paste0("q-learning-",n_row,"x",n_col,".rds")
   )
   LUT_name <- paste0("xmas3_LUT_",n_row,"x",n_col)
@@ -62,8 +60,9 @@ create_strategy_LUT <- function(n_row,n_col){
 # create_strategy_LUT(n_row = 2, n_col=6)
 # create_strategy_LUT( n_row = 6, n_col = 2 )
 # create_strategy_LUT(n_row=5, n_col=3)
-# create_strategy_LUT(n_row=3, n_col=6)
-create_strategy_LUT(n_row=6, n_col=3)
+create_strategy_LUT(n_row=3, n_col=6)
+#create_strategy_LUT(n_row=6, n_col=3)
+#create_strategy_LUT(n_row=6, n_col=3)
 
 
 

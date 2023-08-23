@@ -4,11 +4,10 @@ format: html
 editor: visual
 ---
 
-
-Strategy: 
+Strategy:
 
 1.  Reduce color space to RGB
-2.  Calculate overall 
+2.  Calculate overall
 3.  calculate for each quadrant
 4.  Use heuristics or logistic regression
 
@@ -18,7 +17,6 @@ library(xmas3)
 library(magick)
 my_data <- readr::read_csv(here::here("inst","training-data","image-classification.csv"))
 ```
-
 
 ```{r}
 color_analysis <- \(img){
@@ -59,7 +57,6 @@ color_analysis <- \(img){
 }
 ```
 
-
 ```{r}
 my_color_analysis <- color_analysis(my_data$image)
 my_data <- my_data |> cbind(my_color_analysis)
@@ -98,6 +95,7 @@ image_read(my_files[8])
 image_read(my_files[9])
 image_read(my_files[19])
 ```
+
 Seems like weŕe getting somewhere.
 
 ```{r}
