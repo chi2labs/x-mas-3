@@ -13,7 +13,7 @@ Perhaps most closely related to the original intention of the undertaking is the
 
 ### Generative Gatai
 
-Gato furthermore aspires to apply *generative AI* in order to create games customized to each user's preferences. A deep understanding of existing games is a fundamental input to any generative algorithm we produce for this purpose.
+Gato furthermore aspires to apply *generative AI* in order to create games customized to each user's preferences. A deep understanding of existing games is a fundamental input to any generative algorithm we devise for this purpose.
 
 ## Tactical Derivatives
 
