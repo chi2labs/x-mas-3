@@ -134,7 +134,7 @@ We see that Gatai chooses the highest scoring move.
 #| fig-width: 3
 #| echo: false
 gatai |>
-  predict(B) -> gatai_move
+  predict(B[1]) -> gatai_move
 B <- xmas3board(B,c(3,4))
 B %>% 
   plot() %>% 

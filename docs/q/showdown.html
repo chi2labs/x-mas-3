@@ -115,7 +115,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./abstracting-x-mas-3.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-mas-3</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-Mas-3</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -181,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#arcade" id="toc-arcade" class="nav-link active" data-scroll-target="#arcade"><span class="header-section-number">6.1</span> Arcade</a></li>
+  <li><a href="#arcade-mode" id="toc-arcade-mode" class="nav-link active" data-scroll-target="#arcade-mode"><span class="header-section-number">6.1</span> Arcade Mode</a></li>
   <li><a href="#time-mode" id="toc-time-mode" class="nav-link" data-scroll-target="#time-mode"><span class="header-section-number">6.2</span> Time Mode</a></li>
   </ul>
 </nav>
@@ -206,52 +206,19 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>Now, then. With tactics and strategies honed, and a full-board strategy in place; Gatai is ready to take on X-mas-3 in a one-to-one showdown. When playing through the GUI.</p>
+<p>Now, then. With tactics and strategies honed, and a full-board strategy in place; Gatai is ready to take on X-mas-3 in a one-to-one showdown.</p>
 <p>While observing the games played wee noticed a couple of GUI <em>timing glitches</em>, where a screenshot of the board was transmitted to the AI before the board could update, prompting Gatai to essentially make the same move (or move sequence) twice (the second time on an unevaluated board). These problems were not prevalent, but did cause some decay in the actual observed to expected value ratio. We also noticed that on one occasion the <em>background image</em> of the GUI (which rotates between games) interfered with the vision model causing Gatai to misclassify <em>stripes</em> as <em>candy.</em></p>
-<section id="arcade" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="arcade"><span class="header-section-number">6.1</span> Arcade</h2>
+<section id="arcade-mode" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="arcade-mode"><span class="header-section-number">6.1</span> Arcade Mode</h2>
 <p>The trained AI played five 100-move games — this is the default setup for an <em>arcade</em> game. Gatai used a 4x4 strategy, scanning the board for the highest values move or move sequence and then made that move. We had also programmed in a <em>security valve</em> allowing Gatai to make a random move if no playable move sequence was found. This was, however, never activated<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
-<p>The results are displayed in <a href="#tbl-scores">Table&nbsp;<span>6.1</span></a>, and show a solid performance in line with our expectations.</p>
+<p>The results are displayed in <a href="#fig-scores">Figure&nbsp;<span>6.1</span></a>, and show a solid performance in line with our expectations.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="tbl-scores" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;6.1: Gatai’s Scores Playing X-mas-3 via GUI</caption>
-<thead>
-<tr class="header">
-<th style="text-align: right;">Match</th>
-<th style="text-align: left;">Format</th>
-<th style="text-align: right;">Score</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">Arcade</td>
-<td style="text-align: right;">3500</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2</td>
-<td style="text-align: left;">Arcade</td>
-<td style="text-align: right;">4900</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">3</td>
-<td style="text-align: left;">Arcade</td>
-<td style="text-align: right;">4950</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">Acrade</td>
-<td style="text-align: right;">3950</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">5</td>
-<td style="text-align: left;">Arcade</td>
-<td style="text-align: right;">3950</td>
-</tr>
-</tbody>
-</table>
+<div id="fig-scores" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="showdown_files/figure-html/fig-scores-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;6.1: Gatai’s Scores Playing X-mas-3 via GUI</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -284,7 +251,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>It be proven mathematically that this will always be the case.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>It can be proven mathematically that this will always be the case.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
