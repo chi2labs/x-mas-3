@@ -107,7 +107,9 @@ image_ggplot(img3)
 
 We are now able to extract the individual tiles from the board on the computer screen.
 
-::: {#fig-example-tiles layout-nrol="2"}
+::: {#fig-example-tiles layout-ncol=4}
+
+
 ![Star](images/ui-tiles/image-2023-08-01%2000_10_16-1.png)
 
 ![Red](images/ui-tiles/image-2023-08-01%2000_10_16-2.png)

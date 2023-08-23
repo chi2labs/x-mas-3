@@ -364,69 +364,95 @@ flowchart LR
 </div>
 </div>
 <p>We are now able to extract the individual tiles from the board on the computer screen.</p>
-<div id="fig-example-tiles" class="quarto-figure quarto-figure-center anchored">
+<div id="fig-example-tiles" class="quarto-layout-panel">
 <figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/ui-tiles/image-2023-08-01 00_10_16-1.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Star</figcaption>
 </figure>
 </div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/ui-tiles/image-2023-08-01 00_10_16-2.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Red</figcaption>
 </figure>
 </div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/ui-tiles/image-2023-08-01 00_10_16-3.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Spotted</figcaption>
 </figure>
 </div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/ui-tiles/image-2023-08-01 00_10_16-4.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Wreath</figcaption>
 </figure>
 </div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/ui-tiles/image-2023-08-01 00_10_16-5.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Stocking</figcaption>
 </figure>
 </div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/ui-tiles/image-2023-08-01 00_10_16-8.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Candy</figcaption>
 </figure>
 </div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/ui-tiles/image-2023-08-01 00_10_16-9.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Berries</figcaption>
 </figure>
 </div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/ui-tiles/image-2023-08-01 00_10_16-10.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Tree</figcaption>
 </figure>
 </div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/ui-tiles/image-2023-08-01 00_10_16-14.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Striped</figcaption>
 </figure>
 </div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/ui-tiles/image-2023-08-01 00_10_16-24.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Hat</figcaption>
 </figure>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;5.5: Example tiles, with nomenclature added.</figcaption>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5.5: Example tiles, with nomenclature added.</figcaption><p></p>
 </figure>
 </div>
 <p>Now that we have these tiles at our disposal, in binary format, our first inclination was to define a set of reference tiles and simply compare the tile in question with the reference one, on a byte by byte basis. The problem with this approach is that there exist minute differences between <em>like</em> tiles, probably due to imprecisions introduces when cropping, as well as screen-resolution issues etc. These discrepancies are big enough that a direct comparison is impossible, or at least impracticable.</p>

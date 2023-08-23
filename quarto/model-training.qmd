@@ -1,6 +1,6 @@
 ---
 #title: "Model Training"
-author: "Aleksander Dietrichson, PhD"
+#author: "Aleksander Dietrichson, PhD"
 crossref:
   chapters: true
 #monobackgroundcolor: "lightgrey"
