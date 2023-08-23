@@ -1,6 +1,7 @@
 ---
-title: "Abstracting X-mas-3"
-author: "Aleksander Dietrichson, PhD"
+title: "Abstracting X-Mas-3"
+# author: "Aleksander Dietrichson, PhD"
+bibliography: references.bib
 format: html
 editor: visual
 ---
@@ -13,9 +14,9 @@ library(xmas3)
 
 ```
 
-In order to analyze *x-mas-3* and training an AI to play the game, we decided to make an *abstract* version in the game in R/C++. The abstracted version is more suitable for computer-game interaction as it will communicate only the relevant information between the agent and the game. This will be substantially faster than interacting with the UI and allow for a more streamlined training process.
+In order to analyze *x-mas-3* and training an AI to play the game, we decided to make an *abstract* version in the game in R [@Rlanguage] and C++ [@ISO:2012:III]. The abstracted version is more suitable for computer-game interaction as it will communicate only the relevant information between the agent and the game. This will be substantially faster than interacting with the UI and allow for a more streamlined training process.
 
-## Abstraction of the Board and Tiles
+## Abstracting the Board and Tiles
 
 The board is a 6 by 10 grid each containing a tile out of ten different tile-types. For our purposes we represent the board as a 6x10 matrix with the letters A through J representing the ten different tiles. An example board would me represented thus:
 
@@ -63,14 +64,13 @@ get_n_combinations <- \(m){
   sum(colmatch,rowmatch)
 }
 
-get_n_combinations(board)
 ```
 
 In this case one match is returned because of the triple "C"s found in column 5.
 
 ### Initial Board State
 
-Since the initial state of the board cannot include any scoring combination we need a function that generated a random
+Since the initial state of the board cannot include any scoring combination we need a function that generates a random initial state _until_ the board's score is zero. We implemented this recursively.
 
 ```{r}
 #| echo: true
@@ -95,10 +95,9 @@ Moves are made by specifying a cell, (by clicking on it) and then switching it w
 
 ## Applying Reinforcement Learning
 
-Reinforcement Learning (RL) is an algorithm that allows an agent (i.e. AI) to interact with an environment over a sequence of observations. The agent seeks to be rewarded and for the reward to be maximized over time. The model consists of a set of environment states $S$ a set of actions $A$ and a set of rewards $R$ (positive or negative).
+Reinforcement Learning (RL) [@watkins1992q] is an algorithm that allows an agent (i.e. AI) to interact with an environment over a sequence of observations. The agent seeks to be rewarded and for the reward to be maximized over time. The model consists of a set of environment states $S$ a set of actions $A$ and a set of rewards $R$ (positive or negative).
 
-The algorithm is guaranteed to converge to an optimal policy for each possible state in $S$. RL (and in this case we will use Q-learning) needs to be trained on a set of state-transition tuples formally defined thus:
-
+The algorithm is guaranteed to converge to an optimal policy for each possible state in $S$. RL (and in this case we will use Q-learning) needs to be trained on a set of state-transition _tuples_ formally defined in [-@eq-tuples].
 $$
 (s_i, a_i, r_{i+1}, s_{i+1})
 $$ {#eq-tuples}
@@ -164,7 +163,7 @@ This reduces the problem to a binary one and we effectively reduce $S$ to $2^{60
 
 #### Windowing
 
-We can further reduce our problem space by applying a technique knows as *windowing*. This implies dividing the grid into sub-grids and looking for playable moves within that reduced space. If we first consider the quest for a three-tile combinations, the windows in question would be a $3\times2$ and a $2\times3$ sub-matrix for perpendicular ($\perp$)moves. For parallel ($\parallel$) moves, i.e. moves with the same row or column we would have to consider and $4\times1$ respectively. Examples are shown below.
+We can further reduce our problem space by applying a technique knows as *windowing*. This implies dividing the grid into sub-grids and looking for playable moves within those reduced spaces. If we first consider the quest for a three-tile combinations, the windows in question would be a $3\times2$ and a $2\times3$ sub-matrix for perpendicular ($\perp$)moves. For parallel ($\parallel$) moves, i.e. moves with the same row or column we would have to consider $1\times4$ and $4\times1$ respectively. Examples are shown below.
 
 ```{r}
 #| include: false

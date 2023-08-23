@@ -5,7 +5,7 @@ project:
 book:
   title: "GatAI v. X-Mas-3"
   author: "Aleksander Dietrichson, PhD"
-  date: "8/13/2023"
+  date: "8/23/2023"
 
   chapters:
     - index.qmd
