@@ -216,7 +216,7 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="applicable-models" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="applicable-models"><span class="header-section-number">4.1</span> Applicable Models</h2>
-<p>From the model training already performed we have a total of six models: 3x3, 3x4, 3x5, 3x6 and 4x4, for sub-boards (windowed grids) as well as their relevant transpositions. Any of these can be used to scan the entire board looking for playable moves or move sequences (i.e.&nbsp;strategic moves) by using the <em>windowing</em> technique already described. Each evaluation of a sub-boards will return a best move or move-sequence and expected value of the sequence (which may be of magnitude 1). We may have some intuition about which strategy is optimal, e.g.&nbsp;all 3x3 sub-boards are included in a series of other geometries (3x4,3x5,3x6 and 4x4), and the best strategy can be derived mathematically. We chose the <em>statistics route</em> to the optimal strategy.</p>
+<p>From the model training already performed we have a total of six models: 3x3, 3x4, 3x5, 3x6 and 4x4, for sub-boards (windowed grids) as well as their relevant transpositions. Any of these can be used to scan the entire board looking for playable moves or move sequences (i.e.&nbsp;strategic moves) by using the <em>windowing</em> technique already described. Each evaluation of a sub-boards will return a best move or move-sequence and expected value of the sequence (which may be of cardinality 1). We may have some intuition about which strategy is optimal, e.g.&nbsp;all 3x3 sub-boards are included in a series of other geometries (3x4, 3x5, 3x6 and 4x4), and the best strategy can be derived mathematically. We chose the <em>statistics route</em> to the optimal strategy.</p>
 </section>
 <section id="monte-carlo-simulations" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="monte-carlo-simulations"><span class="header-section-number">4.2</span> Monte Carlo Simulations</h2>
@@ -300,7 +300,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>We see that the larger geometries have shorter evaluation times, which makes logical sense time-per sub-board is relatively stable, but the larger geometries have fewer unique evaluations. However, optimizing for time, the larger overhead will likely be the application of the vision model, so that the relatively small time-differences is a minor issue in comparison.</p>
+<p>We see that the larger geometries have shorter evaluation times, which makes logical sense: time-per sub-board is relatively stable, but the larger geometries have fewer unique evaluations. However, optimizing for time, the larger overhead will likely be the application of the vision model, so that the relatively small time-differences is a minor issue in comparison.</p>
 </section>
 </section>
 <section id="optimal-strategies" class="level2 page-columns page-full" data-number="4.3">
@@ -311,7 +311,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="time-mode" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="time-mode">Time Mode</h3>
-<p>Playing X-mas-3 via the graphical user interface add significant overhead because of the image processing needed. However playing a series of pre-defined moves on the board has relatively low overhead. This suggests a strategy that will optimize the number of playable moved on the board <em>per unit time.</em></p>
+<p>Playing X-mas-3 via the graphical user interface adds significant overhead because of the image processing needed. However playing a series of pre-defined moves on the board has relatively low overhead. This suggests a strategy that will optimize the number of playable moved on the board <em>per unit time.</em></p>
 
 
 

@@ -465,7 +465,7 @@ div.csl-indent {
 </section>
 <section id="training-the-model" class="level3">
 <h3 class="anchored" data-anchor-id="training-the-model">Training the Model</h3>
-<p>We then applied the Q-learning algorithm (<span class="citation" data-cites="watkins1992q">Watkins and Dayan (<a href="references.html#ref-watkins1992q" role="doc-biblioref">1992</a>)</span>) implemented in the open source <em>ReinforcementLearning</em> package <span class="citation" data-cites="ReinforcementLearning">(<a href="references.html#ref-ReinforcementLearning" role="doc-biblioref">Proellochs and Feuerriegel 2020</a>)</span>, with the <em>standard default</em> parameters (<span class="math inline">\(\alpha=.1,\gamma=.1, \epsilon=.1\)</span>).</p>
+<p>We then applied the Q-learning algorithm <span class="citation" data-cites="watkins1992q">(<a href="references.html#ref-watkins1992q" role="doc-biblioref">Watkins and Dayan 1992</a>)</span> implemented in the open source <em>ReinforcementLearning</em> package <span class="citation" data-cites="ReinforcementLearning">(<a href="references.html#ref-ReinforcementLearning" role="doc-biblioref">Proellochs and Feuerriegel 2020</a>)</span>, with the <em>standard default</em> parameters (<span class="math inline">\(\alpha=.1,\gamma=.1, \epsilon=.1\)</span>).</p>
 </section>
 <section id="testing-the-model" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="testing-the-model">Testing the Model</h3>
@@ -583,7 +583,7 @@ div.csl-indent {
 <div id="fig-board-263-3" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="model-training_files/figure-html/fig-board-263-3.png" class="img-fluid figure-img" data-ref-parent="fig-board-263" width="288"></p>
-<figcaption class="figure-caption">(c) Strongest Moved</figcaption>
+<figcaption class="figure-caption">(c) Strongest Moves</figcaption>
 </figure>
 </div>
 </div>
@@ -666,7 +666,7 @@ div.csl-indent {
 </section>
 <section id="action-space-1" class="level3">
 <h3 class="anchored" data-anchor-id="action-space-1">Action Space</h3>
-<p>The action space <span class="math inline">\(A\)</span> has a magnitude of 19.</p>
+<p>The action space <span class="math inline">\(A\)</span> has a cardinality of 19.</p>
 </section>
 <section id="data-for-modelling-1" class="level3">
 <h3 class="anchored" data-anchor-id="data-for-modelling-1">Data for Modelling</h3>
@@ -678,7 +678,7 @@ div.csl-indent {
 </section>
 <section id="testing-the-model-1" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="testing-the-model-1">Testing the Model</h3>
-<p>Again testing the model amounts We can now test the model by asking it to play some boards where we know the correct play. For example <span class="math inline">\(S_{32}\)</span> where there is a scoring move.</p>
+<p>Again we can now test the model by asking it to play some boards where we know the correct play. For example <span class="math inline">\(S_{32}\)</span> where there is a scoring move.</p>
 <section id="spot-checks" class="level4">
 <h4 class="anchored" data-anchor-id="spot-checks">Spot Checks</h4>
 <p>Let’s do a spot_check.</p>
@@ -744,7 +744,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figure&nbsp;3.6: Gatai Thinks Two Moves Ahead</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.6: Gatai Thinks Three Moves Ahead</figcaption><p></p>
 </figure>
 </div>
 </section>

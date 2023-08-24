@@ -5,11 +5,11 @@ editor: visual
 
 # Business Cases {.appendix}
 
-While the purpose of this undertaking was primarily academic, i.e. my intention was to learn from the process of implementing Gatai for a specific target (X-Mas-3). The generalization and scaling of this exercise derives to several business cases. Some of these are strategic and long-term, which others have a more direct or business-tactical path to productization.
+While the purpose of this undertaking was primarily academic, i.e. my intention was to learn from the process of implementing Gatai for a specific target (X-Mas-3), the generalization and scaling of this exercise derives to several business cases. Some of these are strategic and long-term, which others have a more direct or business-tactical path to productization.
 
 ## Eureka {#sec-eureka}
 
-Perhaps most closely related to the original intention of the undertaking is the generation of *insight.* Learning how to play the games available on the platform (or in principle not necessarily) at scale, may uncover patterns which are not necessarily available through the application of heuristic methods and thus provide deeper understanding of the games available and by extension their users. This in turn will allow for better targeting of adveretisements and upsales, which are two of the company's income-streams.
+Perhaps most closely related to the original intention of the undertaking is the generation of *insight.* Learning how to play the games available on the platform (or in principle not necessarily) at scale, may uncover patterns which are not readily available through the application of heuristic methods and thus provide deeper understanding of the games available and by extension their users. This in turn will allow for better targeting of advertisements and upsales, which are two of the company's income-streams.
 
 ### Generative Gatai
 
@@ -25,7 +25,7 @@ There is a potentially long list of directly productizable derivatives attainabl
 
 ### Gatai Tutor
 
-In the Gatai Tutor implementation Gatai *observes* a game played, analyzes it and provides this analysis to the player after the game or on request.
+In the Gatai Tutor implementation, Gatai *observes* a game played, analyzes it and provides this analysis to the player after the game or on request.
 
 For the case of X-mas-3 this may seem trivial, but for more complex puzzles, where skill is a more important factor the tutor will be more valuable to the user.
 
@@ -35,6 +35,6 @@ This application relates to multi-player games. With knowledge of how to play th
 
 ### Cheat-Bots
 
-There exists a category of software products aimed at gamers known as cheat-bots, these AI agents allow the player to play at a higher level than his/her normal game and thus attain a higher score. Cheat-bots are also used in multi-level games, when the player is tired of the lower levels, and wants a quick path to the higher more challenging levels of the game in question.
+There exists a category of software products, aimed at gamers, known as cheat-bots. These AI agents allow the player to play at a higher level than their normal game and thus attain a higher score. Cheat-bots are also used in multi-level games, when the player is tired of the lower levels, and wants a quick path to the higher more challenging levels of the game in question.
 
-It is easy to see how AI knowledge, on the scale of AI intuition / solution of a game will provide the raw-materials for producing such a software product even one game at a time.
+It is easy to see how AI knowledge, on the scale of AI intuition to solution of a game will provide the raw-materials for producing such software products even one game at a time.

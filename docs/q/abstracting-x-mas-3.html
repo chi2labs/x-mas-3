@@ -240,7 +240,7 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#checking-for-combinations" id="toc-checking-for-combinations" class="nav-link" data-scroll-target="#checking-for-combinations">Checking for Combinations</a></li>
   <li><a href="#initial-board-state" id="toc-initial-board-state" class="nav-link" data-scroll-target="#initial-board-state">Initial Board State</a></li>
-  <li><a href="#making-moves" id="toc-making-moves" class="nav-link" data-scroll-target="#making-moves">Making moves</a></li>
+  <li><a href="#making-moves" id="toc-making-moves" class="nav-link" data-scroll-target="#making-moves">Making Moves</a></li>
   </ul></li>
   <li><a href="#applying-reinforcement-learning" id="toc-applying-reinforcement-learning" class="nav-link" data-scroll-target="#applying-reinforcement-learning"><span class="header-section-number">2.2</span> Applying Reinforcement Learning</a>
   <ul class="collapse">
@@ -330,7 +330,7 @@ div.csl-indent {
 </div>
 </section>
 <section id="making-moves" class="level3">
-<h3 class="anchored" data-anchor-id="making-moves">Making moves</h3>
+<h3 class="anchored" data-anchor-id="making-moves">Making Moves</h3>
 <p>Moves are made by specifying a cell, (by clicking on it) and then switching it with one of it’s neighbors directly above, below, to the left or to the right. When a move is made the neighboring tile switches places with the first one clicked.</p>
 </section>
 </section>
@@ -369,7 +369,7 @@ div.csl-indent {
 </div>
 </div></div><p><span class="math inline">\(10^{60}\)</span> = 60,000, 000, 000, 000, 000, 000, 000, 000, 000, 000, 000, 000, 000, 000, 000, 000, 000, 000, 000, 000.</p>
 <p>The action space <span class="math inline">\(A\)</span> is slightly smaller since there are only four possibilities for each cell, so we have “only” <span class="math inline">\(4^{60}\)</span> which is roughly equal to <span class="math inline">\(1.329\times10^{36}\)</span>.</p>
-<p>Given the magnitude of these numbers it is clear that we cannot reasonably expect the algorithm to converge for several millennia with the computing power currently as our disposal. We therefore need to employ some strategies for reducing the spaces.</p>
+<p>Given the magnitude of these numbers it is clear that we cannot reasonably expect the algorithm to converge for several millennia with the computing power currently at our disposal. We therefore need to employ some strategies for reducing the spaces.</p>
 <section id="one-type-at-a-time" class="level4">
 <h4 class="anchored" data-anchor-id="one-type-at-a-time">One Type at a Time</h4>
 <p>We can consider a one-type-at-a-time strategy. The heuristic implemented would then be to first look for moves involving <em>candy</em>, then move on to <em>trees</em> and so on. For example: staring with an initial board like this:</p>
@@ -380,7 +380,7 @@ div.csl-indent {
 </section>
 <section id="windowing" class="level4">
 <h4 class="anchored" data-anchor-id="windowing">Windowing</h4>
-<p>We can further reduce our problem space by applying a technique knows as <em>windowing</em>. This implies dividing the grid into sub-grids and looking for playable moves within those reduced spaces. If we first consider the quest for a three-tile combinations, the windows in question would be a <span class="math inline">\(3\times2\)</span> and a <span class="math inline">\(2\times3\)</span> sub-matrix for perpendicular (<span class="math inline">\(\perp\)</span>)moves. For parallel (<span class="math inline">\(\parallel\)</span>) moves, i.e.&nbsp;moves with the same row or column we would have to consider <span class="math inline">\(1\times4\)</span> and <span class="math inline">\(4\times1\)</span> respectively. Examples are shown below.</p>
+<p>We can further reduce our problem space by applying a technique known as <em>windowing</em>. This implies dividing the grid into sub-grids and looking for playable moves within those reduced spaces. If we first consider the quest for a three-tile combinations, the windows in question would be a <span class="math inline">\(3\times2\)</span> and a <span class="math inline">\(2\times3\)</span> sub-matrix for perpendicular (<span class="math inline">\(\perp\)</span>)moves. For parallel (<span class="math inline">\(\parallel\)</span>) moves, i.e.&nbsp;moves with the same row or column we would have to consider <span class="math inline">\(1\times4\)</span> and <span class="math inline">\(4\times1\)</span> respectively. Examples are shown below.</p>
 <span class="math display">\[\begin{bmatrix} 1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp; 1 \end{bmatrix}
 %
 \text{ or}

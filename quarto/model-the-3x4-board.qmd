@@ -27,7 +27,7 @@ With the grid dimension chosen, we have $2^{(3\times4)}=4096$, possibilities. Th
 
 ### Action Space
 
-The action space $A$ has a magnitude of `r length(A)+1`.
+The action space $A$ has a cardinality of `r length(A)+1`.
 
 ### Data for Modelling
 
@@ -39,7 +39,7 @@ We trained the same type of model (Q-Learning) as before, again with the *standa
 
 ### Testing the Model
 
-Again testing the model amounts We can now test the model by asking it to play some boards where we know the correct play. For example $S_{32}$ where there is a scoring move.
+Again we can now test the model by asking it to play some boards where we know the correct play. For example $S_{32}$ where there is a scoring move.
 
 #### Spot Checks
 
@@ -85,7 +85,7 @@ So, apparently looking three moves ahead.
 ```{r}
 #| label: fig-board-2051 
 #| layout-ncol: 2
-#| fig-cap: "Gatai Thinks Two Moves Ahead"
+#| fig-cap: "Gatai Thinks Three Moves Ahead"
 #| fig-subcap: ["Board  2051","Suggested Move"]
 #| fig-asp: 1
 #| fig-width: 3

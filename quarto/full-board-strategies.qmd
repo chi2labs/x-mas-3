@@ -10,7 +10,7 @@ editor: visual
 
 ## Applicable Models
 
-From the model training already performed we have a total of six models: 3x3, 3x4, 3x5, 3x6 and 4x4, for sub-boards (windowed grids) as well as their relevant transpositions. Any of these can be used to scan the entire board looking for playable moves or move sequences (i.e. strategic moves) by using the *windowing* technique already described. Each evaluation of a sub-boards will return a best move or move-sequence and expected value of the sequence (which may be of magnitude 1). We may have some intuition about which strategy is optimal, e.g. all 3x3 sub-boards are included in a series of other geometries (3x4,3x5,3x6 and 4x4), and the best strategy can be derived mathematically. We chose the *statistics route* to the optimal strategy.
+From the model training already performed we have a total of six models: 3x3, 3x4, 3x5, 3x6 and 4x4, for sub-boards (windowed grids) as well as their relevant transpositions. Any of these can be used to scan the entire board looking for playable moves or move sequences (i.e. strategic moves) by using the *windowing* technique already described. Each evaluation of a sub-boards will return a best move or move-sequence and expected value of the sequence (which may be of cardinality 1). We may have some intuition about which strategy is optimal, e.g. all 3x3 sub-boards are included in a series of other geometries (3x4, 3x5, 3x6 and 4x4), and the best strategy can be derived mathematically. We chose the *statistics route* to the optimal strategy.
 
 ## Monte Carlo Simulations
 
@@ -76,7 +76,7 @@ my_data |>
 
 ```
 
-We see that the larger geometries have shorter evaluation times, which makes logical sense time-per sub-board is relatively stable, but the larger geometries have fewer unique evaluations. However, optimizing for time, the larger overhead will likely be the application of the vision model, so that the relatively small time-differences is a minor issue in comparison.
+We see that the larger geometries have shorter evaluation times, which makes logical sense: time-per sub-board is relatively stable, but the larger geometries have fewer unique evaluations. However, optimizing for time, the larger overhead will likely be the application of the vision model, so that the relatively small time-differences is a minor issue in comparison.
 
 ## Optimal Strategies
 
@@ -86,7 +86,7 @@ For the *arcade* version of the game it is clear that we should use the geometry
 
 ### Time Mode
 
-Playing X-mas-3 via the graphical user interface add significant overhead because of the image processing needed. However playing a series of pre-defined moves on the board has relatively low overhead. This suggests a strategy that will optimize the number of playable moved on the board *per unit time.*
+Playing X-mas-3 via the graphical user interface adds significant overhead because of the image processing needed. However playing a series of pre-defined moves on the board has relatively low overhead. This suggests a strategy that will optimize the number of playable moved on the board *per unit time.*
 
 ::: column-margin
 ```{r}

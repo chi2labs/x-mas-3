@@ -89,7 +89,7 @@ initialize_board <- \(){
 initialize_board()
 ```
 
-### Making moves
+### Making Moves
 
 Moves are made by specifying a cell, (by clicking on it) and then switching it with one of it's neighbors directly above, below, to the left or to the right. When a move is made the neighboring tile switches places with the first one clicked.
 
@@ -130,7 +130,7 @@ $10^{60}$ = 60,`r paste(rep("000",20), collapse=", ")`.
 
 The action space $A$ is slightly smaller since there are only four possibilities for each cell, so we have "only" $4^{60}$ which is roughly equal to $1.329\times10^{36}$.
 
-Given the magnitude of these numbers it is clear that we cannot reasonably expect the algorithm to converge for several millennia with the computing power currently as our disposal. We therefore need to employ some strategies for reducing the spaces.
+Given the magnitude of these numbers it is clear that we cannot reasonably expect the algorithm to converge for several millennia with the computing power currently at our disposal. We therefore need to employ some strategies for reducing the spaces.
 
 #### One Type at a Time
 
@@ -163,7 +163,7 @@ This reduces the problem to a binary one and we effectively reduce $S$ to $2^{60
 
 #### Windowing
 
-We can further reduce our problem space by applying a technique knows as *windowing*. This implies dividing the grid into sub-grids and looking for playable moves within those reduced spaces. If we first consider the quest for a three-tile combinations, the windows in question would be a $3\times2$ and a $2\times3$ sub-matrix for perpendicular ($\perp$)moves. For parallel ($\parallel$) moves, i.e. moves with the same row or column we would have to consider $1\times4$ and $4\times1$ respectively. Examples are shown below.
+We can further reduce our problem space by applying a technique known as *windowing*. This implies dividing the grid into sub-grids and looking for playable moves within those reduced spaces. If we first consider the quest for a three-tile combinations, the windows in question would be a $3\times2$ and a $2\times3$ sub-matrix for perpendicular ($\perp$)moves. For parallel ($\parallel$) moves, i.e. moves with the same row or column we would have to consider $1\times4$ and $4\times1$ respectively. Examples are shown below.
 
 ```{r}
 #| include: false
