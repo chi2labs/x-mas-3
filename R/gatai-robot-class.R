@@ -139,9 +139,58 @@ GatAIRobot <-
             messageToPlayer = function(msg){
               self$remDr$executeScript(paste0("alert('",msg,"');"))
             },
-            #' @field showBestMove
+            #' @field showMoveOnCanvas
+            #' Shows a move on the canvas
+            showMoveOnCanvas = function(move){
+              
+              # Get coordinates
+              m <- parse_move(move)
+              orig <- dplyr::filter(self$coords,row==m$rs[1], col==m$cs[1])
+              dest <- dplyr::filter(self$coords,row==m$rs[2], col==m$cs[2])
+              x <- self$conf$offset_x + orig$x
+              y <- self$conf$offset_y + orig$y
+              
+              # Horizontal or Vertical ?
+              my_arrow <- if(m$rs[1]==m$rs[2]){ #same row
+                 "⇒"
+              } else {"⇓"}
+              
+              
+              # arrows <- list(
+              #   down = "⇓",
+              #   up = "⇑",
+              #   left = "⇒",
+              #   right = "⇐"
+              # )
+              
+              my_con <- file(here::here("js","insert-div.js"))
+              js <- readLines(my_con)
+              js <- paste0(js,collapse = "")
+              close(my_con)
+              
+              
+              
+              # js2 <- '
+              # createArrowOverlay(100, 100, 200, 100, 5000, "red", "rgba(0, 0, 0, 0.3)");
+              # '
+              js2 <- glue::glue('createArrowOverlay({top}, {left}, {width}, {height}, {delay}, "{arrow}",80);',
+                                                top=dest$y,left=dest$x, width = 100, height = 100, delay = 6000, arrow = my_arrow );  
+              js <- paste0(js,js2,collapse = ";")
+              self$remDr$executeScript(js)
+            },
+            
+            #' @field showMoveOnBBestMove
             #' Shows the higest scoring move to the player for the current board.
             showBestMove = function(){
+
+              
+              
+            },
+            
+            
+            #' @field showGataiAssist
+            #' Displays a div with Gatai Assist on the game canvas
+            showGataiAssist = function(){
               
               my_con <- file(here::here("js","insert-div.js"))
               js <- readLines(my_con)
