@@ -147,13 +147,19 @@ GatAIRobot <-
               m <- parse_move(move)
               orig <- dplyr::filter(self$coords,row==m$rs[1], col==m$cs[1])
               dest <- dplyr::filter(self$coords,row==m$rs[2], col==m$cs[2])
-              x <- self$conf$offset_x + orig$x
-              y <- self$conf$offset_y + orig$y
+              x <- self$config$offset_x + orig$x
+              y <- self$config$offset_y + orig$y
               
               # Horizontal or Vertical ?
-              my_arrow <- if(m$rs[1]==m$rs[2]){ #same row
-                 "⇒"
-              } else {"⇓"}
+              if(m$rs[1]==m$rs[2]){ #same row
+               my_arrow <-   "⇒"
+               #x <-  x + 36 
+               #adjust for tile size
+               y <- y -36
+              } else {
+                my_arrow <- "⇓"
+                x <- x -36
+                }
               
               
               # arrows <- list(
@@ -174,7 +180,7 @@ GatAIRobot <-
               # createArrowOverlay(100, 100, 200, 100, 5000, "red", "rgba(0, 0, 0, 0.3)");
               # '
               js2 <- glue::glue('createArrowOverlay({top}, {left}, {width}, {height}, {delay}, "{arrow}",80);',
-                                                top=dest$y,left=dest$x, width = 100, height = 100, delay = 6000, arrow = my_arrow );  
+                                                top=y,left=x, width = 72, height = 72, delay = 6000, arrow = my_arrow );  
               js <- paste0(js,js2,collapse = ";")
               self$remDr$executeScript(js)
             },
