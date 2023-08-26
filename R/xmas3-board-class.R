@@ -242,6 +242,13 @@ window.xmas3 <- function(B,from=c(1,1), dims=c(2,2)){
 slide_move <- function(move,pos){
   
   if(is.null(pos)) return(move)
+  #browser()
+  tryCatch(if(move == "Pass") return(move),
+           error= function(e){
+             message("NA move")
+             return(move)
+           })
+  
   m <- parse_move(move)
   m$rs <- m$rs+pos[1]-1
   m$cs <- m$cs+pos[2]-1 # We're not zero based
