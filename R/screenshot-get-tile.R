@@ -7,13 +7,13 @@
 #' @param conf config
 #' @param tile_width width
 #' @param tile_height height
-#' @importFrom magick  image_crop geometry_area
+#' @importFrom magick  image_crop geometry_area image_write
 #'
 #' @return the tile in png format
 #' @export
 screenshot_get_tile <- function(board,.c, .r, 
-                                conf = robot_config_mac(), 
-                                tile_width = 72, tile_height = 80){
+                                conf, 
+                                tile_width = 68, tile_height = 69){
   my_row <- conf$coords %>% 
     dplyr::filter(.data$col==.c,.data$row==.r)
   
