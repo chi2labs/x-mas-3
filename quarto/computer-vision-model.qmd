@@ -1,12 +1,12 @@
 ---
 title: "Computer Vision"
-author: "Aleksander Dietrichson, PhD"
+#author: "Aleksander Dietrichson, PhD"
 format: html
 editor: visual
 bibliography: references.bib
 ---
 
-In the previous chapters we have abstracted the game and trained models on theoretical abstractions. While the Monte Carlo simulations we conducted showed encouraging results, we have still not provided evidence that Gatai would be able to play this game in the real worlds. In order for us to interact with the real-world game console we either need to obtain the game's source code and interact through the *Unity* platform, or else interact through its graphical user interface (GUI).
+In the previous chapters we have abstracted the game and trained models on theoretical abstractions. While the Monte Carlo simulations we conducted showed encouraging results, we have still not provided evidence that Gatai would be able to play this game in the real world. In order for us to interact with the real-world game console we either need to obtain the game's source code and interact through the *Unity* platform, or else interact through its graphical user interface (GUI).
 
 ## Interacting with the GUI
 
@@ -41,7 +41,7 @@ flowchart LR
     B -->|screenshot| A
 ```
 
-*Selenium* is our go-to solution when browser automatization is required. Given the prior implementation of Gatai, it made sense to interact with *Selenium* using the package available on CRAN [@RSelenium].
+*Selenium* is our go-to solution when browser automation is required. Given the prior implementation of Gatai, it made sense to interact with *Selenium* using the package available on CRAN [@RSelenium].
 
 ## Screenshot Evaluation
 
@@ -107,7 +107,7 @@ image_ggplot(img3)
 
 We are now able to extract the individual tiles from the board on the computer screen.
 
-::: {#fig-example-tiles layout-ncol="5"}
+::: {#fig-example-tiles layout-ncol="4"}
 ![Star](images/ui-tiles/image-2023-08-01%2000_10_16-1.png)
 
 ![Red](images/ui-tiles/image-2023-08-01%2000_10_16-2.png)
@@ -131,11 +131,11 @@ We are now able to extract the individual tiles from the board on the computer s
 Example tiles, with nomenclature added.
 :::
 
-Now that we have these tiles at our disposal, in binary format, our first inclination was to define a set of reference tiles and simply compare the tile in question with the reference one, on a byte by byte basis. The problem with this approach is that there exist minute differences between *like* tiles, probably due to imprecisions introduces when cropping, as well as screen-resolution issues etc. These discepancies are big enough that a direct comparison is impossible, or at least impracticable.
+Now that we have these tiles at our disposal, in binary format, our first inclination was to define a set of reference tiles and simply compare the tile in question with the reference one, on a byte by byte basis. The problem with this approach is that there exist minute differences between *like* tiles, probably due to imprecisions introduces when cropping, as well as screen-resolution issues etcetera. These discrepancies are big enough that a direct comparison is impossible, or at least impracticable.
 
 ## Algorithm for Classification
 
-Image classification can be done with a series of algorithms --support vector machines (SVM), convoluted neural networks (CNN), k-nearest neighbors etcetera. However, given the very restricted space, and the presumably very small within-class differences (they are in principle identical, differences are introduced by imperfections in the data-retrieval procedures), we decided that *multinomial logistic regression* would be the correct choice for this use case. This is conveniently implemented in the nnet @nnet package, available open source on the CRAN network.
+Image classification can be done with a series of algorithms --support vector machines (SVM), convoluted neural networks (CNN), k-nearest neighbors etcetera. However, given the very restricted space, and the presumably very small within-class differences (they are in principle identical, differences are introduced by imperfections in the data-retrieval procedures), we decided that *multinomial logistic regression* would be the correct choice for this use case. This is conveniently implemented in the nnet [@nnet] package, available open source on the CRAN network.
 
 {{< include multinomial-logistic-regression.qmd >}}
 

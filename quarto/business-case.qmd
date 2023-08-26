@@ -5,15 +5,15 @@ editor: visual
 
 # Business Cases {.appendix}
 
-While the purpose of this undertaking was primarily academic, i.e. my intention was to learn from the process of implementing Gatai for a specific target (X-mas-3). The generalization and scaling of this exercise derives to several business cases. Some of these are strategic and long-term, which others have a more direct or business tactical path to productization.
+While the purpose of this undertaking was primarily academic, i.e. my intention was to learn from the process of implementing Gatai for a specific target (X-Mas-3), the generalization and scaling of this exercise derives to several business cases. Some of these are strategic and long-term, which others have a more direct or business-tactical path to productization.
 
 ## Eureka {#sec-eureka}
 
-Perhaps most closely related to the original intention of the undertaking is the production of *insight.* Learning how to play the games available on the platform (or in principle not necessarily) at scale, may uncover patterns which are not necessarily available through the application of heuristic methods and thus provide insight into the games available and by extension their users. This in turn will allow for better targeting of adds, which is one of the suggested income-streams for the company.
+Perhaps most closely related to the original intention of the undertaking is the generation of *insight.* Learning how to play the games available on the platform (or in principle not necessarily) at scale, may uncover patterns which are not readily available through the application of heuristic methods and thus provide deeper understanding of the games available and by extension their users. This in turn will allow for better targeting of advertisements and upsales, which are two of the company's income-streams.
 
 ### Generative Gatai
 
-Gato furthermore aspires to apply *generative AI* in order to create games customized to each users preferences. A deep understanding of existing games is a fundamental input to any generative algorithm we produce for this purpose.
+Gato furthermore aspires to apply *generative AI* in order to create games customized to each user's preferences. A deep understanding of existing games is a fundamental input to any generative algorithm we devise for this purpose.
 
 ## Tactical Derivatives
 
@@ -25,16 +25,16 @@ There is a potentially long list of directly productizable derivatives attainabl
 
 ### Gatai Tutor
 
-In the Gatai Tutor implementation Gatai *observes* a game played, analyzes it and provides this analysis to the player after the game or on request.
+In the Gatai Tutor implementation, Gatai *observes* a game played, analyzes it and provides this analysis to the player after the game or on request.
 
 For the case of X-mas-3 this may seem trivial, but for more complex puzzles, where skill is a more important factor the tutor will be more valuable to the user.
 
 ### Gatai Extra Player
 
-This application relates to multiplayer-games. WIth knowledge of how to play the game in question, Gatai can take on or several seats in a multiplayer game, and thus make the experience more interesting for the user. If, for example, I have the urge to play Bridge at 4am in the morining in my time-zone, and I can only find two more insomniacs to join me, I would be able to call on Gatai to fill the fourth chair.
+This application relates to multi-player games. With knowledge of how to play the game in question, Gatai can take on or several seats in a multi-player game, and thus make the experience more interesting for the user. If, for example, I have the urge to play Bridge at 4am in the morning in my time-zone, and I can only find two more insomniacs to join me, I would be able to call on Gatai to fill the fourth chair.
 
 ### Cheat-Bots
 
-There exists a category of software products aimed at gamers known as cheat-bots, these AI agents allow the player to play at a higher level than his/her normal game and thus attain a higher score. Cheat-bots are also used in multi-level games, when the player is tired of the lower levels, and wants a quick path to the higher more challenging levels of the game in question.
+There exists a category of software products, aimed at gamers, known as cheat-bots. These AI agents allow the player to play at a higher level than their normal game and thus attain a higher score. Cheat-bots are also used in multi-level games, when the player is tired of the lower levels, and wants a quick path to the higher more challenging levels of the game in question.
 
-It is easy to see how AI knowledge, on the scale of AI intuition / solution of a game will provide the raw-materials for producing such a software product even one game at a time.
+It is easy to see how AI knowledge, on the scale of AI intuition to solution of a game will provide the raw-materials for producing such software products even one game at a time.

@@ -1,6 +1,6 @@
 ---
 #title: "Model Training"
-author: "Aleksander Dietrichson, PhD"
+#author: "Aleksander Dietrichson, PhD"
 crossref:
   chapters: true
 #monobackgroundcolor: "lightgrey"
@@ -35,7 +35,7 @@ It also seems that chess-like notation, which is more human readable, and thus m
 
 ## Functions Needed
 
-For the purposes of setting up the agent training for a 4x5 board, we implemented the following functions in the {xmas3} package.
+For the purposes of setting up the agent training for an $m\times{n}$ board, we implemented the following functions.
 
 ### create_state_space
 
@@ -66,34 +66,36 @@ This function generates an action space in chess notation given a grid on ncol a
 #| code-block-border-left: true
 
 
-
-\(B){
-  if(!is.matrix(B)) B <- as.matrix(B)
-  
-  # Magic numbers here are:
-  # 7,14,28 - three in a row/col
-  # 15, 30 - four in a row/col
-  # 31 - five in a row
-  rows <- 
-    apply(B,1,function(x){
-      v <- paste0(x, collapse = "")
-      strtoi(v,2)
-    })
-  
-  cols <- 
-    apply(B,2,function(x){
-      v <- paste0(x, collapse = "")
-      strtoi(v,2)
-    })
-  
-  totals <- c(cols,rows)
-  
-  score <- sum(
-             sum(totals%in%c(7,14,28))*50,
-             sum(totals%in%c(15,30))*100, 
-             sum(totals%in%c(31))*200
+create_action_space <-\(nrows=3, ncols=3){
+  my_cols <- LETTERS[1:ncols]
+  my_rows <- 1:nrows
+  A <- c()
+  # Vertical moves
+  for(.r in 1:(length(my_rows))){
+    for(.c in 1:(length(my_cols)-1)){
+      A <- c(A,
+             paste0(
+               my_cols[.c],my_rows[.r],
+               " to ",
+               my_cols[.c+1],my_rows[.r]
              )
-  score
+      )
+    }
+  }
+  
+  # Horizontal
+  for(.c in 1:(length(my_cols))){
+    for(.r in 1:(length(my_rows)-1)){
+      A <- c(A,
+             paste0(
+               my_cols[.c],my_rows[.r],
+               " to ",
+               my_cols[.c],my_rows[.r+1]
+             )
+      )
+    }
+  }
+  c(A,"Pass")
 }
 
 ```

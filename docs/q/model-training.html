@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Aleksander Dietrichson, PhD">
 
 <title>GatAI v. X-Mas-3 - 3&nbsp; Model Training</title>
 <style>
@@ -171,7 +170,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./abstracting-x-mas-3.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-mas-3</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-Mas-3</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -277,12 +276,6 @@ div.csl-indent {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Aleksander Dietrichson, PhD </p>
-          </div>
-  </div>
     
   
     
@@ -305,7 +298,7 @@ div.csl-indent {
 <p>It also seems that chess-like notation, which is more human readable, and thus more convenient for the researcher (i.e.&nbsp;me), add minimal overhead in the parsing and scoring processes.</p>
 <section id="functions-needed" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="functions-needed"><span class="header-section-number">3.1</span> Functions Needed</h2>
-<p>For the purposes of setting up the agent training for a 4x5 board, we implemented the following functions in the {xmas3} package.</p>
+<p>For the purposes of setting up the agent training for an <span class="math inline">\(m\times{n}\)</span> board, we implemented the following functions.</p>
 <section id="create_state_space" class="level3">
 <h3 class="anchored" data-anchor-id="create_state_space">create_state_space</h3>
 <div class="cell" data-code-block-border-left="true">
@@ -328,34 +321,37 @@ div.csl-indent {
 <div class="cell" data-code-block-border-left="true">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>\(B){</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.matrix</span>(B)) B <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(B)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Magic numbers here are:</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 7,14,28 - three in a row/col</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 15, 30 - four in a row/col</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 31 - five in a row</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  rows <span class="ot">&lt;-</span> </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">apply</span>(B,<span class="dv">1</span>,<span class="cf">function</span>(x){</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      v <span class="ot">&lt;-</span> <span class="fu">paste0</span>(x, <span class="at">collapse =</span> <span class="st">""</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">strtoi</span>(v,<span class="dv">2</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  cols <span class="ot">&lt;-</span> </span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">apply</span>(B,<span class="dv">2</span>,<span class="cf">function</span>(x){</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      v <span class="ot">&lt;-</span> <span class="fu">paste0</span>(x, <span class="at">collapse =</span> <span class="st">""</span>)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">strtoi</span>(v,<span class="dv">2</span>)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  totals <span class="ot">&lt;-</span> <span class="fu">c</span>(cols,rows)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  score <span class="ot">&lt;-</span> <span class="fu">sum</span>(</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(totals<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">7</span>,<span class="dv">14</span>,<span class="dv">28</span>))<span class="sc">*</span><span class="dv">50</span>,</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(totals<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">15</span>,<span class="dv">30</span>))<span class="sc">*</span><span class="dv">100</span>, </span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>(totals<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">31</span>))<span class="sc">*</span><span class="dv">200</span></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>create_action_space <span class="ot">&lt;-</span>\(<span class="at">nrows=</span><span class="dv">3</span>, <span class="at">ncols=</span><span class="dv">3</span>){</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  my_cols <span class="ot">&lt;-</span> LETTERS[<span class="dv">1</span><span class="sc">:</span>ncols]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  my_rows <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>nrows</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Vertical moves</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(.r <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(<span class="fu">length</span>(my_rows))){</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(.c <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(<span class="fu">length</span>(my_cols)<span class="sc">-</span><span class="dv">1</span>)){</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      A <span class="ot">&lt;-</span> <span class="fu">c</span>(A,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>             <span class="fu">paste0</span>(</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>               my_cols[.c],my_rows[.r],</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>               <span class="st">" to "</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>               my_cols[.c<span class="sc">+</span><span class="dv">1</span>],my_rows[.r]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Horizontal</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(.c <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(<span class="fu">length</span>(my_cols))){</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(.r <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(<span class="fu">length</span>(my_rows)<span class="sc">-</span><span class="dv">1</span>)){</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      A <span class="ot">&lt;-</span> <span class="fu">c</span>(A,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>             <span class="fu">paste0</span>(</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>               my_cols[.c],my_rows[.r],</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>               <span class="st">" to "</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>               my_cols[.c],my_rows[.r<span class="sc">+</span><span class="dv">1</span>]</span>
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  score</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(A,<span class="st">"Pass"</span>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -429,7 +425,7 @@ div.csl-indent {
 </section>
 <section id="the-3x3-board" class="level2 page-columns page-full" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="the-3x3-board"><span class="header-section-number">3.3</span> The 3x3 Board</h2>
-<p>We start with a 3x3 grid. This should be sufficiently small that a machine learning algorithm will converge in short order and we are able to test the outcome before embarking on a more wide-ranging exercise.</p>
+<p>We start with a 3x3 grid. This should be sufficiently small that a machine learning algorithm will converge in short order and we are able to test the outcome before embarking on a more wide-ranging training activities.</p>
 <section id="state-space" class="level3">
 <h3 class="anchored" data-anchor-id="state-space">State Space</h3>
 <p>A three by three board gives us a state-space of 512 possibilities. However, some proportion of the boards in this space will already have a winning combination on them, and should be excluded form the training because (a) they will not come up in play, as tiles are immediately removed when a scoring combination is found, and (b) there is logically no correct move on these boards. For example Board 56 has three touching tiles in column B.</p>
@@ -469,7 +465,7 @@ div.csl-indent {
 </section>
 <section id="training-the-model" class="level3">
 <h3 class="anchored" data-anchor-id="training-the-model">Training the Model</h3>
-<p>We then using the Q-learning algorithm implemented in the opensource <em>ReinforcementLearning</em> package <span class="citation" data-cites="ReinforcementLearning">(<a href="references.html#ref-ReinforcementLearning" role="doc-biblioref">Proellochs and Feuerriegel 2020</a>)</span>, with the <em>standard default</em> parameters (<span class="math inline">\(\alpha=.1,\gamma=.1, \epsilon=.1\)</span>).</p>
+<p>We then applied the Q-learning algorithm <span class="citation" data-cites="watkins1992q">(<a href="references.html#ref-watkins1992q" role="doc-biblioref">Watkins and Dayan 1992</a>)</span> implemented in the open source <em>ReinforcementLearning</em> package <span class="citation" data-cites="ReinforcementLearning">(<a href="references.html#ref-ReinforcementLearning" role="doc-biblioref">Proellochs and Feuerriegel 2020</a>)</span>, with the <em>standard default</em> parameters (<span class="math inline">\(\alpha=.1,\gamma=.1, \epsilon=.1\)</span>).</p>
 </section>
 <section id="testing-the-model" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="testing-the-model">Testing the Model</h3>
@@ -587,7 +583,7 @@ div.csl-indent {
 <div id="fig-board-263-3" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="model-training_files/figure-html/fig-board-263-3.png" class="img-fluid figure-img" data-ref-parent="fig-board-263" width="288"></p>
-<figcaption class="figure-caption">(c) Strongest Moved</figcaption>
+<figcaption class="figure-caption">(c) Strongest Moves</figcaption>
 </figure>
 </div>
 </div>
@@ -670,7 +666,7 @@ div.csl-indent {
 </section>
 <section id="action-space-1" class="level3">
 <h3 class="anchored" data-anchor-id="action-space-1">Action Space</h3>
-<p>The action space <span class="math inline">\(A\)</span> has a magnitude of 19.</p>
+<p>The action space <span class="math inline">\(A\)</span> has a cardinality of 19.</p>
 </section>
 <section id="data-for-modelling-1" class="level3">
 <h3 class="anchored" data-anchor-id="data-for-modelling-1">Data for Modelling</h3>
@@ -682,7 +678,7 @@ div.csl-indent {
 </section>
 <section id="testing-the-model-1" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="testing-the-model-1">Testing the Model</h3>
-<p>Again testing the model amounts We can now test the model by asking it to play some boards where we know the correct play. For example <span class="math inline">\(S_{32}\)</span> where there is a scoring move.</p>
+<p>Again we can now test the model by asking it to play some boards where we know the correct play. For example <span class="math inline">\(S_{32}\)</span> where there is a scoring move.</p>
 <section id="spot-checks" class="level4">
 <h4 class="anchored" data-anchor-id="spot-checks">Spot Checks</h4>
 <p>Let’s do a spot_check.</p>
@@ -708,8 +704,7 @@ div.csl-indent {
 | · · · · |
 | · · · · |</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(S[<span class="dv">33</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span> <span class="fu">predict</span>(S[<span class="dv">33</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Pass"</code></pre>
 </div>
@@ -749,7 +744,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figure&nbsp;3.6: Gatai Thinks Two Moves Ahead</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.6: Gatai Thinks Three Moves Ahead</figcaption><p></p>
 </figure>
 </div>
 </section>
@@ -757,12 +752,14 @@ div.csl-indent {
 <h4 class="anchored" data-anchor-id="competing-moves">Competing Moves</h4>
 <p>Board 2699 has two possible solutions. One scores higher than the other</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">xmas3board</span>(<span class="dv">2699</span>, <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>))[<span class="dv">1</span>]</span>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">xmas3board</span>(<span class="dv">2699</span>, <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>))</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>B</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2699</code></pre>
+<pre><code>| O · · · |
+| · O · O |
+| O · O O |</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span> <span class="fu">predict</span>(B) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>gatai <span class="sc">|&gt;</span> <span class="fu">predict</span>(B[<span class="dv">1</span>]) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "B2 to B3"</code></pre>
 </div>
@@ -816,6 +813,9 @@ div.csl-indent {
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-ReinforcementLearning" class="csl-entry" role="listitem">
 Proellochs, Nicolas, and Stefan Feuerriegel. 2020. <span>“ReinforcementLearning: Model-Free Reinforcement Learning.”</span>
+</div>
+<div id="ref-watkins1992q" class="csl-entry" role="listitem">
+Watkins, Christopher JCH, and Peter Dayan. 1992. <span>“Q-Learning.”</span> <em>Machine Learning</em> 8: 279–92.
 </div>
 </div>
 </section>
@@ -1057,7 +1057,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./abstracting-x-mas-3.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-mas-3</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-Mas-3</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

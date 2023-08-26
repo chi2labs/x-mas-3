@@ -65,22 +65,21 @@ GatAIRobot <-
             startRemoteDriver = function(){
               self$message("Initializing x-mas-3 Robot")
               self$message("Starting Selenium")  
-              my_command <- "/usr/bin/java -Dwebdriver.chrome.driver='/Users/sasha/chromedriver' -Dwebdriver.gecko.driver='/Users/sasha/Library/Application Support/binman_geckodriver/macos/0.33.0/geckodriver' -Dphantomjs.binary.path='/Users/sasha/Library/Application Support/binman_phantomjs/macosx/2.1.1/phantomjs-2.1.1-macosx/bin/phantomjs' -jar '/Users/sasha/Library/Application Support/binman_seleniumserver/generic/4.0.0-alpha-2/selenium-server-standalone-4.0.0-alpha-2.jar' -port 4567"
+              ## For mac
+               my_command <- "/usr/bin/java -Dwebdriver.chrome.driver='/Users/sasha/chromedriver' -Dwebdriver.gecko.driver='/Users/sasha/Library/Application Support/binman_geckodriver/macos/0.33.0/geckodriver' -Dphantomjs.binary.path='/Users/sasha/Library/Application Support/binman_phantomjs/macosx/2.1.1/phantomjs-2.1.1-macosx/bin/phantomjs' -jar '/Users/sasha/Library/Application Support/binman_seleniumserver/generic/4.0.0-alpha-2/selenium-server-standalone-4.0.0-alpha-2.jar' -port 4567"
+              # 
+               system(my_command, wait = FALSE)
+               Sys.sleep(1)
               
-              system(my_command, wait = FALSE)
-              Sys.sleep(1)
-              self$remDr <- remoteDriver$new(
-                browserName = "chrome",  
-                port = 4567L
-              )
+              
               # selenium(retcommand = TRUE)
               # #selenium()
               # self$cDrv <- chrome()
-              # self$remDr <- remoteDriver(
-              #   remoteServerAddr = "localhost",
-              #   port = 4567L,
-              #   browserName = "chrome"
-              # )
+              self$remDr <- remoteDriver(
+                remoteServerAddr = "localhost",
+                port = 4567L,
+                browserName = "chrome"
+              )
               self$message("Connecting to Chome Driver")
               self$remDr$open()
               self$remDr$setWindowSize(width = 1200,height = 831)
@@ -127,6 +126,96 @@ GatAIRobot <-
                 purrr::walk(moves$sequence, self$makeMoveSequence)  
               }
               
+            },
+            #' @field monitor
+            #' Monitors the play on the board and intervenes if there is a huddle.
+            monitor = function(){
+              
+            },
+            
+            #' @field messgeToPlayer
+            #' Sends a message via javascript to the player
+            messageToPlayer = function(msg){
+              self$remDr$executeScript(paste0("alert('",msg,"');"))
+            },
+            #' @field showMoveOnCanvas
+            #' Shows a move on the canvas
+            showMoveOnCanvas = function(move){
+              
+              # Get coordinates
+              m <- parse_move(move)
+              orig <- dplyr::filter(self$coords,row==m$rs[1], col==m$cs[1])
+              dest <- dplyr::filter(self$coords,row==m$rs[2], col==m$cs[2])
+              x <- self$config$offset_x + orig$x
+              y <- self$config$offset_y + orig$y
+              
+              # Horizontal or Vertical ?
+              if(m$rs[1]==m$rs[2]){ #same row
+               my_arrow <-   "⇒"
+               #x <-  x + 36 
+               #adjust for tile size
+               y <- y -36
+              } else {
+                my_arrow <- "⇓"
+                x <- x -36
+                }
+              
+              
+              # arrows <- list(
+              #   down = "⇓",
+              #   up = "⇑",
+              #   left = "⇒",
+              #   right = "⇐"
+              # )
+              
+              my_con <- file(here::here("js","insert-div.js"))
+              js <- readLines(my_con)
+              js <- paste0(js,collapse = "")
+              close(my_con)
+              
+              
+              
+              # js2 <- '
+              # createArrowOverlay(100, 100, 200, 100, 5000, "red", "rgba(0, 0, 0, 0.3)");
+              # '
+              js2 <- glue::glue('createArrowOverlay({top}, {left}, {width}, {height}, {delay}, "{arrow}",80);',
+                                                top=y,left=x, width = 72, height = 72, delay = 6000, arrow = my_arrow );  
+              js <- paste0(js,js2,collapse = ";")
+              self$remDr$executeScript(js)
+            },
+            
+            #' @field showMoveOnBBestMove
+            #' Shows the higest scoring move to the player for the current board.
+            showBestMove = function(){
+
+              
+              
+            },
+            
+            
+            #' @field showGataiAssist
+            #' Displays a div with Gatai Assist on the game canvas
+            showGataiAssist = function(){
+              
+              my_con <- file(here::here("js","insert-div.js"))
+              js <- readLines(my_con)
+              js <- paste0(js,collapse = "")
+              close(my_con)
+              
+              
+              
+              js2 <- '
+              createOverlay(100, 100, 200, 100, 5000, "⇐⇒", 40, "rgba(0, 128, 0, 0.5)");
+              '
+              
+              js <- paste0(js,js2,collapse = ";")
+              self$remDr$executeScript(js)
+            },
+            
+            #' @field insertJavaScript
+            #' Inserts the necessary JS to communicate with player
+            insertJavaScript = function(){
+
             },
             
             #' @field clickToGame
@@ -207,6 +296,7 @@ if(interactive()){
   library(RSelenium)
   library(wdman)
   library(xmas3)
+  library(magick)
   if(exists("gat")){
     rm(gat)
     gc()
@@ -214,6 +304,9 @@ if(interactive()){
   }
   gat <- GatAIRobot$new(verbose=TRUE)
   #,conf_filename = "./inst/conf/chromebook.yml")
+
+  # gat <- GatAIRobot$new(verbose=TRUE,conf_filename = "./inst/conf/chromebook.yml")
+
   # gat$play(agent_6)
   
 }

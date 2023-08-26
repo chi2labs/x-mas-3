@@ -7,41 +7,39 @@ editor: visual
 ```{r}
 #| include: false
 library(xmas3)
+library(ggplot2)
+library(ggdark)
+theme_set(ggdark::dark_theme_minimal())
 ```
 
-Now, then. With tactics and strategies honed, and a full-board strategy in plac; Gatai is ready to take on X-mas-3 in a one-to-one showdown. The format was to play 5 games in either of the two possible modes all through the graphical user interface.
+Now, then. With tactics and strategies honed, and a full-board strategy in place; Gatai is ready to take on X-mas-3 in a one-to-one showdown.
+
+While observing the games played we noticed a couple of GUI *timing glitches*, where a screenshot of the board was transmitted to the AI before the board could update, prompting Gatai to essentially make the same move (or move sequence) twice (the second time on an unevaluated board). These problems were not prevalent, but did cause some decay in the actual observed to expected value ratio. We also noticed that on one occasion the *background image* of the GUI (which rotates between games) interfered with the vision model causing Gatai to misclassify *stripes* as *candy.*
 
 ## Arcade Mode
 
-For the *arcade mode* games Gatai simply scanned the board for the best-scoring move and made that move.
+The trained AI played five 100-move games --- this is the default setup for an *arcade* game. Gatai used a 4x4 strategy, scanning the board for the highest values move or move sequence and then made that move. We had also programmed in a *security valve* allowing Gatai to make a random move if no playable move sequence was found. This was, however, never activated[^1].
+
+[^1]: It can be proven mathematically that this will always be the case.
+
+The results are displayed in @fig-scores, and show a solid performance in line with our expectations.
+
+```{r}
+#| echo: false
+#| label: fig-scores
+#| fig-cap: "Gatai's Scores Playing X-mas-3 via GUI"
+my_data <- readr::read_csv(here::here("scores.csv"),show_col_types = FALSE)
+my_data |> 
+  ggplot(aes(Match, Score, group=1))+
+  geom_point()+
+  geom_line()+
+  ylim(0,6000)+
+  xlab("Match #")
+```
 
 ## Time Mode
 
-For the time-mode version of the game, Gatai would still scan the board for the best moves, but then, if more than one move or move sequence is possible, try to make all of then, in a pattern that minimizes the risk for interference between the moves.
-
-```{r}
-#| include: false
-#| echo: false
-#| layout-ncol: 2
-
-cat(
-  "Game over...",
-  ascii_gatai("bigtreebroken")  
-)
-
-cat("\n\n\n\n\n",
-    ascii_gatai("cool"),"Hasta la vista, baby." )
-
-# cat("\n\n\n\n\n\n
-#                 /\\_/\\
-#                (⌐■_■ ) 
-#                 > ^ <
-#  Hasta la vista, baby.
-#     ")
-
-```
-
-------------------------------------------------------------------------
+Two games were also played in time mode. For the time-mode version of the game, Gatai would still scan the board for the best moves, but then, if more than one move or move sequence is possible, try to make all of then, in a pattern that minimizes the risk for interference between the moves, and maximizes the likelihood of a high score. In this format Gatai was able to score as high as *7850*, however, this measurement is of lesser interest, since it is mostly a function of Gatai's ability to make moves fast, which in turn depends on the computer hardware rather than the AI implemented.
 
 ::: column-margin
 ```{r}
