@@ -6,6 +6,7 @@
 #' @param img either a "magick-image or character-vector (filename) 
 #' @importFrom purrr map_df
 #' @importFrom magick image_read
+#' @importFrom magick image_info
 #' @importFrom stringr str_sub
 #' @return a data.frame with variables
 #' @export 
