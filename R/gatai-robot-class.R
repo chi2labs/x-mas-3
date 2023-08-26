@@ -24,20 +24,20 @@ GatAIRobot <-
             remDr = NULL,
             cDrv = NULL,
             coords =NULL,
-            game_canvas = NULL,
             screenshotFile = character(0),
             board_geometry= NULL,
             initialize = function(
-    
               #conf_filename =  system.file("conf/chromebook.yml", package = "xmas3"),
               conf_filename =  system.file("conf/macbook.yml", package = "xmas3"),
               verbose = FALSE
+              
             ){
               self$screenshotFile <- tempfile(fileext = ".png")
               if(!file.exists(conf_filename))stop("Config file not found", conf_filename)
               self$config <- yaml::read_yaml(conf_filename)
               self$verbose <- verbose
-              self$coords <- calculate_grid_centroids(self$config$board$width,self$config$board$height)
+              self$coords <- calculate_grid_centroids(surface_width = self$config$board$width,
+                                                      surface_height = self$config$board$height)
               self$config$coords <- self$coords
               b <- self$config$board
               self$board_geometry <- geometry_area(b$width,
@@ -146,7 +146,7 @@ GatAIRobot <-
             #' @field getGameCanvas
             #' Returns the binding to the game canvas.
             getGameCanvas = function(){
-              self$remDr$findElements(using = "id","unity-canvas")
+              self$remDr$findElements(using = "id","unity-container")
             },
             
             #' @field testRemoveDriver
@@ -171,7 +171,6 @@ GatAIRobot <-
               self$message("Moving: ", move)
               orig <- dplyr::filter(self$coords,row==m$rs[1], col==m$cs[1])
               dest <- dplyr::filter(self$coords,row==m$rs[2], col==m$cs[2])
-              
               if(sum(nrow(orig),nrow(dest))!=2){
                 self$message("Move off the board detected")
                 return(invisible())
@@ -179,17 +178,24 @@ GatAIRobot <-
               conf <- self$config
               # return(invisible()) ## debugging ####
               remDr <- self$remDr
+              
+              orig$x <- orig$x-(conf$canvas$width/2)
+              orig$y <- orig$y-(conf$canvas$height/2)
+              dest$x <- dest$x-(conf$canvas$width/2)
+              dest$y <- dest$y-(conf$canvas$height/2)
+              
               game_canvas <- self$getGameCanvas()
               remDr$mouseMoveToLocation(x = conf$offset_x + orig$x ,
-                                        y = conf$offset_y + orig$y , game_canvas[[1]])
+                                        y = conf$offset_y + orig$y ,
+                                        game_canvas[[1]])
               remDr$click()
               
               remDr$mouseMoveToLocation(x = conf$offset_x + dest$x ,
-                                        y = conf$offset_y + dest$y , game_canvas[[1]])
+                                        y = conf$offset_y + dest$y ,
+                                        game_canvas[[1]])
               remDr$click()
               
             }
-            # TODO refactor this to accept chess notation
           )
           
   )
@@ -197,6 +203,7 @@ GatAIRobot <-
 # Debugging ####
 if(interactive()){
   library(R6)
+  library(magick)
   library(RSelenium)
   library(wdman)
   library(xmas3)
@@ -205,7 +212,8 @@ if(interactive()){
     gc()
 
   }
-  #gat <- GatAIRobot$new(verbose=TRUE,conf_filename = "./inst/conf/chromebook.yml")
+  gat <- GatAIRobot$new(verbose=TRUE)
+  #,conf_filename = "./inst/conf/chromebook.yml")
   # gat$play(agent_6)
   
 }
