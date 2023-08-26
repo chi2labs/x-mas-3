@@ -2,7 +2,7 @@
 # This app was created to facilitate the classification of image files for
 # the computer vision algorithm
 library(shiny)
-
+library(magick)
 my_files <- dir(here::here("training-tiles"),full.names = TRUE, pattern = ".png")
 
 my_files <- sample(my_files,length(my_files))

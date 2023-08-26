@@ -4,10 +4,14 @@
 \alias{screenshot_translate_board}
 \title{Creates Matrix from Screenshot}
 \usage{
-screenshot_translate_board(B, conf = robot_config_mac())
+screenshot_translate_board(B, conf, create_training_pngs = FALSE)
 }
 \arguments{
 \item{B}{the screenshot}
+
+\item{conf}{configuration}
+
+\item{create_training_pngs}{pngs for training the vision model be created}
 }
 \value{
 a 6x10 Matrix

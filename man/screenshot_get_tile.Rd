@@ -4,14 +4,7 @@
 \alias{screenshot_get_tile}
 \title{Fecth tile from Screenshot}
 \usage{
-screenshot_get_tile(
-  board,
-  .c,
-  .r,
-  conf = robot_config_mac(),
-  tile_width = 40,
-  tile_height = 40
-)
+screenshot_get_tile(board, .c, .r, conf, tile_width = 68, tile_height = 69)
 }
 \arguments{
 \item{board}{the board weŕe playing on}

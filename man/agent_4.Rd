@@ -15,5 +15,5 @@ agent_4(B, ...)
 a data.frame containing as least move_sequence
 }
 \description{
-Plays a 4x4 Grid
+Plays a 4x4 Best Move Strategy
 }

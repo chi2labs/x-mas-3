@@ -1,0 +1,25 @@
+---
+bibliography: references.bib
+---
+
+## Multinomial Logistic Regression
+
+### Training Data
+
+```{r}
+#| label: multinomial-regression-setup
+#| include: false
+library(xmas3)
+library(dplyr)
+library(nnet)
+library(magick)
+set.seed(2023)
+image_path <- here::here("training-tiles")
+my_data <- 
+  readr::read_csv(here::here("training-tiles","chromebook-image-classification.csv"))
+colnames(my_data) <- c("image","class","time")
+my_color_analysis <- color_analysis(my_data$image)
+my_data <- bind_cols(my_data,my_color_analysis)
+GataiVision <- nnet::multinom(class~.,data = my_data %>% select(-image,-time))
+readr::write_rds(GataiVision, here::here("inst","vision-model.rds"))
+```
