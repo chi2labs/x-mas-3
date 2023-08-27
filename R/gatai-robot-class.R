@@ -116,17 +116,32 @@ GatAIRobot <-
     #' @field play
     #' Plays the current board using one of the GatAI agents.
     #' @param agent a GatAi Agent function.
-    play = function(agent = agent_0, n_moves = 100){
+    #' @param n_moves How many moves to play
+    #' @param annotate Should a game record be produced?
+    play = function(agent = agent_0, n_moves = 100, record = FALSE){
+      
+      if(!isFALSE(record)){
+        record_file <- record
+        if(!is.character(record)) record_file <- tempfile(fileext = ".rds")
+        file.create(record_file)
+      }
+      record <- list()
+      
       max_moves <- n_moves
       move_n <- 0
       while(move_n < max_moves){
         self$message("Move number: ", move_n)
         S <- self$getBoardOnScreen()
         moves <- agent(S)
+        record <- c(record, moves)
         move_n <- move_n + sum(moves$n_moves) # update Move count
         purrr::walk(moves$sequence, self$makeMoveSequence)  
       }
-      
+      if(!isFALSE(record)){
+        message("Saving game record to: ",record_file)
+        readr::write_rds(record, file=record_file)
+        
+      }
     },
     
     #' @field monitorGame
@@ -211,37 +226,38 @@ GatAIRobot <-
     #' @field showMoveOnBBestMove
     #' Shows the higest scoring move to the player for the current board.
     showBestMove = function(){
+      suggested_moves <- play_strategy(B, "4x4")
+      # Show Gatai Assist.
+      self$showGataiAssist()
       ## Calculate best moves
-      self$showMoveOnCanvas("B1B2")
+      #self$showMoveOnCanvas("B1B2")
       
     },
     
     
     #' @field showGataiAssist
     #' Displays a div with Gatai Assist on the game canvas
-    showGataiAssist = function(){
+    showGataiAssist = function(moves = c("A1B1"), chitchat = "Having trouble?\\n\\nHere are some moves you might try:\\n\\n"){
       
       my_con <- file(here::here("js","insert-div.js"))
       js <- readLines(my_con)
       js <- paste0(js,collapse = "")
       close(my_con)
       
+      text1 <- glue::glue("\\n\\n '/\\\\_/\\\\ \\n( o.o )\\n'> ^ <\\n\\n\\n")
       
+      text2 <- paste0(chitchat,moves, collapse="\\n")
+    
       
-      js2 <- '
-              createOverlay(100, 100, 200, 100, 5000, "⇐⇒", 40, "rgba(0, 128, 0, 0.5)");
-              '
+      js2 <- glue::glue('
+              insertTeletypeDiv("{text1}", "{text2}", 0, 0);
+              ')
       
       js <- paste0(js,js2,collapse = ";")
       self$remDr$executeScript(js)
     },
     
-    #' @field insertJavaScript
-    #' Inserts the necessary JS to communicate with player
-    insertJavaScript = function(){
       
-    },
-    
     #' @field clickToGame
     #' Clicks into the game from the welcome screen.
     clickToGame = function(mode=c("arcade","time")){

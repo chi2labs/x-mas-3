@@ -11,25 +11,24 @@ play_strategy <- function(B, geometry="3x3", strategy=c("bestmove")){
   res <- evaluate_sub_boards(BS)
   if(strategy == "bestmove"){
     res <- res %>%
-      arrange(desc(expected_value), n_moves) %>%
-      slice_head(n=1)
+      arrange(desc(expected_value), n_moves)
   }
 }
 
-if(interactive()){
-  system.time(
-    {
-      set.seed(123)
-      for (i in 1:10){
-        
-        B <- initialize_board()
-        moves <- play_strategy(B, "6x3")
-      }
-      
-      
-      
-    }
-    
-  ) |> print()
-  
-}
+# if(interactive()){
+#   system.time(
+#     {
+#       set.seed(123)
+#       for (i in 1:10){
+#         
+#         B <- initialize_board()
+#         moves <- play_strategy(B, "6x3")
+#       }
+#       
+#       
+#       
+#     }
+#     
+#   ) |> print()
+#   
+# }

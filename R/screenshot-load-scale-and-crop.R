@@ -8,11 +8,12 @@
 #' @return a magick image
 #' @export
 
-screenshot_load_scale_and_crop <- function(img, my_geometry = geometry_area(710,426,250,134)){
+screenshot_load_scale_and_crop <- function(img, my_geometry){
+  
   if(is.character(img))(
     img <- image_read(img)    
   )
   img %>% 
-    image_resize( "1200x700") %>% 
+    image_resize( "1200x654") %>% 
     image_crop(my_geometry)
 }
