@@ -1,11 +1,11 @@
 # Config for macbook
-offset_x: 262
+offset_x: 275
 offset_y: 120
 window:
   height: 831
   width: 1200
 board:
-  width: 680
+  width: 670
   height: 414
 canvas:
   width: 1200
