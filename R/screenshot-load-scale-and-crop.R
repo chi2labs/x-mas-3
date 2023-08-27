@@ -14,6 +14,6 @@ screenshot_load_scale_and_crop <- function(img, my_geometry){
     img <- image_read(img)    
   )
   img %>% 
-    image_resize( "1200x654") %>% 
+    image_resize( "1200x655") %>% 
     image_crop(my_geometry)
 }

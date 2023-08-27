@@ -120,8 +120,8 @@ GatAIRobot <-
     #' @param annotate Should a game record be produced?
     play = function(agent = agent_0, n_moves = 100, record = FALSE){
       
+      record_file <- record
       if(!isFALSE(record)){
-        record_file <- record
         if(!is.character(record)) record_file <- tempfile(fileext = ".rds")
         file.create(record_file)
       }
@@ -130,14 +130,16 @@ GatAIRobot <-
       max_moves <- n_moves
       move_n <- 0
       while(move_n < max_moves){
+        move_n <- move_n +1
         self$message("Move number: ", move_n)
+        
         S <- self$getBoardOnScreen()
         moves <- agent(S)
         record <- c(record, moves)
-        move_n <- move_n + sum(moves$n_moves) # update Move count
+        #move_n <- move_n + sum(moves$n_moves) # update Move count
         purrr::walk(moves$sequence, self$makeMoveSequence)  
       }
-      if(!isFALSE(record)){
+      if(!isFALSE(record_file)){
         message("Saving game record to: ",record_file)
         readr::write_rds(record, file=record_file)
         
@@ -172,7 +174,7 @@ GatAIRobot <-
         } else{
           last_screen <- current_screen
         }
-       Sys.sleep(self$huddleRate) 
+        Sys.sleep(self$huddleRate) 
       }
       
     },
@@ -185,7 +187,8 @@ GatAIRobot <-
     #' @field showMoveOnCanvas
     #' Shows a move on the canvas
     showMoveOnCanvas = function(move){
-      
+      purrr::walk(move,\(move){
+        Sys.sleep(1) #kunstpause
       # Get coordinates
       m <- parse_move(move)
       orig <- dplyr::filter(self$coords,row==m$rs[1], col==m$cs[1])
@@ -216,21 +219,30 @@ GatAIRobot <-
       js <- readLines(my_con)
       js <- paste0(js,collapse = "")
       close(my_con)
-
+      
       js2 <- glue::glue('createArrowOverlay({top}, {left}, {width}, {height}, {delay}, "{arrow}",80);',
                         top=y,left=x, width = 72, height = 72, delay = 6000, arrow = my_arrow );  
       js <- paste0(js,js2,collapse = ";")
       self$remDr$executeScript(js)
+      
+      })
+      
     },
     
     #' @field showMoveOnBBestMove
     #' Shows the higest scoring move to the player for the current board.
     showBestMove = function(){
-      suggested_moves <- play_strategy(B, "4x4")
-      # Show Gatai Assist.
-      self$showGataiAssist()
-      ## Calculate best moves
-      #self$showMoveOnCanvas("B1B2")
+      B <- self$getBoardOnScreen()
+      suggested_moves <- play_strategy(B, "4x4") %>% 
+        dplyr::filter(score>0) %>% 
+        dplyr::arrange(n_moves) %>% 
+        head(4) %>% 
+        dplyr::pull("sequence") %>% 
+        unlist()-> tmp
+       # Show Gatai Assist.
+      self$showGataiAssist(moves = tmp)
+      Sys.sleep(2) # Kunstpause
+      self$showMoveOnCanvas(tmp)
       
     },
     
@@ -246,8 +258,10 @@ GatAIRobot <-
       
       text1 <- glue::glue("\\n\\n '/\\\\_/\\\\ \\n( o.o )\\n'> ^ <\\n\\n\\n")
       
-      text2 <- paste0(chitchat,moves, collapse="\\n")
-    
+      text2 <- paste0(chitchat,
+                      paste0(moves, collapse="\\n"), 
+                      collapse="\\n")
+      
       
       js2 <- glue::glue('
               insertTeletypeDiv("{text1}", "{text2}", 0, 0);
@@ -257,7 +271,7 @@ GatAIRobot <-
       self$remDr$executeScript(js)
     },
     
-      
+    
     #' @field clickToGame
     #' Clicks into the game from the welcome screen.
     clickToGame = function(mode=c("arcade","time")){
