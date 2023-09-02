@@ -31,6 +31,7 @@ function createArrowOverlay(top, left, width, height, duration = 3000, arrowSymb
     overlayDiv.style.left = left + "px";
     overlayDiv.style.zIndex = "9999";
     overlayDiv.style.backgroundColor = bgColor;
+    overlayDiv.style.pointerEvents =  "none";
     overlayDiv.style.textAlign = "center";
     overlayDiv.style.lineHeight = height + "px";
     overlayDiv.style.fontSize = fontSize + "px";
@@ -95,3 +96,6 @@ function insertTeletypeDiv(text1, text2, x, y, duration = 10000) {
 /*
 insertTeletypeDiv("\n\n '/\\_/\\ \n( o.o )\n'> ^ <\n\nGatai the AI\n", "World!S\nThis is a new line.", 0, 0);
 */
+
+
+

@@ -31,18 +31,20 @@ color_analysis <- function(img){
     mid_row <- ceiling(rows / 2)
     mid_col <- ceiling(cols / 2)
     
-    # q1 <- M[1:mid_row, 1:mid_col]
-    # q2 <- M[1:mid_row, (mid_col + 1):cols]
-    # q3 <- M[(mid_row + 1):rows, 1:mid_col]
-    # q4 <- M[(mid_row + 1):rows, (mid_col + 1):cols]
+    
+    # Quarters
+    q1 <- M[1:mid_row, 1:mid_col]
+    q2 <- M[1:mid_row, (mid_col + 1):cols]
+    q3 <- M[(mid_row + 1):rows, 1:mid_col]
+    q4 <- M[(mid_row + 1):rows, (mid_col + 1):cols]
     # 
     
     # Slices
-    l <- length(M)
-    q1=M[1:l/4]
-    q2=M[(l/4):(l/2)]
-    q3=M[l/2:(l*3/4)]
-    q4=M[(l*3/4):l]
+    # l <- length(M)
+    # q1=M[1:l/4]
+    # q2=M[(l/4):(l/2)]
+    # q3=M[l/2:(l*3/4)]
+    # q4=M[(l*3/4):l]
     
     th = c(q1,q2)
     lh = c(q2,q4)

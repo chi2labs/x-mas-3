@@ -52,6 +52,7 @@ get_sub_board <- function(B,from,dims){
     prs <- stringr::str_split(dims,"x", simplify = TRUE)
     dims <- c(prs[1],prs[2]) %>% as.numeric()
   }
+  #browser()
   
   B[from[1]:(from[1] + dims[1]-1),
     from[2]:(from[2] + dims[2]-1)

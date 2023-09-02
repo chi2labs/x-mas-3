@@ -117,8 +117,10 @@ GatAIRobot <-
     #' Plays the current board using one of the GatAI agents.
     #' @param agent a GatAi Agent function.
     #' @param n_moves How many moves to play
-    #' @param annotate Should a game record be produced?
-    play = function(agent = agent_0, n_moves = 100, record = FALSE){
+    #' @param record Should a game record be produced?
+    #' @param record show Should the moved be shown on screen before they are played.
+    play = function(agent = agent_0, n_moves = 100, record = FALSE, 
+                    show=FALSE){
       
       record_file <- record
       if(!isFALSE(record)){
@@ -130,14 +132,17 @@ GatAIRobot <-
       max_moves <- n_moves
       move_n <- 0
       while(move_n < max_moves){
-        move_n <- move_n +1
+        move_n <- move_n + 1
         self$message("Move number: ", move_n)
-        
         S <- self$getBoardOnScreen()
         moves <- agent(S)
         record <- c(record, moves)
         #move_n <- move_n + sum(moves$n_moves) # update Move count
-        purrr::walk(moves$sequence, self$makeMoveSequence)  
+        purrr::walk(moves$sequence, ~{
+          if(isTRUE(show)) self$showMoveOnCanvas(.x, delay =1000)
+          self$makeMoveSequence(.x)
+          }
+          )  
       }
       if(!isFALSE(record_file)){
         message("Saving game record to: ",record_file)
@@ -186,7 +191,7 @@ GatAIRobot <-
     },
     #' @field showMoveOnCanvas
     #' Shows a move on the canvas
-    showMoveOnCanvas = function(move){
+    showMoveOnCanvas = function(move, delay = 1000){
       purrr::walk(move,\(move){
         Sys.sleep(1) #kunstpause
       # Get coordinates
@@ -221,7 +226,7 @@ GatAIRobot <-
       close(my_con)
       
       js2 <- glue::glue('createArrowOverlay({top}, {left}, {width}, {height}, {delay}, "{arrow}",80);',
-                        top=y,left=x, width = 72, height = 72, delay = 6000, arrow = my_arrow );  
+                        top=y,left=x, width = 72, height = 72, delay = delay, arrow = my_arrow );  
       js <- paste0(js,js2,collapse = ";")
       self$remDr$executeScript(js)
       
