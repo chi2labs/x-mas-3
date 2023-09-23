@@ -57,6 +57,7 @@ GatAIRobot <-
                error = function(e){
                  warning("Unable to close session","run: lsof -i :4567", " From a terminal to find the blocking process")
                })
+      # sudo kill -9 $(sudo lsof -t -i:4567)
       # run: lsof -i :4567
       # and kill from command line
     },
