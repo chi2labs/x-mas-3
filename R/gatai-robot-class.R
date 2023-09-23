@@ -29,7 +29,7 @@ GatAIRobot <-
             huddleRate = 10L, # Number of seconds
             initialize = function(
     #conf_filename =  system.file("conf/chromebook.yml", package = "xmas3"),
-              conf_filename =  system.file("conf/macbook.yml", package = "xmas3"),
+              conf_filename =  system.file("conf/mac-mini.yml", package = "xmas3"),
               verbose = FALSE
               
             ){
@@ -362,9 +362,15 @@ if(interactive()){
     gc()
     
   }
-  gat <- GatAIRobot$new(verbose=TRUE)
-  #,conf_filename = "./inst/conf/chromebook.yml")
+  gat <- GatAIRobot$new(verbose=TRUE
+  ,conf_filename = "./inst/conf/mac-mini.yml")
+  gat$takeScreenshot()
+  Board <- screenshot_load_scale_and_crop(
+    gat$screenshotFile,
+    my_geometry = gat$board_geometry
+  )
   
+  print(Board)
   # gat <- GatAIRobot$new(verbose=TRUE,conf_filename = "./inst/conf/chromebook.yml")
   
   # gat$play(agent_6)
