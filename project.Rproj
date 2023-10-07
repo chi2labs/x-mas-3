@@ -19,4 +19,4 @@ PackageRoxygenize: rd,collate,namespace
 
 PythonType: system
 PythonVersion: 3.8.10
-PythonPath: /usr/bin/python
+PythonPath: /usr/bin/python3.8
