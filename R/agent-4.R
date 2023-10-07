@@ -10,7 +10,8 @@
 agent_4 <-function(B, ...){
   suggested_moves <- play_strategy(B, "4x4")
   print(suggested_moves)
-  suggested_moves
+  suggested_moves |> 
+    slice_head(n=1)
 }
 
 

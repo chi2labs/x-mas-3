@@ -13,10 +13,12 @@ RoxygenNote: 7.2.3
 Imports: 
     adana,
     dplyr,
+    magick,
     magrittr,
     purrr,
     R6,
     readr,
+    ReinforcementLearning,
     RSelenium,
     wdman
 Suggests: 
