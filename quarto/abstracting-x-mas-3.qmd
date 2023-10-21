@@ -70,7 +70,7 @@ In this case one match is returned because of the triple "C"s found in column 5.
 
 ### Initial Board State
 
-Since the initial state of the board cannot include any scoring combination we need a function that generates a random initial state _until_ the board's score is zero. We implemented this recursively.
+Since the initial state of the board cannot include any scoring combination we need a function that generates a random initial state *until* the board's score is zero. We implemented this recursively.
 
 ```{r}
 #| echo: true
@@ -97,8 +97,7 @@ Moves are made by specifying a cell, (by clicking on it) and then switching it w
 
 Reinforcement Learning (RL) [@watkins1992q] is an algorithm that allows an agent (i.e. AI) to interact with an environment over a sequence of observations. The agent seeks to be rewarded and for the reward to be maximized over time. The model consists of a set of environment states $S$ a set of actions $A$ and a set of rewards $R$ (positive or negative).
 
-The algorithm is guaranteed to converge to an optimal policy for each possible state in $S$. RL (and in this case we will use Q-learning) needs to be trained on a set of state-transition _tuples_ formally defined in [-@eq-tuples].
-$$
+The algorithm is guaranteed to converge to an optimal policy for each possible state in $S$. RL (and in this case we will use Q-learning) needs to be trained on a set of state-transition *tuples* formally defined in [-@eq-tuples]. $$
 (s_i, a_i, r_{i+1}, s_{i+1})
 $$ {#eq-tuples}
 
@@ -126,7 +125,7 @@ cat("Wow, that's a huge number!")
 ```
 :::
 
-$10^{60}$ = 60,`r paste(rep("000",20), collapse=", ")`.
+$10^{60}$ = 1,`r paste(rep("000",20), collapse=", ")`.
 
 The action space $A$ is slightly smaller since there are only four possibilities for each cell, so we have "only" $4^{60}$ which is roughly equal to $1.329\times10^{36}$.
 
