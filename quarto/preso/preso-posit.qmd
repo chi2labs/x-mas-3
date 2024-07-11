@@ -1,0 +1,114 @@
+---
+title: "AI for Gaming"
+subtitle: "How I Built a Bot to Play a Video-Game with R and Python"
+author: "Aleksander Dietrichson, PhD"
+format: 
+  revealjs: 
+    code-line-numbers: false
+    echo: true
+    theme: dark
+    monofont: "JetBrains Mono"
+    header-includes: |
+      <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=JetBrains Mono" type="text/css"/>
+
+editor: visual
+---
+
+## Gatai versus X-mas-3 {background-video="media/intro-gatai.mp4" background-video-loop="false" background-video-muted="true"}
+
+Training session (brute-force approach)
+
+## Gato & Gatai
+
+-   **Gato**: A web-portal for game creators
+-   Gato AI -\> Gatai -\> Gatai the AI
+-   Gato == Cat in Spanish
+
+```{r}
+#| label: fig-gatai
+#| fig-cap: "GatAI the AI"
+#| layout-ncol: 1
+#| echo: false
+library(xmas3)
+cat(ascii_gatai())
+cat("\n\n\nGatai, the AI\nOne smart cat")
+```
+
+## X-mas-3
+
+![X-mas-3: The Game](images/Screenshot%202023-07-29%2011.14.08.png)
+
+## X-mas-3
+
+![X-mas-3: The Game](images/X-mas-3-board-annotated.png)
+
+## X-mas-3
+
+10 Tiles 6x10 Board
+
+::: columns
+::: {.column width="50%"}
+$10^{60}$ = 1,`r paste(rep("000",20), collapse=", ")`.
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+ascii_gatai("hiding") |> cat()
+cat("Wow, that's a huge number!")
+```
+:::
+:::
+
+## X-mas-3
+
+10 Tiles 6x10 Board
+
+::: columns
+::: {.column width="50%"}
+$10^{60}$ = 1,`r paste(rep("000",20), collapse=", ")`.
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+ascii_gatai("hiding") |> cat()
+cat("Wow, that's a huge number!")
+```
+:::
+:::
+
+### 
+
+This is our state space $S$
+
+## Relative Complexity
+
+| Item                             | Magnitude           |
+|----------------------------------|---------------------|
+| Atoms in the Observable Universe | $1.0\times10^{78}$  |
+| State Space of X-mas-3           | $1.0\times10^{60}$  |
+| Atoms on Earth                   | $1.3\times 10^{50}$ |
+| State Space of Chess             | $1.0\times10^{40}$  |
+
+## Q-Learning (RL) 
+
+-   State Space
+
+-   Action Space
+
+-   Rewards
+
+-   Resulting State
+
+    $$
+    (s_i, a_i, r_{i+1}, s_{i+1})
+    $$
+
+## Strategies for Reducing the State Space
+
+-   One tile at a time (Binarization)
+
+-   Transpositions
+
+-   Windowing
