@@ -6,7 +6,7 @@ format:
   revealjs: 
     code-line-numbers: false
     echo: true
-    theme: dark
+    theme: [dark, custom.scss]
     monofont: "JetBrains Mono"
     header-includes: |
       <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=JetBrains Mono" type="text/css"/>
@@ -30,6 +30,7 @@ Training session (brute-force approach)
 #| layout-ncol: 1
 #| echo: false
 library(xmas3)
+library(magick)
 cat(ascii_gatai())
 cat("\n\n\nGatai, the AI\nOne smart cat")
 ```
@@ -91,7 +92,7 @@ This is our state space $S$
 | Atoms on Earth                   | $1.3\times 10^{50}$ |
 | State Space of Chess             | $1.0\times10^{40}$  |
 
-## Q-Learning (RL) 
+## Q-Learning (RL)
 
 -   State Space
 
@@ -112,3 +113,352 @@ This is our state space $S$
 -   Transpositions
 
 -   Windowing
+
+## Binarization
+
+```{r}
+#| echo: false
+#| results: asis
+#| fig-cap: "Example Board"
+board <- initialize_board() 
+array_to_LaTeX(board) |> 
+  cat()
+```
+
+\|S\| = $10^{60}$
+
+## Binarization
+
+```{r}
+#| label: example-binary-board
+#| results: asis
+#| echo: false
+B <- apply(board,2,\(x){ifelse(x=="A",1,0)})
+array_to_LaTeX(B) |> 
+  cat()
+```
+
+\|S\| = $2^{60}$
+
+## Windowing
+
+::: columns
+::: {.column width="50%"}
+![](images/fig-window-example-2.png)
+:::
+
+::: {.column width="50%"}
+![](images/fig-window-example-3.png)
+:::
+:::
+
+## Transpositions
+
+::: columns
+::: {.column width="50%"}
+![](images/fig-transposition-1.png)
+:::
+
+::: {.column width="50%"}
+![](images/fig-transpositions-2.png)
+:::
+:::
+
+## Model Training Sub-boards
+
+```{r}
+#| include: false
+.nf <- \(x){
+  format(x,big.mark = ',')
+}
+```
+
+-   For 3x3 \|S\| = $2^{3\times3}$ =`r 2^(3*3) |> .nf()`
+-   For 3x4 \|S\| = $2^{3\times4}$ =`r 2^(3*4) |> .nf()`
+-   For 3x5 \|S\| = $2^{3\times5}$ =`r 2^(3*5) |> .nf()`
+-   For 4x4 \|S\| = $2^{4\times4}$ =`r 2^(4*4) |> .nf()`
+-   For 3x6 \|S\| = $2^{3\times6}$ =`r 2^(3*6) |> .nf()`
+-   For 4x5 \|S\| = $2^{4\times5}$ =`r 2^(4*5) |> .nf()`
+-   For 4x6 \|S\| = $2^{4\times6}$ =`r 2^(4*6) |> .nf()`
+-   For 5x5 \|S\| = $2^{5\times5}$ =`r 2^(5*5) |> .nf()`
+
+## Spot checks
+
+```{r}
+#| include: false
+library(ReinforcementLearning)
+```
+
+```{r}
+S <- create_state_space(3,3)
+my_scores <- purrr::map(S,score_binary_board) |> unlist()
+S <- S[my_scores==0] 
+gatai <- readr::read_rds(here::here("models","q-learning-3x3.rds"))
+gatai |> predict(S[32])
+```
+
+![](images/fig-s32-2.png)
+
+## Spot checks
+
+```{r}
+gatai |> predict(S[4])
+```
+
+![](images/fig-s4-and-6-1.png)
+
+## Spot checks
+
+```{r}
+B <- xmas3board(259,c(3,3))
+gatai |> predict(B[1])
+```
+
+::: columns
+::: {.column width="40%"}
+![](images/fig-board-space-259-adjusted-model-1.png)
+:::
+
+::: {.column width="40%"}
+![](images/fig-board-space-259-adjusted-model-2.png)
+:::
+
+::: {.column width="20%"}
+```{r}
+#| echo: false
+cat("\n\n\n\n.\n\n\n")
+ascii_gatai("cool") |> cat()
+cat("Cool model")
+```
+:::
+:::
+
+## Spot checks: Competing moves
+
+::: columns
+::: {.column width="40%"}
+![](images/fig-board-competing-1.png)
+:::
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="20%"}
+```{r}
+#| echo: false
+# cat("\n\n\n\n.\n\n\n")
+# ascii_gatai("cool") |> cat()
+# cat("Cool model")
+```
+:::
+:::
+
+## Spot checks: Competing moves
+
+::: columns
+::: {.column width="40%"}
+![](images/fig-board-competing-1.png)
+:::
+
+::: {.column width="40%"}
+![](images/fig-board-competing-2.png)
+:::
+
+::: {.column width="20%"}
+```         
+```
+:::
+:::
+
+::: columns
+::: {.column width="80%"}
+:::
+
+::: {.column width="20%"}
+```{r}
+#| echo: false
+ascii_gatai("cash") |> cat()
+cat("In it to win it, baby.")
+```
+:::
+:::
+
+## Interacting with the GUI
+
+```{mermaid}
+%%| label: fig-flowchart
+%%| fig-width: 10
+%%| fig-height: 9
+%%| echo: false
+%%| include: false
+
+%%{init: {'theme': 'dark', "flowchart": { "curve": "straight"}}}%%
+flowchart LR
+    A --> |start| B
+    A[GatAI] -->|moves| B[Robot]
+    B -->|load| C[Chrome]
+    B -->|play moves| C
+    C -->|screenshot| B
+    B -->|screenshot| A
+```
+
+Using selenium: Browser automation (I used python but there is also the {RSelenium} package available).
+
+-   Workflow:
+
+    -   Load the game
+
+    -   Grab screen shot
+
+    -   Convert to Matrix
+
+    -   Evaluate: Each tile type by sub-board until playable move is found
+
+    -   Play move on screen
+
+## Computer vision model
+
+![](images/fig-raw-board-1.png)
+
+## Computer vision model
+
+![](images/fig-cropped-board-with-grid-1.png)
+
+## Computer vision model
+
+-   {magick} for image manipulation
+
+-   *multinomial logistic regression* {nnet}
+
+$$
+Y \sim \color{red}\blacksquare+\color{green}\blacksquare+\color{blue}\blacksquare +  ... + \epsilon
+$$
+
+::: columns
+::: {.column width="80%"}
+:::
+
+::: {.column width="20%"}
+```{r}
+#| echo: false
+ascii_gatai("isee") |> cat("I see.")
+```
+:::
+:::
+
+## Computer vision model
+
+```{r}
+GataiVision <- readr::read_rds(here::here("models/gatai_vision.rds"))
+tile <- here::here("inst/image-data/ui-tiles/image-2023-08-01 00_10_16-1.png")
+image_read(tile) |> print(info=FALSE)
+
+```
+
+## Computer vision model
+
+```{r}
+#| eval: false
+image_data <- color_analysis(tile)
+GataiVision |>
+  predict(image_data,type="prob")
+```
+
+```{r}
+#| echo: false
+library(dplyr)
+image_data <- color_analysis(tile)
+GataiVision |>
+  predict(image_data,type="prob") ->p
+data.frame(Type = names(p),p = p) |> 
+  arrange(desc(p)) |> 
+  mutate(Probability = format(p, scientific = FALSE)) |> 
+  dplyr::select(Type,Probability) |> 
+  knitr::kable(row.names = FALSE)
+```
+
+## The Showdown
+
+::: columns
+::: {.column width="70%"}
+```{r}
+#| echo: false
+#| label: fig-scores
+#| fig-cap: "Gatai's Scores Playing X-mas-3 via GUI"
+library(ggplot2)
+my_data <- readr::read_csv(here::here("scores.csv"),show_col_types = FALSE)
+my_data |> 
+  ggplot(aes(Match, Score, group=1))+
+  geom_point()+
+  geom_line()+
+  ylim(0,6000)+
+  xlab("Match #")+ggdark::dark_theme_minimal(base_size = 18)
+```
+:::
+
+::: {.column width="30%"}
+### 42.5
+
+Mean Score Per Move
+:::
+:::
+
+## The Showdown
+
+::: columns
+::: {.column width="70%"}
+```{r}
+#| echo: false
+#| label: fig-scores-2
+#| fig-cap: "Gatai's Scores Playing X-mas-3 via GUI"
+library(ggplot2)
+my_data <- readr::read_csv(here::here("scores.csv"),show_col_types = FALSE)
+my_data |> 
+  ggplot(aes(Match, Score, group=1))+
+  geom_point()+
+  geom_line()+
+  ylim(0,6000)+
+  xlab("Match #")+ggdark::dark_theme_minimal(base_size = 18)
+```
+:::
+
+::: {.column width="30%"}
+```{r}
+#| echo: false
+cat(
+  "Game over...",
+  ascii_gatai("bigtreebroken"),"______________"
+)
+
+cat(ascii_gatai("cool"),"Hasta la vista, baby.")
+```
+:::
+:::
+
+## Why?
+
+-   Bragging rights
+
+Business cases:
+
+-   AI opponents
+
+-   AI Couch
+
+-   Generative AI custom games
+
+## Recycling the project
+
+-   Simulations
+
+-   Mathematical proofs
+
+-   Package development
+
+-   R6 vs S4 classes
+
+-   Graphics processing with {magick}
+
+-   Empirical reasoning
+
+-   Probability
