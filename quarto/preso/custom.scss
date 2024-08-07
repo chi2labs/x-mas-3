@@ -1,0 +1,19 @@
+/*-- scss:defaults --*/
+
+$body-bg: #000000;
+
+.reveal .slides section.special-slide > h2 {
+  display: none;
+}
+
+/* Pixelated font style */
+.pixelated-text {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 6em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Include the Google Fonts for the pixelated font */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+

@@ -539,12 +539,12 @@ One smart cat</code></pre>
 </section>
 <section id="binarization" class="slide level2">
 <h2>Binarization</h2>
-<span class="math display">\[\begin{bmatrix} J &amp; G &amp; B &amp; F &amp; G &amp; B &amp; H &amp; H &amp; C &amp; I \\ E &amp; A &amp; C &amp; J &amp; C &amp; H &amp; F &amp; J &amp; I &amp; H \\ G &amp; A &amp; F &amp; D &amp; E &amp; F &amp; C &amp; I &amp; H &amp; A \\ I &amp; D &amp; F &amp; B &amp; A &amp; F &amp; B &amp; F &amp; G &amp; G \\ A &amp; J &amp; I &amp; I &amp; C &amp; E &amp; C &amp; G &amp; G &amp; E \\ H &amp; A &amp; A &amp; J &amp; C &amp; C &amp; E &amp; B &amp; C &amp; H \end{bmatrix}\]</span>
+<span class="math display">\[\begin{bmatrix} A &amp; D &amp; J &amp; B &amp; E &amp; D &amp; G &amp; C &amp; D &amp; E \\ I &amp; G &amp; F &amp; J &amp; E &amp; B &amp; H &amp; F &amp; A &amp; I \\ B &amp; F &amp; C &amp; E &amp; D &amp; I &amp; F &amp; C &amp; B &amp; A \\ D &amp; C &amp; A &amp; F &amp; I &amp; D &amp; A &amp; E &amp; G &amp; A \\ E &amp; J &amp; J &amp; F &amp; A &amp; D &amp; H &amp; D &amp; F &amp; I \\ G &amp; A &amp; F &amp; G &amp; F &amp; A &amp; F &amp; E &amp; B &amp; H \end{bmatrix}\]</span>
 <p>|S| = <span class="math inline">\(10^{60}\)</span></p>
 </section>
 <section id="binarization-1" class="slide level2">
 <h2>Binarization</h2>
-<span class="math display">\[\begin{bmatrix} 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\ 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \end{bmatrix}\]</span>
+<span class="math display">\[\begin{bmatrix} 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \end{bmatrix}\]</span>
 <p>|S| = <span class="math inline">\(2^{60}\)</span></p>
 </section>
 <section id="windowing" class="slide level2">
@@ -684,18 +684,16 @@ One smart cat</code></pre>
 </section>
 <section id="interacting-with-the-gui" class="slide level2">
 <h2>Interacting with the GUI</h2>
-<p>Using selenium: Browser automation (I used python but there is also the {RSelenium} package available).</p>
+<p>Using <em>selenium</em> with a <em>Chrome</em> Browser</p>
 <ul>
-<li><p>Workflow:</p>
-<ul>
-<li><p>Load the game</p></li>
-<li><p>Grab screen shot</p></li>
-<li><p>Convert to Matrix</p></li>
-<li><p>Evaluate: Each tile type by sub-board until playable move is found</p></li>
-<li><p>Play move on screen</p></li>
-</ul></li>
+<li><p>I used python</p></li>
+<li><p>An R package {Rselenium} is also available (didn’t work on my hardware)</p></li>
 </ul>
 </section>
+<section id="interacting-with-the-gui-1" class="slide level2">
+<h2>Interacting with the GUI</h2>
+
+<img data-src="images/mermaid-diagram-2024-08-07-162155.png" class="r-stretch"></section>
 <section id="computer-vision-model" class="slide level2">
 <h2>Computer vision model</h2>
 
@@ -711,7 +709,7 @@ One smart cat</code></pre>
 <li><p><em>multinomial logistic regression</em> {nnet}</p></li>
 </ul>
 <p><span class="math display">\[
-Y \sim \color{red}\blacksquare+\color{green}\blacksquare+\color{blue}\blacksquare +  ... + \epsilon
+P(Y) \sim \color{red}\blacksquare+\color{green}\blacksquare+\color{blue}\blacksquare +  ... + \epsilon
 \]</span></p>
 <div class="columns">
 <div class="column" style="width:80%;">
@@ -739,7 +737,7 @@ Y \sim \color{red}\blacksquare+\color{green}\blacksquare+\color{blue}\blacksquar
 <span id="cb20-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(tile) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">info=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="preso-posit_files/figure-revealjs/unnamed-chunk-16-1.png" class="r-stretch"></section>
+<img data-src="preso-posit_files/figure-revealjs/unnamed-chunk-15-1.png" class="r-stretch"></section>
 <section id="computer-vision-model-4" class="slide level2">
 <h2>Computer vision model</h2>
 <div class="cell">
@@ -805,7 +803,7 @@ Y \sim \color{red}\blacksquare+\color{green}\blacksquare+\color{blue}\blacksquar
 <section id="the-showdown" class="slide level2">
 <h2>The Showdown</h2>
 <div class="columns">
-<div class="column" style="width:70%;">
+<div class="column" style="width:65%;">
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-scores" class="quarto-figure quarto-figure-center quarto-float">
@@ -820,7 +818,7 @@ Figure&nbsp;1: Gatai’s Scores Playing X-mas-3 via GUI
 </div>
 </div>
 </div>
-</div><div class="column" style="width:30%;">
+</div><div class="column" style="width:35%;">
 <h3 id="section-1">42.5</h3>
 <p>Mean Score Per Move</p>
 </div>
@@ -829,7 +827,7 @@ Figure&nbsp;1: Gatai’s Scores Playing X-mas-3 via GUI
 <section id="the-showdown-1" class="slide level2">
 <h2>The Showdown</h2>
 <div class="columns">
-<div class="column" style="width:70%;">
+<div class="column" style="width:65%;">
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-scores-2" class="quarto-figure quarto-figure-center quarto-float">
@@ -844,15 +842,19 @@ Figure&nbsp;2: Gatai’s Scores Playing X-mas-3 via GUI
 </div>
 </div>
 </div>
-</div><div class="column" style="width:30%;">
+</div><div class="column" style="width:35%;">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>Game over... 
+<pre><code>Gatai wins...
+ 
     
     []
 \\\\\/////   /\    
  \\\\////   //\\    *
- ______________</code></pre>
+ ______________
+
+
+.</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -863,6 +865,37 @@ Figure&nbsp;2: Gatai’s Scores Playing X-mas-3 via GUI
 </div>
 </div>
 </div>
+</div>
+</section>
+<section id="why" class="slide level2">
+<h2>Why?</h2>
+<ul>
+<li>Bragging rights</li>
+</ul>
+<p>Business cases:</p>
+<ul>
+<li><p>AI opponents</p></li>
+<li><p>AI Couch</p></li>
+<li><p>Generative AI custom games</p></li>
+</ul>
+</section>
+<section id="reuse-for-teaching" class="slide level2">
+<h2>Reuse for teaching</h2>
+<ul>
+<li><p>Simulations</p></li>
+<li><p>Probability</p></li>
+<li><p>Empirical reasoning</p></li>
+<li><p>Mathematical proofs</p></li>
+<li><p>Package development</p></li>
+<li><p>R6 vs S4 classes</p></li>
+<li><p>Graphics processing with {magick}</p></li>
+<li><p>Browser automation</p></li>
+</ul>
+</section>
+<section id="special-slide" class="slide level2 special-slide">
+<h2>Special Slide</h2>
+<div class="pixelated-text">
+<p>GAME OVER</p>
 </div>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">

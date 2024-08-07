@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -58,6 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -100,7 +101,13 @@ div.csl-indent {
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -109,6 +116,7 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -119,6 +127,33 @@ div.csl-indent {
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 </head>
 
 <body class="nav-sidebar floating slimcontent">
@@ -127,12 +162,12 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./abstracting-x-mas-3.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-Mas-3</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./abstracting-x-mas-3.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Abstracting X-Mas-3</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -142,7 +177,7 @@ div.csl-indent {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">GatAI v. X-Mas-3</a> 
@@ -229,7 +264,7 @@ div.csl-indent {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -278,9 +313,11 @@ div.csl-indent {
   </div>
   
 
+
 </header>
 
-<p>In order to analyze <em>x-mas-3</em> and training an AI to play the game, we decided to make an <em>abstract</em> version in the game in R <span class="citation" data-cites="Rlanguage">(<a href="references.html#ref-Rlanguage" role="doc-biblioref">R Core Team 2023</a>)</span> and C++ <span class="citation" data-cites="ISO:2012:III">(<a href="references.html#ref-ISO:2012:III" role="doc-biblioref">ISO 2012</a>)</span>. The abstracted version is more suitable for computer-game interaction as it will communicate only the relevant information between the agent and the game. This will be substantially faster than interacting with the UI and allow for a more streamlined training process.</p>
+
+<p>In order to analyze <em>x-mas-3</em> and training an AI to play the game, we decided to make an <em>abstract</em> version in the game in R <span class="citation" data-cites="Rlanguage">(<a href="#ref-Rlanguage" role="doc-biblioref">R Core Team 2023</a>)</span> and C++ <span class="citation" data-cites="ISO:2012:III">(<a href="#ref-ISO:2012:III" role="doc-biblioref">ISO 2012</a>)</span>. The abstracted version is more suitable for computer-game interaction as it will communicate only the relevant information between the agent and the game. This will be substantially faster than interacting with the UI and allow for a more streamlined training process.</p>
 <section id="abstracting-the-board-and-tiles" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="abstracting-the-board-and-tiles"><span class="header-section-number">2.1</span> Abstracting the Board and Tiles</h2>
 <p>The board is a 6 by 10 grid each containing a tile out of ten different tile-types. For our purposes we represent the board as a 6x10 matrix with the letters A through J representing the ten different tiles. An example board would me represented thus:</p>
@@ -293,7 +330,7 @@ div.csl-indent {
 \]</span></p>
 <p>as a regular expression will identify three or more consecutive occurrences of similar tiles. Implemented in R below:</p>
 <div class="cell" data-code-block-border-left="true">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>get_n_combinations <span class="ot">&lt;-</span> \(m){</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  my_regex <span class="ot">&lt;-</span> <span class="st">"([A-J])</span><span class="sc">\\</span><span class="st">1</span><span class="sc">\\</span><span class="st">1+"</span>  </span>
@@ -314,7 +351,7 @@ div.csl-indent {
 <h3 class="anchored" data-anchor-id="initial-board-state">Initial Board State</h3>
 <p>Since the initial state of the board cannot include any scoring combination we need a function that generates a random initial state <em>until</em> the board’s score is zero. We implemented this recursively.</p>
 <div class="cell" data-code-block-border-left="true">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>initialize_board <span class="ot">&lt;-</span> \(){</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  tiles <span class="ot">&lt;-</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
@@ -336,8 +373,8 @@ div.csl-indent {
 </section>
 <section id="applying-reinforcement-learning" class="level2 page-columns page-full" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="applying-reinforcement-learning"><span class="header-section-number">2.2</span> Applying Reinforcement Learning</h2>
-<p>Reinforcement Learning (RL) <span class="citation" data-cites="watkins1992q">(<a href="references.html#ref-watkins1992q" role="doc-biblioref">Watkins and Dayan 1992</a>)</span> is an algorithm that allows an agent (i.e.&nbsp;AI) to interact with an environment over a sequence of observations. The agent seeks to be rewarded and for the reward to be maximized over time. The model consists of a set of environment states <span class="math inline">\(S\)</span> a set of actions <span class="math inline">\(A\)</span> and a set of rewards <span class="math inline">\(R\)</span> (positive or negative).</p>
-<p>The algorithm is guaranteed to converge to an optimal policy for each possible state in <span class="math inline">\(S\)</span>. RL (and in this case we will use Q-learning) needs to be trained on a set of state-transition <em>tuples</em> formally defined in <a href="#eq-tuples"><span>2.1</span></a>. <span id="eq-tuples"><span class="math display">\[
+<p>Reinforcement Learning (RL) <span class="citation" data-cites="watkins1992q">(<a href="#ref-watkins1992q" role="doc-biblioref">Watkins and Dayan 1992</a>)</span> is an algorithm that allows an agent (i.e.&nbsp;AI) to interact with an environment over a sequence of observations. The agent seeks to be rewarded and for the reward to be maximized over time. The model consists of a set of environment states <span class="math inline">\(S\)</span> a set of actions <span class="math inline">\(A\)</span> and a set of rewards <span class="math inline">\(R\)</span> (positive or negative).</p>
+<p>The algorithm is guaranteed to converge to an optimal policy for each possible state in <span class="math inline">\(S\)</span>. RL (and in this case we will use Q-learning) needs to be trained on a set of state-transition <em>tuples</em> formally defined in <a href="#eq-tuples" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">eq-tuples</span></a>. <span id="eq-tuples"><span class="math display">\[
 (s_i, a_i, r_{i+1}, s_{i+1})
 \tag{2.1}\]</span></span></p>
 <p>where:</p>
@@ -396,7 +433,7 @@ div.csl-indent {
 \begin{bmatrix} 1 \\ 1 \\ 0 \\ 1 \end{bmatrix}
 %
 \text{ for }\parallel \text{ moves.}\]</span>
-<p>Is it easy to see that the <span class="math inline">\(3\times2\)</span> matrix above is a transposition of the <span class="math inline">\(2\times3\)</span> one, and therefore it does not matter whether a move if horizontal or vertical the problem is similar in nature for all <em>perpendicular</em> moves. The same is true for the <span class="math inline">\(4\times1\)</span> and <span class="math inline">\(1\times4\)</span> matrices, i.e.&nbsp;where there is a winning <em>parallel</em> move. Matrix <a href="#eq-example-windows"><span>2.2</span></a> illustrates two windows on our original board and Matrix <a href="#eq-example-windows-binary"><span>2.3</span></a> shows the same in our binary space (combining the two reduction strategies).</p>
+<p>Is it easy to see that the <span class="math inline">\(3\times2\)</span> matrix above is a transposition of the <span class="math inline">\(2\times3\)</span> one, and therefore it does not matter whether a move if horizontal or vertical the problem is similar in nature for all <em>perpendicular</em> moves. The same is true for the <span class="math inline">\(4\times1\)</span> and <span class="math inline">\(1\times4\)</span> matrices, i.e.&nbsp;where there is a winning <em>parallel</em> move. Matrix <a href="#eq-example-windows" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">eq-example-windows</span></a> illustrates two windows on our original board and Matrix <a href="#eq-example-windows-binary" class="quarto-xref"><span class="quarto-unresolved-ref ref-noprefix">eq-example-windows-binary</span></a> shows the same in our binary space (combining the two reduction strategies).</p>
 <p><span id="eq-example-windows"><span class="math display">\[
 \begin{bmatrix} G &amp; \color{red}{\textbf{C}} &amp; \color{red}{\textbf{J}} &amp; \color{red}{\textbf{D}} &amp; \color{red}{\textbf{G}} &amp; G &amp; C &amp; G &amp; B &amp; A \\ I &amp; D &amp; E &amp; A &amp; C &amp; B &amp; H &amp; C &amp; E &amp; F \\ J &amp; C &amp; J &amp; F &amp; C &amp; J &amp; \color{red}{\textbf{A}} &amp; \color{red}{\textbf{H}} &amp; B &amp; F \\ H &amp; C &amp; D &amp; F &amp; C &amp; F &amp; \color{red}{\textbf{D}} &amp; \color{red}{\textbf{B}} &amp; G &amp; B \\ D &amp; I &amp; H &amp; I &amp; I &amp; B &amp; \color{red}{\textbf{F}} &amp; \color{red}{\textbf{C}} &amp; C &amp; E \\ B &amp; F &amp; A &amp; J &amp; E &amp; H &amp; I &amp; C &amp; H &amp; G \end{bmatrix}
 \tag{2.2}\]</span></span></p>
@@ -414,11 +451,11 @@ div.csl-indent {
 <section id="the-reduced-action-spaces" class="level4">
 <h4 class="anchored" data-anchor-id="the-reduced-action-spaces">The Reduced Action Spaces</h4>
 <p>If we employ the windowed approach suggested above, our action space, <span class="math inline">\(A\)</span> shrinks significantly. We will in fact have two different <span class="math inline">\(S\)</span> and <span class="math inline">\(A\)</span> depending on whether we are considering parallel or perpendicular moves.</p>
-<p>For a parallel window, we can generalize to the horizontal variant (since the horizontal one is a simple transposition thereof) and we then get only a few relevant combinations. Since any four element set which already has three in a row is will not occur, we are left with: {0000,0001,0010,0011,0100,0101,0110,1000,1001,1011, 1101} for a total of 11 cases out of which only two have a winning move ({1011, 1101}). This reduces <span class="math inline">\(A_{\parallel}\)</span> for <span class="math inline">\(S_{\parallel}\)</span> to three moves: pass (P), flip first (F) or flip last (L). formalized in <a href="#eq-action-space-parallel">Equation&nbsp;<span>2.4</span></a>.</p>
+<p>For a parallel window, we can generalize to the horizontal variant (since the horizontal one is a simple transposition thereof) and we then get only a few relevant combinations. Since any four element set which already has three in a row is will not occur, we are left with: {0000,0001,0010,0011,0100,0101,0110,1000,1001,1011, 1101} for a total of 11 cases out of which only two have a winning move ({1011, 1101}). This reduces <span class="math inline">\(A_{\parallel}\)</span> for <span class="math inline">\(S_{\parallel}\)</span> to three moves: pass (P), flip first (F) or flip last (L). formalized in <a href="#eq-action-space-parallel" class="quarto-xref">Equation&nbsp;<span class="quarto-unresolved-ref">eq-action-space-parallel</span></a>.</p>
 <p><span id="eq-action-space-parallel"><span class="math display">\[
 A_{\parallel} = \{P,F,L\}
 \tag{2.4}\]</span></span></p>
-<p>For the perpendicular case we 62 combinations, these are illustrated in <a href="#eq-perpendicular-combinations">Equation&nbsp;<span>2.5</span></a>.</p>
+<p>For the perpendicular case we 62 combinations, these are illustrated in <a href="#eq-perpendicular-combinations" class="quarto-xref">Equation&nbsp;<span class="quarto-unresolved-ref">eq-perpendicular-combinations</span></a>.</p>
 <p><span id="eq-perpendicular-combinations"><span class="math display">\[
 S_{\perp} = \Biggl\{ \left[{000\atop{000}}\right],
 \left[{000\atop{001}}\right],
@@ -428,7 +465,7 @@ S_{\perp} = \Biggl\{ \left[{000\atop{000}}\right],
 \left[{110\atop{011}}\right]
 \Biggr\}
 \tag{2.5}\]</span></span></p>
-<p>The action space is limited to flipping one out of three positions, First, Middle, Last, or Passing. Illustrated in <a href="#eq-action-space-perpendicular">Equation&nbsp;<span>2.6</span></a>.</p>
+<p>The action space is limited to flipping one out of three positions, First, Middle, Last, or Passing. Illustrated in <a href="#eq-action-space-perpendicular" class="quarto-xref">Equation&nbsp;<span class="quarto-unresolved-ref">eq-action-space-perpendicular</span></a>.</p>
 <p><span id="eq-action-space-perpendicular"><span class="math display">\[
 A_{\perp}=\{F,M,L,P\}
 \tag{2.6}\]</span></span></p>
@@ -447,24 +484,32 @@ A_{\perp}=\{F,M,L,P\}
 </section>
 <section id="algebraic-notation" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="algebraic-notation"><span class="header-section-number">2.3</span> Algebraic Notation</h2>
-<p>In order to facilitate the discussion and analysis of positions and moves I decided to use notation inspired by <em>algebraic notation</em> in the game of <em>chess</em>. Our board is 6x10 (as opposed to 8x8 in chess), so we have columns A through J, and rows 1 through 6. Since there is a component of “gravity” in the game, i.e.&nbsp;tiles fall toward the botton of the screen when tiles are removed from the board, I decided to number rows from the top. This would be congruent with the typical layout of a chess board, but seen from the perpective of the black pieces. An example can be seen in <a href="#fig-example-board-algebraic-notation">Figure&nbsp;<span>2.1</span></a>.</p>
+<p>In order to facilitate the discussion and analysis of positions and moves I decided to use notation inspired by <em>algebraic notation</em> in the game of <em>chess</em>. Our board is 6x10 (as opposed to 8x8 in chess), so we have columns A through J, and rows 1 through 6. Since there is a component of “gravity” in the game, i.e.&nbsp;tiles fall toward the botton of the screen when tiles are removed from the board, I decided to number rows from the top. This would be congruent with the typical layout of a chess board, but seen from the perpective of the black pieces. An example can be seen in <a href="#fig-example-board-algebraic-notation" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-example-board-algebraic-notation</span></a>.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-example-board-algebraic-notation" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="abstracting-x-mas-3_files/figure-html/fig-example-board-algebraic-notation-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;2.1: An Example Board</figcaption>
+<div id="fig-example-board-algebraic-notation" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-board-algebraic-notation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="abstracting-x-mas-3_files/figure-html/fig-example-board-algebraic-notation-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-board-algebraic-notation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1: An Example Board
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Moving the top-left tile to the adjecent square to the right would be denoted: “A1 to B1” or simply “A1B1”. The move is illustrated in <a href="#fig-example-move">Figure&nbsp;<span>2.2</span></a>.</p>
+<p>Moving the top-left tile to the adjecent square to the right would be denoted: “A1 to B1” or simply “A1B1”. The move is illustrated in <a href="#fig-example-move" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-example-move</span></a>.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-example-move" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="abstracting-x-mas-3_files/figure-html/fig-example-move-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;2.2: The Move A1 to B1</figcaption>
+<div id="fig-example-move" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-move-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="abstracting-x-mas-3_files/figure-html/fig-example-move-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-move-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: The Move A1 to B1
+</figcaption>
 </figure>
 </div>
 </div>
@@ -475,27 +520,39 @@ A_{\perp}=\{F,M,L,P\}
 <p>Since the strategies and tactics learned on a i.e.&nbsp;3x4 board are in principle the same as those of a 4x3 board it is useful to be able to transpose both boards and moves. We therefore implemented transpose-functions for both.</p>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
-<div id="fig-transpositions" class="cell quarto-layout-panel" data-fig.asp="1">
-<figure class="figure">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-transpositions-1" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="abstracting-x-mas-3_files/figure-html/fig-transpositions-1.png" class="img-fluid figure-img" data-ref-parent="fig-transpositions" width="288"></p>
-<figcaption class="figure-caption">(a) Original</figcaption>
+<div id="fig-transpositions" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-transpositions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-transpositions" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-transpositions-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-transpositions-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="abstracting-x-mas-3_files/figure-html/fig-transpositions-1.png" class="img-fluid figure-img" data-ref-parent="fig-transpositions" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-transpositions-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Original
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-transpositions-2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="abstracting-x-mas-3_files/figure-html/fig-transpositions-2.png" class="img-fluid figure-img" data-ref-parent="fig-transpositions" width="288"></p>
-<figcaption class="figure-caption">(b) Transposed</figcaption>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-transpositions" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-transpositions-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-transpositions-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="abstracting-x-mas-3_files/figure-html/fig-transpositions-2.png" class="img-fluid figure-img" data-ref-parent="fig-transpositions" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-transpositions-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Transposed
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.3: Transposition example</figcaption><p></p>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-transpositions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.3: Transposition example
+</figcaption>
 </figure>
 </div>
 </section>
@@ -506,40 +563,56 @@ A_{\perp}=\{F,M,L,P\}
 <p>Since we are operating on simplified sub-boards, and part of our strategy is to window the playing-board we implemented functions to <em>window</em> a board, i.e.&nbsp;subdivide it into smaller pieces for analysis. When moves are suggested for the sub-division we need to <em>slide</em> these moves over on the real playing board (i.e.&nbsp;the larger one).</p>
 <section id="examples-1" class="level3">
 <h3 class="anchored" data-anchor-id="examples-1">Examples</h3>
-<div id="fig-window-example" class="cell quarto-layout-panel">
-<figure class="figure">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-window-example-1" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="abstracting-x-mas-3_files/figure-html/fig-window-example-1.png" class="img-fluid figure-img" data-ref-parent="fig-window-example" width="672"></p>
-<figcaption class="figure-caption">(a) Board with Window</figcaption>
+<div id="fig-window-example" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-window-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-window-example" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-window-example-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-window-example-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="abstracting-x-mas-3_files/figure-html/fig-window-example-1.png" class="img-fluid figure-img" data-ref-parent="fig-window-example" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-window-example-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Board with Window
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-window-example-2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="abstracting-x-mas-3_files/figure-html/fig-window-example-2.png" class="img-fluid figure-img" data-ref-parent="fig-window-example" width="672"></p>
-<figcaption class="figure-caption">(b) Moves A1xA2 and B1xA1</figcaption>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-window-example" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-window-example-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-window-example-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="abstracting-x-mas-3_files/figure-html/fig-window-example-2.png" class="img-fluid figure-img" data-ref-parent="fig-window-example" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-window-example-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Moves A1xA2 and B1xA1
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-window-example-3" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="abstracting-x-mas-3_files/figure-html/fig-window-example-3.png" class="img-fluid figure-img" data-ref-parent="fig-window-example" width="672"></p>
-<figcaption class="figure-caption">(c) Transitioned Moves</figcaption>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-window-example" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-window-example-3" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-window-example-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="abstracting-x-mas-3_files/figure-html/fig-window-example-3.png" class="img-fluid figure-img" data-ref-parent="fig-window-example" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-window-example-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Transitioned Moves
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.4: Example of windowing</figcaption><p></p>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-window-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.4: Example of windowing
+</figcaption>
 </figure>
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-ISO:2012:III" class="csl-entry" role="listitem">
 ISO. 2012. <em><span class="nocase">ISO/IEC 14882:2011 Information technology — Programming languages — C++</span></em>. Geneva, Switzerland: International Organization for Standardization. <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=50372">http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=50372</a>.
 </div>
@@ -633,10 +706,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -646,8 +736,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -659,7 +758,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -703,6 +925,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -728,6 +951,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -789,17 +1038,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./x-mas-3-description.html" class="pagination-link">
+      <a href="./x-mas-3-description.html" class="pagination-link" aria-label="The Game">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">The Game</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./model-training.html" class="pagination-link">
+      <a href="./model-training.html" class="pagination-link" aria-label="Model Training">
         <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Model Training</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

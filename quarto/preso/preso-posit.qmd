@@ -285,36 +285,15 @@ cat("In it to win it, baby.")
 
 ## Interacting with the GUI
 
-```{mermaid}
-%%| label: fig-flowchart
-%%| fig-width: 10
-%%| fig-height: 9
-%%| echo: false
-%%| include: false
+Using *selenium* with a *Chrome* Browser
 
-%%{init: {'theme': 'dark', "flowchart": { "curve": "straight"}}}%%
-flowchart LR
-    A --> |start| B
-    A[GatAI] -->|moves| B[Robot]
-    B -->|load| C[Chrome]
-    B -->|play moves| C
-    C -->|screenshot| B
-    B -->|screenshot| A
-```
+-   I used python
 
-Using selenium: Browser automation (I used python but there is also the {RSelenium} package available).
+-   An R package {Rselenium} is also available (didn't work on my hardware)
 
--   Workflow:
+## Interacting with the GUI
 
-    -   Load the game
-
-    -   Grab screen shot
-
-    -   Convert to Matrix
-
-    -   Evaluate: Each tile type by sub-board until playable move is found
-
-    -   Play move on screen
+![](images/mermaid-diagram-2024-08-07-162155.png)
 
 ## Computer vision model
 
@@ -331,7 +310,7 @@ Using selenium: Browser automation (I used python but there is also the {RSeleni
 -   *multinomial logistic regression* {nnet}
 
 $$
-Y \sim \color{red}\blacksquare+\color{green}\blacksquare+\color{blue}\blacksquare +  ... + \epsilon
+P(Y) \sim \color{red}\blacksquare+\color{green}\blacksquare+\color{blue}\blacksquare +  ... + \epsilon
 $$
 
 ::: columns
@@ -380,7 +359,7 @@ data.frame(Type = names(p),p = p) |>
 ## The Showdown
 
 ::: columns
-::: {.column width="70%"}
+::: {.column width="65%"}
 ```{r}
 #| echo: false
 #| label: fig-scores
@@ -396,7 +375,7 @@ my_data |>
 ```
 :::
 
-::: {.column width="30%"}
+::: {.column width="35%"}
 ### 42.5
 
 Mean Score Per Move
@@ -406,7 +385,7 @@ Mean Score Per Move
 ## The Showdown
 
 ::: columns
-::: {.column width="70%"}
+::: {.column width="65%"}
 ```{r}
 #| echo: false
 #| label: fig-scores-2
@@ -422,12 +401,12 @@ my_data |>
 ```
 :::
 
-::: {.column width="30%"}
+::: {.column width="35%"}
 ```{r}
 #| echo: false
 cat(
-  "Game over...",
-  ascii_gatai("bigtreebroken"),"______________"
+  "Gatai wins...\n",
+  ascii_gatai("bigtreebroken"),"______________\n\n\n."
 )
 
 cat(ascii_gatai("cool"),"Hasta la vista, baby.")
@@ -447,9 +426,12 @@ Business cases:
 
 -   Generative AI custom games
 
-## Recycling the project
+## Reuse for teaching  
 
 -   Simulations
+
+-   Probability
+-   Empirical reasoning
 
 -   Mathematical proofs
 
@@ -459,6 +441,10 @@ Business cases:
 
 -   Graphics processing with {magick}
 
--   Empirical reasoning
+-   Browser automation
+  
+## Special Slide {.special-slide}
 
--   Probability
+<div class="pixelated-text">
+GAME OVER
+</div>

@@ -26,11 +26,22 @@ robot_initialize <- function(){
   selenium(retcommand = TRUE)
   #selenium()
   cDrv <<- chrome()
+  
+  # Try this if the above doesn't work:
+  rsDriver(verbose = TRUE, port = 6195L, chromever = "127.0.6533.73", geckover = NULL, phantomver = NULL)
+  
+  # remDr <<- remoteDriver(
+  #   remoteServerAddr = "localhost",
+  #   port = 4567L,
+  #   browserName = "chrome"
+  # )
+  
   remDr <<- remoteDriver(
     remoteServerAddr = "localhost",
-    port = 4567L,
+    port = 6195L,
     browserName = "chrome"
   )
+  
   message("Connecting to Chome Driver")
   remDr$open()
   remDr$setWindowSize(width = 1200,height = 831)
