@@ -149,7 +149,7 @@ B %>%
 ```{r}
 #| echo: false
 ascii_gatai("cash") |> cat()
-cat("In it to win it, baby.")
+cat("In it to win it!")
 
 ```
 
