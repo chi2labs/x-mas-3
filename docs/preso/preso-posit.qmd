@@ -422,7 +422,7 @@ Business cases:
 
 -   AI opponents
 
--   AI Assist 
+-   AI Assist
 
 -   Generative AI custom games
 
@@ -438,11 +438,11 @@ Business cases:
 
 -   AI opponents
 
--   AI Assist 
+-   AI Assist
 
 -   **Generative AI custom games**
 
-## Reuse for teaching  
+## Reuse for teaching
 
 -   Simulations
 
@@ -459,9 +459,9 @@ Business cases:
 -   Graphics processing with {magick}
 
 -   Browser automation
-  
+
 ## Special Slide {.special-slide}
 
-<div class="pixelated-text">
+::: pixelated-text
 GAME OVER
-</div>
+:::
