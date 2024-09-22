@@ -289,7 +289,7 @@ Using *selenium* with a *Chrome* Browser
 
 -   I used python
 
--   An R package {Rselenium} is also available (didn't work on my hardware)
+-   An R package {RSelenium} is also available (didn't work on my hardware)
 
 ## Interacting with the GUI
 
@@ -422,15 +422,32 @@ Business cases:
 
 -   AI opponents
 
--   AI Couch
+-   AI Assist 
 
 -   Generative AI custom games
+
+## Gatai Assist
+
+{{< video media/gatai-assist.mp4 >}}
+
+## Why?
+
+-   Bragging rights
+
+Business cases:
+
+-   AI opponents
+
+-   AI Assist 
+
+-   **Generative AI custom games**
 
 ## Reuse for teaching  
 
 -   Simulations
 
 -   Probability
+
 -   Empirical reasoning
 
 -   Mathematical proofs

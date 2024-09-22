@@ -7,7 +7,9 @@
 <link href="preso-posit_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="preso-posit_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="preso-posit_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
-<link href="preso-posit_files/libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<link href="preso-posit_files/libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="preso-posit_files/libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="preso-posit_files/libs/quarto-contrib/videojs/video-js.css" rel="stylesheet"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.4.555">
 
   <meta name="author" content="Aleksander Dietrichson, PhD">
@@ -539,12 +541,12 @@ One smart cat</code></pre>
 </section>
 <section id="binarization" class="slide level2">
 <h2>Binarization</h2>
-<span class="math display">\[\begin{bmatrix} A &amp; D &amp; J &amp; B &amp; E &amp; D &amp; G &amp; C &amp; D &amp; E \\ I &amp; G &amp; F &amp; J &amp; E &amp; B &amp; H &amp; F &amp; A &amp; I \\ B &amp; F &amp; C &amp; E &amp; D &amp; I &amp; F &amp; C &amp; B &amp; A \\ D &amp; C &amp; A &amp; F &amp; I &amp; D &amp; A &amp; E &amp; G &amp; A \\ E &amp; J &amp; J &amp; F &amp; A &amp; D &amp; H &amp; D &amp; F &amp; I \\ G &amp; A &amp; F &amp; G &amp; F &amp; A &amp; F &amp; E &amp; B &amp; H \end{bmatrix}\]</span>
+<span class="math display">\[\begin{bmatrix} A &amp; B &amp; J &amp; A &amp; F &amp; J &amp; I &amp; A &amp; B &amp; A \\ C &amp; J &amp; A &amp; E &amp; A &amp; B &amp; B &amp; E &amp; I &amp; E \\ A &amp; B &amp; G &amp; B &amp; E &amp; H &amp; H &amp; B &amp; B &amp; A \\ D &amp; C &amp; A &amp; D &amp; G &amp; G &amp; J &amp; F &amp; C &amp; I \\ B &amp; G &amp; J &amp; C &amp; I &amp; A &amp; F &amp; H &amp; E &amp; A \\ F &amp; G &amp; C &amp; I &amp; J &amp; G &amp; J &amp; I &amp; I &amp; C \end{bmatrix}\]</span>
 <p>|S| = <span class="math inline">\(10^{60}\)</span></p>
 </section>
 <section id="binarization-1" class="slide level2">
 <h2>Binarization</h2>
-<span class="math display">\[\begin{bmatrix} 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \end{bmatrix}\]</span>
+<span class="math display">\[\begin{bmatrix} 1 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 1 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\ 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \end{bmatrix}\]</span>
 <p>|S| = <span class="math inline">\(2^{60}\)</span></p>
 </section>
 <section id="windowing" class="slide level2">
@@ -687,7 +689,7 @@ One smart cat</code></pre>
 <p>Using <em>selenium</em> with a <em>Chrome</em> Browser</p>
 <ul>
 <li><p>I used python</p></li>
-<li><p>An R package {Rselenium} is also available (didn’t work on my hardware)</p></li>
+<li><p>An R package {RSelenium} is also available (didn’t work on my hardware)</p></li>
 </ul>
 </section>
 <section id="interacting-with-the-gui-1" class="slide level2">
@@ -875,8 +877,24 @@ Figure&nbsp;2: Gatai’s Scores Playing X-mas-3 via GUI
 <p>Business cases:</p>
 <ul>
 <li><p>AI opponents</p></li>
-<li><p>AI Couch</p></li>
+<li><p>AI Assist</p></li>
 <li><p>Generative AI custom games</p></li>
+</ul>
+</section>
+<section id="gatai-assist" class="slide level2">
+<h2>Gatai Assist</h2>
+<video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="media/gatai-assist.mp4"></video>
+</section>
+<section id="why-1" class="slide level2">
+<h2>Why?</h2>
+<ul>
+<li>Bragging rights</li>
+</ul>
+<p>Business cases:</p>
+<ul>
+<li><p>AI opponents</p></li>
+<li><p>AI Assist</p></li>
+<li><p><strong>Generative AI custom games</strong></p></li>
 </ul>
 </section>
 <section id="reuse-for-teaching" class="slide level2">
@@ -1327,6 +1345,7 @@ Figure&nbsp;2: Gatai’s Scores Playing X-mas-3 via GUI
       }
     });
     </script>
+    <script>videojs(video_shortcode_videojs_video1);</script>
     
 
 </body></html>

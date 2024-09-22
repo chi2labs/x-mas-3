@@ -25,7 +25,7 @@ robot_initialize <- function(){
   message("Starting Selenium")
   selenium(retcommand = TRUE)
   #selenium()
-  cDrv <<- chrome()
+ # cDrv <<- chrome()
   
   # Try this if the above doesn't work:
   rsDriver(verbose = TRUE, port = 6195L, chromever = "127.0.6533.73", geckover = NULL, phantomver = NULL)
@@ -51,7 +51,7 @@ robot_initialize <- function(){
   readline("Waiting for game do load. Press enter when it does.")
   message("Clicking through to Arcade Mode")
   game_canvas <- remDr$findElements(using = "id","unity-canvas")
-  remDr$mouseMoveToLocation(x=800,y=250, game_canvas[[1]])
+  remDr$mouseMoveToLocation(x=500,y=250, game_canvas[[1]])
   remDr$click()
   invisible()
 }
